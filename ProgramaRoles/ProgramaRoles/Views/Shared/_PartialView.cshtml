@@ -1,0 +1,50 @@
+﻿@model List<ProgramaRoles.Models.ViewModel>
+@{
+    ViewBag.Title = "PartialList";
+}
+
+@using (Html.BeginForm("ControladorPartialView", "UsuariosSectores", FormMethod.Post))
+{
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="container text-center"></th>
+                <th class="col-md-4">DNI</th>
+                <th class="col-md-4">Nombre de Usuario</th>
+                <th class="col-md-4">Nombre de Sector</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td>@Html.CheckBoxFor(m => m[i].Chked)</td>
+                    <td>@Html.DisplayFor(m => m[i].dni) </td>
+                    <td>@Html.DisplayFor(m => m[i].nombreUsu)</td>
+                    <td>@Html.DisplayFor(m => m[i].nombreSec)</td>
+                </tr>
+
+                @Html.HiddenFor(m => m[i].Id)
+                @Html.HiddenFor(m => m[i].dni)
+                @Html.HiddenFor(m => m[i].nombreUsu)
+                @Html.HiddenFor(m => m[i].nombreSec)
+            }
+
+        </tbody>
+
+    </table>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <input type="submit" value="Siguiente" class="btn btn-default btn-success btn-block" />
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+
+}

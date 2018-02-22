@@ -1,0 +1,48 @@
+﻿@using (Html.BeginForm("ObtenerUsuariosSectores", "UsuariosSectores", FormMethod.Post))
+{
+
+    <div style="margin-left:20%;margin-top:30px">
+        <div class="row">
+            <div class="col-xs-3">
+                <label for="celular1">DNI:</label>
+            </div>
+            <div class="col-xs-3">
+                <label for="celular2">Nombre de Usuario:</label>
+            </div>
+            <div class="col-xs-3">
+                <label for="celular3">Nombre de Sector:</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-3">
+                <input type="text" name="dni" class="form-control" placeholder="DNI" />
+            </div>
+            <div class="col-xs-3">
+                <input type="text" name="nombreUsuario" class="form-control" placeholder="Usuario" />
+            </div>
+            <div class="col-xs-3">
+                <input type="text" name="nombreSector" class="form-control" placeholder="Sector" />
+            </div>
+
+        </div>
+    </div>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <input type="submit" value="Filtrar" class="btn btn-primary btn-success btn-block" />
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+
+}
+
+<br /><br /><br /><br />
+
+
+@{Html.RenderAction("ControladorPartialView1", "UsuariosSectores");}
