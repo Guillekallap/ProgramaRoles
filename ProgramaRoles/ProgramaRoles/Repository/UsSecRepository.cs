@@ -197,5 +197,54 @@ namespace ProgramaRoles.Repository
             }
         }
 
-   }
+
+
+
+        public List<UsuariosSectores> BuscarUsuarioSectorPorRol(string rol)
+        {
+
+            connection();
+            SqlCommand com = new SqlCommand("BuscarUsuarioSectorPorRol", con);
+
+            List<UsuariosSectores> listaUsec = new List<UsuariosSectores>();
+            com.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataTable dt = new DataTable();
+
+            com.Parameters.AddWithValue("@rol", rol);
+
+            try
+            {
+
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+                listaUsec = (from DataRow dr in dt.Rows
+                        select new UsuariosSectores()
+                        {
+
+                            id = Convert.ToInt32(dr["id"]),
+                            idSector = Convert.ToInt32(dr["idSector"]),
+                            nombreSector = Convert.ToString(dr["nombreSector"]),
+                            idUsuario = Convert.ToInt32(dr["idUsuario"]),
+                            nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
+                            dni = Convert.ToString(dr["dni"]),
+                            roles = Convert.ToString(dr["roles"]),
+                        }).ToList();
+
+
+
+
+                return (listaUsec);
+
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+
+            }
+
+        }
+    }
 }

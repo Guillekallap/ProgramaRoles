@@ -26,23 +26,41 @@ namespace ProgramaRoles.Controllers
             return View(listadoDeSRoles);
         }
 
-        public ActionResult ControladorPartialViewRolFiltrado(List<Roles> listadoDeRoles)
+        public ActionResult ControladorPartialViewRolFiltrado(List<Sroles> listadoDeRoles)
         {
+            List<ViewModel> listaCheckEnUsuarioSector = new List<ViewModel>();
             string rol_elegido = null;
-            foreach (Roles item in listadoDeRoles)
+
+
+            foreach (Sroles item in listadoDeRoles)
             {
-                rol_elegido = item.rol;
+                rol_elegido = item.roles.rol;
             }
 
             UsSecRepository UsSecRepo = new UsSecRepository();
-            List<UsuariosSectores> listaUsuarioSector = UsSecRepo.ListarTodosUsuariosSectores(null,null,null);
-            return View("_PartialViewRolFiltrado", new { datoLista = listaUsuarioSector, datoRol = rol_elegido});
+            List<UsuariosSectores> listaUsuarioSector = UsSecRepo.BuscarUsuarioSectorPorRol(rol_elegido);
+            foreach (var item in listaUsuarioSector)
+            {
+                ViewModel vModel = new ViewModel(item);
+                listaCheckEnUsuarioSector.Add(vModel);
+            }
+
+            return View("_PartialViewRolFiltrado", new { datoLista = listaCheckEnUsuarioSector, datoRol = rol_elegido});
         }
         [HttpPost]
-        public ActionResult ControladorPartialViewRolFiltrado(List<UsuariosSectores> listaUsuarioSectorEnviados)
+        public ActionResult ControladorPartialViewRolFiltrado(List<ViewModel> listaUsuarioSectorEnviados)
         {
             List<UsuariosSectores> usec = new List<UsuariosSectores>();
-            UsSecRepository UsSecRepo = new UsSecRepository();          
+            UsSecRepository UsSecRepo = new UsSecRepository();
+
+            foreach (ViewModel item in listaUsuarioSectorEnviados)
+            {
+                if (item.Chked)
+                {
+                    var i = item.Id;
+                    usec.Add(UsSecRepo.BuscarUsuarioSector(i));
+                }
+            }
             return RedirectToAction("ObtenerUsuariosSectores");
         }
 
