@@ -23,13 +23,24 @@ namespace ProgramaRoles.Utils
 
         public List<Sroles> ParsearPropiedadRoles( UsuariosSectores usSec, List<string> listaRolesString)
         {
-
+            
             UsSecRepository UsSecRepo = new UsSecRepository();
             List<string> listaRolesStringUsuarioSector = usSec.roles.Split(',').ToList();
             List<Roles> lista_roles = UsSecRepo.ListarTodosRoles();
             List<Sroles> listadoSRoles = new List<Sroles>();
             List<Sroles> listadoSRolesFalse = new List<Sroles>();
 
+            if (listaRolesStringUsuarioSector.Count()==1 && listaRolesStringUsuarioSector.First() =="")
+            {
+                     foreach (var rolGenerico in lista_roles)
+                    {
+                            Sroles seleccionadosRoles = new Sroles();
+                            seleccionadosRoles.roles = UsSecRepo.BuscarRol(rolGenerico.rol);
+                            seleccionadosRoles.RolSeleccionado = false;
+                            listadoSRoles.Add(seleccionadosRoles);
+                    }
+                
+            }
             int i = 0;
             //Parsea la propiedad 'roles' para identificar que roles contiene el UsuarioSector dado. 
             foreach (var rolesUsuarioSector in listaRolesString)

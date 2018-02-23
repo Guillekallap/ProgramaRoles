@@ -120,15 +120,23 @@ namespace ProgramaRoles.Controllers
         [HttpPost]
         public ActionResult EditarRoles(List<ViewMuestra> listaVMU)
         {
-            List<UsuariosSectores> usec = new List<UsuariosSectores>();
-            UsSecRepository UsSecRepo = new UsSecRepository();
-            foreach (ViewMuestra item in listaVMU)
-            {
-                UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(item.id), item.nombreRoles);
-                UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles); 
-            }
-            return RedirectToAction("ObtenerUsuariosSectores");
+            try{
+                List<UsuariosSectores> usec = new List<UsuariosSectores>();
+                UsSecRepository UsSecRepo = new UsSecRepository();
+                foreach (ViewMuestra item in listaVMU)
+                {
+                    UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(item.id), item.nombreRoles);
+                    UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                }
 
+                return RedirectToAction("ObtenerUsuariosSectores");
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            
         }
 
     }

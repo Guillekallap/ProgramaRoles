@@ -60,7 +60,20 @@ namespace UnitTest
             Assert.IsNotNull(Lista_SRoles);
         }
 
-       
-       
+        [TestMethod]
+        public void ParsearPropiedadRolesNulo()
+        {
+
+            UtilsString Utils = new UtilsString();
+            UsSecRepository UsSec = new UsSecRepository();
+            UsuariosSectores UsuarioSec = UsSec.BuscarUsuarioSector(2011);
+            List<Roles> Lista_Roles = UsSec.ListarTodosRoles();
+            List<string> Lista_string = Utils.ConvertirDeListaDeRolesAListaNombreRoles(Lista_Roles);
+            List<Sroles> Lista_SRoles = new List<Sroles>();
+            Lista_SRoles = Utils.ParsearPropiedadRoles(UsuarioSec, Lista_string);
+            //string StringResultante = Utils.TraducirRolesAString(Lista_SRoles);
+            Assert.IsNotNull(Lista_SRoles);
+        }
+
     }
 }

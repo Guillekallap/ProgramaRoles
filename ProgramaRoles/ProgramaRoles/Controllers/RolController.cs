@@ -14,93 +14,37 @@ namespace ProgramaRoles.Controllers
     {
         public ActionResult ObtenerRoles()
         {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult ObtenerRoles(string descripcion)
-        {
-            string descrip = null;
-            if (descripcion != null)
-            {
-                descrip = descripcion;
-            }
-            else
-            {
-                return View("ObtenerUsuariosSectores");
-            }
-
-
             UsSecRepository usSecRepo = new UsSecRepository();
             UtilsString utils = new UtilsString();
             List<Roles> listadoDeRoles = usSecRepo.ListarTodosRoles();
-            List<string> listadoDeNombreRoles = utils.ConvertirDeListaDeRolesAListaNombreRoles(listadoDeRoles);
-            return View("_PartialView");
+            List<Sroles> listadoDeSRoles = new List<Sroles>();
+            foreach (Roles rol in listadoDeRoles)
+            {
+                Sroles rolSel = new Sroles(rol,false);
+                listadoDeSRoles.Add(rolSel);
+            }
+            return View(listadoDeSRoles);
         }
 
+        public ActionResult ControladorPartialViewRolFiltrado(List<Roles> listadoDeRoles)
+        {
+            string rol_elegido = null;
+            foreach (Roles item in listadoDeRoles)
+            {
+                rol_elegido = item.rol;
+            }
 
-//        string nomsec = null;
-//        string nomusu = null;
-//        string dni2 = null;
-//            if (dni != null && dni.Length <= 8)
-//            {
-//                dni2 = dni;
-//            }
-//            else
-//            {
-//                return View("ObtenerUsuariosSectores");
-//}
-
-//            if (nombreUsuario != null && nombreUsuario.Length <= 255)
-//            {
-//                nomusu = nombreUsuario;
-//            }
-//            else
-//            {
-//                return View("ObtenerUsuariosSectores");
-//            }
-//            if (nombreSector != null && nombreSector.Length <= 100)
-//            {
-//                nomsec = nombreSector;
-//            }
-//            else
-//            {
-//                return View("ObtenerUsuariosSectores");
-//            }
-
-
-//            TempData["dni"] = dni2;
-//            TempData["nombreUsuario"] = nomusu;
-//            TempData["nombreSector"] = nomsec;
-//            return View();
-//        }
-
-
-//        public ActionResult ControladorPartialView1()
-//{
-//    string dni = string.Empty;
-//    string nombreUsuario = string.Empty;
-//    string nombreSector = string.Empty;
-//    if (TempData.Keys.Contains("dni"))
-//    {
-//        dni = TempData["dni"].ToString();
-//        nombreUsuario = TempData["nombreUsuario"].ToString();
-//        nombreSector = TempData["nombreSector"].ToString();
-//    }
-//    UsSecRepository UsSecRepo = new UsSecRepository();
-//    List<ViewModel> lista = new List<ViewModel>();
-
-//    ModelState.Clear();
-
-//    List<UsuariosSectores> aux = UsSecRepo.ListarTodosUsuariosSectores(dni, nombreUsuario, nombreSector);
-
-//    foreach (var item in aux)
-//    {
-//        ViewModel vModel = new ViewModel(item);
-//        lista.Add(vModel);
-//    }
-//    return PartialView("_PartialView", lista);
-//}
+            UsSecRepository UsSecRepo = new UsSecRepository();
+            List<UsuariosSectores> listaUsuarioSector = UsSecRepo.ListarTodosUsuariosSectores(null,null,null);
+            return View("_PartialViewRolFiltrado", new { datoLista = listaUsuarioSector, datoRol = rol_elegido});
+        }
+        [HttpPost]
+        public ActionResult ControladorPartialViewRolFiltrado(List<UsuariosSectores> listaUsuarioSectorEnviados)
+        {
+            List<UsuariosSectores> usec = new List<UsuariosSectores>();
+            UsSecRepository UsSecRepo = new UsSecRepository();          
+            return RedirectToAction("ObtenerUsuariosSectores");
+        }
 
     }
 }
