@@ -16,7 +16,6 @@ namespace ProgramaRoles.Repository
         {
             string constr = ConfigurationManager.ConnectionStrings["getconn"].ToString();
             con = new SqlConnection(constr);
-
         }
 
         public List<UsuariosSectores> ListarTodosUsuariosSectores(string dni, string nombreUsuario, string nombreSector)

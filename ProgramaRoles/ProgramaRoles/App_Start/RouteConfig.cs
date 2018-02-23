@@ -16,7 +16,7 @@ namespace ProgramaRoles
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "UsuariosSectores", action = "ObtenerUsuariosSectores", id = UrlParameter.Optional }
+                defaults: new { controller = "UsuariosSectores", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

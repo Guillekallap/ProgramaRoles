@@ -82,5 +82,8 @@ namespace ProgramaRoles.Utils
             string resultado = string.Join(",",listaRolesSeleccionados.ToArray());
             return resultado;
         }
+
+        public List<string>
+
     }
 }
