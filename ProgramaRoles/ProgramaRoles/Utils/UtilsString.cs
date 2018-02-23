@@ -69,7 +69,8 @@ namespace ProgramaRoles.Utils
 
         }
 //A partir de la Lista Sroles creo una lista de string con los roles modificados, luego la convierto a string para agregarla como atributo a la propiedad roles de UsuariosSectores.
-        public string TraducirRolesAString(List<Sroles> RolesAEditar) {
+        public string TraducirRolesAString(List<Sroles> RolesAEditar)
+        {
            
             List<string> listaRolesSeleccionados = new List<string>(); 
             foreach (var item in RolesAEditar)
@@ -82,8 +83,6 @@ namespace ProgramaRoles.Utils
             string resultado = string.Join(",",listaRolesSeleccionados.ToArray());
             return resultado;
         }
-
-        public List<string>
 
     }
 }
