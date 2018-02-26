@@ -1,7 +1,67 @@
-﻿
+﻿@model List<ProgramaRoles.Models.Sroles>
 @{
+    /**/
+
     ViewBag.Title = "ObtenerRoles";
 }
 
 <h2>ObtenerRoles</h2>
 
+@using (Html.BeginForm("ObtenerRoles", "Rol", FormMethod.Post))
+{
+
+    <table class="table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="col-xs-1"></th>
+                <th style="padding-left:1%">Nombre de Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td class="text-center">@Html.CheckBoxFor(m => m[i].RolSeleccionado)</td>
+                    <td style="padding-left:1%">@Html.DisplayFor(m => m[i].roles.rol) </td>
+                </tr>
+
+                @Html.HiddenFor(m => m[i].RolSeleccionado)
+                @Html.HiddenFor(m => m[i].roles)
+            }
+
+        </tbody>
+
+    </table>
+
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <input type="submit" value="Siguiente" class="btn btn-default btn-success btn-block" />
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+
+    <div class="text-center">
+        <br />
+        <a style="text-align:center" class="btn btn-default btn-success" href="~/UsuariosSectores/Index" title="Volver Atrás">Atrás</a>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+
+        // Evento que se ejecuta al pulsar en un checkbox
+        $("input[type=checkbox]").change(function () {
+
+            // Cogemos el elemento actual
+            var elemento = this;
+
+            $("input[type=checkbox]").prop('checked', false);
+            $(elemento).prop('checked', true);
+
+        });
+    });
+</script>
