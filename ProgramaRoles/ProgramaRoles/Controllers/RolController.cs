@@ -25,16 +25,18 @@ namespace ProgramaRoles.Controllers
             }
             return View(listadoDeSRoles);
         }
-
-        public ActionResult ControladorPartialViewRolFiltrado(List<Sroles> listadoDeRoles)
+        [HttpPost]
+        public ActionResult ObtenerRoles(List<Sroles> listadoDeRoles)
         {
             List<ViewModel> listaCheckEnUsuarioSector = new List<ViewModel>();
             string rol_elegido = null;
 
-
             foreach (Sroles item in listadoDeRoles)
             {
-                rol_elegido = item.roles.rol;
+                if (item.RolSeleccionado == true)
+                {
+                    rol_elegido = item.roles.rol;
+                }
             }
 
             UsSecRepository UsSecRepo = new UsSecRepository();
@@ -44,9 +46,43 @@ namespace ProgramaRoles.Controllers
                 ViewModel vModel = new ViewModel(item);
                 listaCheckEnUsuarioSector.Add(vModel);
             }
+            TempData["listaCheckEnUsuarioSectorSeleccionado"] = listaCheckEnUsuarioSector;
 
-            return View("_PartialViewRolFiltrado", new { datoLista = listaCheckEnUsuarioSector, datoRol = rol_elegido});
+            return RedirectToAction("EditarUsuarioSector");
         }
+
+        public ActionResult EditarUsuarioSector()
+        {
+            List<ViewModel> listaRecibida = (List<ViewModel>)TempData["listaCheckEnUsuarioSectorSeleccionado"];
+            return View();
+        }
+
+        //public ActionResult EditarUsuarioSector()
+        //{
+        //    List<ViewModel> listaRecibida = (List<ViewModel>)TempData["listaCheckEnUsuarioSectorSeleccionado"];
+        //    return View();
+        //}
+        //public ActionResult ControladorPartialViewRolFiltrado(List<Sroles> listadoDeRoles)
+        //{
+        //    List<ViewModel> listaCheckEnUsuarioSector = new List<ViewModel>();
+        //    string rol_elegido = null;
+
+
+        //    foreach (Sroles item in listadoDeRoles)
+        //    {
+        //        rol_elegido = item.roles.rol;
+        //    }
+
+        //    UsSecRepository UsSecRepo = new UsSecRepository();
+        //    List<UsuariosSectores> listaUsuarioSector = UsSecRepo.BuscarUsuarioSectorPorRol(rol_elegido);
+        //    foreach (var item in listaUsuarioSector)
+        //    {
+        //        ViewModel vModel = new ViewModel(item);
+        //        listaCheckEnUsuarioSector.Add(vModel);
+        //    }
+
+        //    return View("_PartialViewRolFiltrado", new { datoLista = listaCheckEnUsuarioSector, datoRol = rol_elegido});
+        //}
         [HttpPost]
         public ActionResult ControladorPartialViewRolFiltrado(List<ViewModel> listaUsuarioSectorEnviados)
         {
