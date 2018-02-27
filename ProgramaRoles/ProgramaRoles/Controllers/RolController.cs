@@ -42,10 +42,10 @@ namespace ProgramaRoles.Controllers
             }
             TempData["rolSeleccionado"] = rolSeleccionado;
 
-            return RedirectToAction("EditarUsuarioSectorFiltrado");
+            return RedirectToAction("EditarUsuarioSector");
         }
 
-        public ActionResult EditarUsuarioSectorFiltrado(string dni, string nombreUsuario, string nombreSector)
+        public ActionResult EditarUsuarioSector(string dni, string nombreUsuario, string nombreSector)
         {
             string nomsec = null;
             string nomusu = null;
@@ -59,7 +59,7 @@ namespace ProgramaRoles.Controllers
             }
             else
             {
-                return View("EditarUsuarioSectorFiltrado");
+                dni2 = null;
             }
 
             if (nombreUsuario != null && nombreUsuario.Length <= 255)
@@ -68,7 +68,7 @@ namespace ProgramaRoles.Controllers
             }
             else
             {
-                return View("EditarUsuarioSectorFiltrado");
+                nomusu = null;
             }
             if (nombreSector != null && nombreSector.Length <= 100)
             {
@@ -76,7 +76,7 @@ namespace ProgramaRoles.Controllers
             }
             else
             {
-                return View("EditarUsuarioSectorFiltrado");
+                nomsec = null;
             }
 
             List<UsuariosSectores> lista_aux = UsSecRepo.ListarTodosUsuariosSectores(dni2, nomusu, nomsec);
@@ -89,7 +89,7 @@ namespace ProgramaRoles.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditarUsuarioSectorFiltrado(List<ViewModel> lista_VMUsSec)
+        public ActionResult EditarUsuarioSector(List<ViewModel> lista_VMUsSec)
         {
             List<UsuariosSectores> listaUsuarioSector = new List<UsuariosSectores>(); 
             foreach (ViewModel item in lista_VMUsSec)
@@ -104,7 +104,7 @@ namespace ProgramaRoles.Controllers
                     //Falta Implementar
                 }
             }
-            return View("EditarUsuarioSectorFiltrado");
+            return View("EditarUsuarioSector");
         }
 
     }

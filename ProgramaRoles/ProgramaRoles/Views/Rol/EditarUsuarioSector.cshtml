@@ -1,0 +1,98 @@
+﻿@model List<ProgramaRoles.Models.ViewModel>
+@{
+    ViewBag.Title = "EditarUsuarioSector";
+}
+
+<h2>EditarUsuarioSector</h2>
+
+@using (Html.BeginForm("EditarUsuarioSector", "Rol", FormMethod.Post))
+{
+
+    <div style="margin-left:20%;margin-top:30px">
+        <div class="row">
+            <div class="col-xs-3">
+                <label for="celular1">DNI:</label>
+            </div>
+            <div class="col-xs-3">
+                <label for="celular2">Nombre de Usuario:</label>
+            </div>
+            <div class="col-xs-3">
+                <label for="celular3">Nombre de Sector:</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-3">
+                <input type="text" name="dni" class="form-control" placeholder="DNI" />
+            </div>
+            <div class="col-xs-3">
+                <input type="text" name="nombreUsuario" class="form-control" placeholder="Usuario" />
+            </div>
+            <div class="col-xs-3">
+                <input type="text" name="nombreSector" class="form-control" placeholder="Sector" />
+            </div>
+
+        </div>
+    </div>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <input type="submit" value="Filtrar" class="btn btn-primary btn-success btn-block" />
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+
+    <div class="text-center">
+        <br />
+        <a style="text-align:center" class="btn btn-default btn-success" href="~/Rol/ObtenerRoles" title="Volver Atrás">Atrás</a>
+    </div>
+
+
+    <br /><br />
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="container text-center"></th>
+                <th class="col-md-4">DNI</th>
+                <th class="col-md-4">Nombre de Usuario</th>
+                <th class="col-md-4">Nombre de Sector</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <td>@Html.CheckBoxFor(m => m[i].Chked)</td>
+                    <td>@Html.DisplayFor(m => m[i].dni) </td>
+                    <td>@Html.DisplayFor(m => m[i].nombreUsu)</td>
+                    <td>@Html.DisplayFor(m => m[i].nombreSec)</td>
+                </tr>
+
+                @Html.HiddenFor(m => m[i].Id)
+                @Html.HiddenFor(m => m[i].dni)
+                @Html.HiddenFor(m => m[i].nombreUsu)
+                @Html.HiddenFor(m => m[i].nombreSec)
+            }
+
+        </tbody>
+
+    </table>
+
+    <br /><br />
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <a style="text-align:center" class="btn btn-default btn-success" href="~/Rol/EditarUsuarioSector" title="Volver Atrás">Siguiente</a>
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+}

@@ -168,6 +168,7 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Views\Rol\ObtenerRoles.cshtml" />
     <Content Include="Views\UsuariosSectores\Index.cshtml" />
+    <Content Include="Views\Rol\EditarUsuarioSector.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
