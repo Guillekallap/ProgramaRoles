@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using ProgramaRoles.Repository;
+using ProgramaRoles.Utils;
 
 namespace ProgramaRoles.Models
 {
@@ -29,6 +31,16 @@ namespace ProgramaRoles.Models
             this.nombreUsu = usec.nombreUsuario;
             this.dni = usec.dni;
             this.Chked = false;
+        }
+
+        public ViewModel(UsuariosSectores usec, string rolSeleccionado)
+        {
+            UtilsString Utils = new UtilsString();
+            this.Id = usec.id;
+            this.nombreSec = usec.nombreSector;
+            this.nombreUsu = usec.nombreUsuario;
+            this.dni = usec.dni;
+            this.Chked = Utils.VerificarRolEnUsuarioSector(usec,rolSeleccionado);
         }
     }
 }

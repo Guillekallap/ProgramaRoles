@@ -21,9 +21,9 @@ namespace ProgramaRoles.Models
         public string nombreSector { get; set; }
         public int idUsuario { get; set; }
         public string nombreUsuario {get; set;}
-
         public string dni { get; set; }
         public string roles { get; set; }
+
         public UsuariosSectores(UsuariosSectores usec,List<Sroles> RolesAEditar)
         {
             this.id = usec.id;

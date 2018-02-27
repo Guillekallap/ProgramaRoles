@@ -96,7 +96,6 @@ namespace ProgramaRoles.Controllers
                 if (item.Chked)
                 {
                     var i = item.Id;
-                    //ModelState.Clear();
                     usec.Add(UsSecRepo.BuscarUsuarioSector(i));
                 }
             }

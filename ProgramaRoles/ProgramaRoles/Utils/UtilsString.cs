@@ -77,9 +77,8 @@ namespace ProgramaRoles.Utils
             listadoSRoles.AddRange(listadoSRolesFalse);
             listadoSRoles = listadoSRoles.OrderBy(x => x.roles.id).ToList();
             return listadoSRoles;
-
         }
-//A partir de la Lista Sroles creo una lista de string con los roles modificados, luego la convierto a string para agregarla como atributo a la propiedad roles de UsuariosSectores.
+        //A partir de la Lista Sroles creo una lista de string con los roles modificados, luego la convierto a string para agregarla como atributo a la propiedad roles de UsuariosSectores.
         public string TraducirRolesAString(List<Sroles> RolesAEditar)
         {
            
@@ -95,6 +94,28 @@ namespace ProgramaRoles.Utils
             return resultado;
         }
 
+        public bool VerificarRolEnUsuarioSector(UsuariosSectores usSec, string rolSeleccionado)
+        {
+            bool resultado = false;
+            List<string> listaRolesUsuarioSector = usSec.roles.Split(',').ToList();
+            if (listaRolesUsuarioSector.Count() == 1 && listaRolesUsuarioSector.First() == "")
+            {
+                resultado = false;
+            }
+            else {
+                foreach (string rol in listaRolesUsuarioSector)
+                {
+                    if (rol.Equals(rolSeleccionado))
+                    {
+                        resultado = true;
+                    }
+                }
+
+            }
+            return (resultado);
+
+
+        }
 
 
     }

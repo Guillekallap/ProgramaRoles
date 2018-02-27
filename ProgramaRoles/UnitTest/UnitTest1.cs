@@ -75,5 +75,17 @@ namespace UnitTest
             Assert.IsNotNull(Lista_SRoles);
         }
 
+        [TestMethod]
+        public void VerificarVM()
+        {
+            string rolSeleccionado = "ROLE_USUARIOS_ADMINISTRADOR";
+            UtilsString Utils = new UtilsString();
+            UsSecRepository UsSec = new UsSecRepository();
+            UsuariosSectores UsuarioSec = UsSec.BuscarUsuarioSector(2011);
+            ViewModel vm = new ViewModel(UsuarioSec,rolSeleccionado);
+
+            Assert.IsNotNull(vm);
+        }
+
     }
 }
