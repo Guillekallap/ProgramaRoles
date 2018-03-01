@@ -18,6 +18,12 @@ namespace ProgramaRoles
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "UsuariosSectores", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "EditarUsuarioSector",
+                url: "{controller}/{action}/{ddni}/{nnombreUsuario}/{nnombreSector}",
+                defaults: new { controller = "Rol" , action = "EditarUsuarioSector", ddni = UrlParameter.Optional, nnombreUsuario = UrlParameter.Optional, nnombreSector = UrlParameter.Optional }
+            );
         }
     }
 }

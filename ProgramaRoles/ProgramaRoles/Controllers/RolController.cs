@@ -21,7 +21,7 @@ namespace ProgramaRoles.Controllers
             List<Sroles> listadoDeSRoles = new List<Sroles>();
             foreach (Roles rol in listadoDeRoles)
             {
-                Sroles rolSel = new Sroles(rol,false);
+                Sroles rolSel = new Sroles(rol, false);
                 listadoDeSRoles.Add(rolSel);
             }
 
@@ -43,6 +43,13 @@ namespace ProgramaRoles.Controllers
             TempData["rolSeleccionado"] = rolSeleccionado;
 
             return RedirectToAction("EditarUsuarioSector");
+        }
+
+
+        public ActionResult PasarFiltros(string ddni, string nnombreUsuario, string nnombreSector)
+        {
+            var url = Url.Action("EditarUsuarioSector", "Rol", new { dni = ddni, nombreUsuario = nnombreUsuario, nombreSector = nnombreSector });
+            return Redirect(url);
         }
 
         public ActionResult EditarUsuarioSector(string dni, string nombreUsuario, string nombreSector)
