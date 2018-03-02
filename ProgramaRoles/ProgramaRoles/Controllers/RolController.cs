@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using ProgramaRoles.Models;
 using ProgramaRoles.Utils;
 using ProgramaRoles.Repository;
+using System.Text.RegularExpressions;
 
 
 namespace ProgramaRoles.Controllers
@@ -40,56 +41,54 @@ namespace ProgramaRoles.Controllers
                     rolSeleccionado = item.roles;
                 }
             }
-            TempData["rolSeleccionado"] = rolSeleccionado;
 
-            return RedirectToAction("EditarUsuarioSector");
+            return RedirectToAction("EditarUsuarioSector","Rol",new { rolSeleccionado.rol });
         }
 
 
-        public ActionResult PasarFiltros(string ddni, string nnombreUsuario, string nnombreSector)
+        public ActionResult PasarFiltros(string rrol, string ddatosUsuarios)
         {
-            var url = Url.Action("EditarUsuarioSector", "Rol", new { dni = ddni, nombreUsuario = nnombreUsuario, nombreSector = nnombreSector });
+            var url = Url.Action("EditarUsuarioSector", "Rol", new { datosUsuarios = ddatosUsuarios, rol=rrol});
             return Redirect(url);
         }
 
-        public ActionResult EditarUsuarioSector(string dni, string nombreUsuario, string nombreSector)
+        public ActionResult EditarUsuarioSector(string datosUsuarios, string rol)
         {
+            ViewBag.rol = rol;
             string nomsec = null;
             string nomusu = null;
-            string dni2 = null;
-            Roles rolSeleccionado = (Roles)TempData["rolSeleccionado"];
+            string dni = null;
+            string[] datos;
+            string[] datosUsu;
+            List<string> datosUUsu=new List<string>();
+
+
             List<ViewModel> lista_VMUsSec = new List<ViewModel>();
 
-            if (dni != null && dni.Length <= 8)
+            if (datosUsuarios != null)
             {
-                dni2 = dni;
-            }
-            else
-            {
-                dni2 = null;
+                datos = datosUsuarios.Split(' ');
+                foreach (var i in datos)
+                {
+                    datosUsu = i.Split('=');
+                    foreach (var j in datosUsu)
+                        datosUUsu.Add(j);
+                }
+
+                if (datosUUsu[1].Length <= 8)       /* DNI */
+                    dni = datosUUsu[1];
+
+                if (datosUUsu[3].Length <= 255)     /* USUARIO */
+                    nomusu = datosUUsu[3];
+
+                if (datosUUsu[5].Length <= 100)     /* SECTOR */
+                    nomsec = datosUUsu[5];
             }
 
-            if (nombreUsuario != null && nombreUsuario.Length <= 255)
-            {
-                nomusu = nombreUsuario;
-            }
-            else
-            {
-                nomusu = null;
-            }
-            if (nombreSector != null && nombreSector.Length <= 100)
-            {
-                nomsec = nombreSector;
-            }
-            else
-            {
-                nomsec = null;
-            }
-
-            List<UsuariosSectores> lista_aux = UsSecRepo.ListarTodosUsuariosSectores(dni2, nomusu, nomsec);
+            List<UsuariosSectores> lista_aux = UsSecRepo.ListarTodosUsuariosSectores(dni, nomusu, nomsec);
             foreach (var item in lista_aux)
             {
-                ViewModel vModel = new ViewModel(item, rolSeleccionado.rol);
+                ViewModel vModel = new ViewModel(item, rol);
                 lista_VMUsSec.Add(vModel);
             }
             return View(lista_VMUsSec);
