@@ -33,6 +33,13 @@ namespace ProgramaRoles.Models
             this.roles =Auxiliar.TraducirRolesAString(RolesAEditar);
         }
 
+        public UsuariosSectores(UsuariosSectores usec,string rolesArreglado)
+        {
+            this.id = usec.id;
+            this.idSector = usec.idSector;
+            this.idUsuario = usec.idUsuario;
+            this.roles = rolesArreglado;
+        }
     }
 
      

@@ -95,22 +95,11 @@ namespace ProgramaRoles.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditarUsuarioSector(List<ViewModel> lista_VMUsSec)
+        public ActionResult EditarUsuarioSector(List<ViewModel> lista_VMUsSec, string rolElegido)
         {
-            List<UsuariosSectores> listaUsuarioSector = new List<UsuariosSectores>(); 
-            foreach (ViewModel item in lista_VMUsSec)
-            {
-                if (item.Chked)
-                {
-                    var i = item.Id;
-                    listaUsuarioSector.Add(UsSecRepo.BuscarUsuarioSector(i));
-                }
-                else
-                {
-                    //Falta Implementar
-                }
-            }
-            return View("EditarUsuarioSector");
+            UtilsString utils = new UtilsString();
+            utils.ModificarDatosRolSegunChequeos(lista_VMUsSec,rolElegido);
+            return View("EditarUsuarioSector",rolElegido);
         }
 
     }

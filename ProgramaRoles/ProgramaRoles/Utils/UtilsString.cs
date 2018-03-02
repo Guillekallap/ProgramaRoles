@@ -102,7 +102,8 @@ namespace ProgramaRoles.Utils
             {
                 resultado = false;
             }
-            else {
+            else
+            {
                 foreach (string rol in listaRolesUsuarioSector)
                 {
                     if (rol.Equals(rolSeleccionado))
@@ -113,10 +114,106 @@ namespace ProgramaRoles.Utils
 
             }
             return (resultado);
-
-
         }
 
+        public void ModificarDatosRolSegunChequeos(List<ViewModel> lista_VMUsSec, string rolElegido)
+        {
+            UsSecRepository UsSecRepo = new UsSecRepository();
+            List<string> roles = new List<string>();
+            List<string> rolesOrdenados = new List<string>();
 
+            List<Roles> listaRoles = new List<Roles>();
+            foreach (ViewModel item in lista_VMUsSec)
+            {
+                roles = item.roles.Split(',').ToList();
+                //Ver si está en vacío la lista
+                int i = item.Id;
+
+                int contador=0;
+                //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
+                if (item.Chked)
+                {
+                    if (roles.Count() == 1 && roles.First() == null) {
+                        string rolesArreglado = rolElegido;
+                        UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
+                        UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                    }
+                    else { 
+                        foreach (string rol in roles)
+                        {                            
+                            if (!(rolElegido.Equals(rol)) && contador!=-1)
+                            {
+                                contador++;
+                                if (contador == roles.Count())
+                                {
+                                    foreach (string rol2 in roles)
+                                    {
+                                        Roles rolClase = UsSecRepo.BuscarRol(rol2);
+                                        listaRoles.Add(rolClase);
+                                    }
+                                    listaRoles = listaRoles.OrderBy(x => x.id).ToList();
+                                    foreach (Roles rolNombre in listaRoles)
+                                    {
+                                        //string rolNombreTemporal = rolNombre.rol;
+                                        rolesOrdenados.Add(rolNombre.rol);
+                                    }
+                                    string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
+
+                                    UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
+                                    UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                                    listaRoles = null;
+                                    rolesOrdenados = null;
+                                }
+                            }
+                            else
+                            {
+                                contador = -1;
+                            }
+
+                        }
+                    }
+                }
+                //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
+                else
+                {
+                    //if (roles.Count() == 1 && roles.First() == "")
+                    //{
+                    //    string rolesArreglado = "";
+                    //    UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
+                    //    UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                    //}
+                    foreach (string rol in roles)
+                    {
+                       if ((rolElegido.Equals(rol)) && contador!=-1)
+                       {
+                                contador++;
+                                if (contador == roles.Count())
+                                {
+                                        foreach (string rol2 in roles)
+                                        {
+                                            Roles rolClase = UsSecRepo.BuscarRol(rol2);
+                                            listaRoles.Add(rolClase);
+                                        }
+                                        listaRoles = listaRoles.OrderBy(x => x.id).ToList();
+                                        foreach (Roles rolNombre in listaRoles)
+                                        {
+                                            //string rolNombreTemporal = rolNombre.rol;
+                                            rolesOrdenados.Add(rolNombre.rol);
+                                        }
+                                        rolesOrdenados.Remove(rol);                        
+                                        string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
+                                        UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
+                                        UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                                 }
+                        }
+                        else
+                        {
+                            contador = -1;
+                        }
+
+                    }
+                }
+            }
+        }
     }
 }

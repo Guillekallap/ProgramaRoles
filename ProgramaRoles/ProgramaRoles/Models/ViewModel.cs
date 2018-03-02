@@ -21,6 +21,7 @@ namespace ProgramaRoles.Models
 
         public string dni { get; set; }
 
+        public string roles { get; set; }
         public bool Chked { get; set; }
 
         
@@ -40,6 +41,7 @@ namespace ProgramaRoles.Models
             this.nombreSec = usec.nombreSector;
             this.nombreUsu = usec.nombreUsuario;
             this.dni = usec.dni;
+            this.roles = usec.roles;
             this.Chked = Utils.VerificarRolEnUsuarioSector(usec,rolSeleccionado);
         }
     }

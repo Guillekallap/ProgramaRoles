@@ -87,5 +87,23 @@ namespace UnitTest
             Assert.IsNotNull(vm);
         }
 
+        [TestMethod]
+        public void VerificarVMGuardarDatos()
+        {
+            string rolSeleccionado = "ROLE_USUARIOS_ADMINISTRADOR";
+            List<ViewModel> lista = new List<ViewModel>();
+            UtilsString Utils = new UtilsString();
+            UsSecRepository UsSec = new UsSecRepository();
+            UsuariosSectores UsuarioSec = UsSec.BuscarUsuarioSector(2011);
+            ViewModel vm = new ViewModel(UsuarioSec, rolSeleccionado);
+            List<UsuariosSectores> aux = UsSec.ListarTodosUsuariosSectores("39","juan",null);
+            foreach (var item in aux)
+            {
+                ViewModel vModel = new ViewModel(item,rolSeleccionado);
+                lista.Add(vModel);
+            }
+            Utils.ModificarDatosRolSegunChequeos(lista, rolSeleccionado);
+            Assert.IsNotNull(vm);
+        }
     }
 }
