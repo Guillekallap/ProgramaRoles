@@ -16,11 +16,8 @@ namespace ProgramaRoles.Models
 
         public int Id { get; set; }
         public string nombreSec { get; set; }
-
         public string nombreUsu { get; set; }
-
         public string dni { get; set; }
-
         public string roles { get; set; }
         public bool Chked { get; set; }
 

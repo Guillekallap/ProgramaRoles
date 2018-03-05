@@ -41,6 +41,7 @@ namespace ProgramaRoles.Controllers
                     rolSeleccionado = item.roles;
                 }
             }
+            ViewBag.listadoRoles = UsSecRepo.ListarTodosRoles();
 
             return RedirectToAction("EditarUsuarioSector","Rol",new { rolSeleccionado.rol });
         }
@@ -61,8 +62,6 @@ namespace ProgramaRoles.Controllers
             string[] datos;
             string[] datosUsu;
             List<string> datosUUsu=new List<string>();
-
-
             List<ViewModel> lista_VMUsSec = new List<ViewModel>();
 
             if (datosUsuarios != null)
