@@ -168,7 +168,7 @@ namespace ProgramaRoles.Repository
             }
         }
 
-        public void ModificarRolesUsuarioSector(int id, int idSector, int idUsuario, string roles)
+        public void ModificarRolesUsuarioSector(int id,/* int idSector, int idUsuario*/ string roles)
         {
                 connection();
                 SqlCommand com = new SqlCommand("ModificarRolesUsuarioSector", con);
@@ -179,9 +179,9 @@ namespace ProgramaRoles.Repository
                 
                 com.Parameters.AddWithValue("@id", id);
 
-                com.Parameters.AddWithValue("@idSector", idSector);
+                //com.Parameters.AddWithValue("@idSector", idSector);
 
-                com.Parameters.AddWithValue("@idUsuario", idUsuario);
+                //com.Parameters.AddWithValue("@idUsuario", idUsuario);
 
                 com.Parameters.AddWithValue("@roles", roles);
 

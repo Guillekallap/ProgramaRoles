@@ -121,53 +121,51 @@ namespace ProgramaRoles.Utils
             UsSecRepository UsSecRepo = new UsSecRepository();
             List<string> roles = new List<string>();
             List<string> rolesOrdenados = new List<string>();
+            List<Roles> listaRoles = UsSecRepo.ListarTodosRoles();
+            List<Roles> listaRolesAObtener = new List<Roles>();
 
-            List<Roles> listaRoles = new List<Roles>();
             foreach (ViewModel item in lista_VMUsSec)
             {
                 roles = item.roles.Split(',').ToList();
                 //Ver si está en vacío la lista
-                int i = item.Id;
 
                 int contador=0;
+                bool encontrado=false;
                 //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
                 if (item.Chked)
                 {
-                    if (roles.Count() == 1 && roles.First() == null) {
+                    if (roles.Count() == 1 && roles.First() ==""){
                         string rolesArreglado = rolElegido;
-                        UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
-                        UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                        UsSecRepo.ModificarRolesUsuarioSector(item.Id,rolesArreglado);
                     }
                     else { 
                         foreach (string rol in roles)
                         {                            
-                            if (!(rolElegido.Equals(rol)) && contador!=-1)
+                            if (!(rolElegido.Equals(rol)) && (encontrado == false))
                             {
                                 contador++;
                                 if (contador == roles.Count())
                                 {
                                     foreach (string rol2 in roles)
                                     {
-                                        Roles rolClase = UsSecRepo.BuscarRol(rol2);
-                                        listaRoles.Add(rolClase);
+                                        Roles rolClase = listaRoles.Find(x => x.rol == rol2);
+                                        listaRolesAObtener.Add(rolClase);
+                                        
                                     }
-                                    listaRoles = listaRoles.OrderBy(x => x.id).ToList();
-                                    foreach (Roles rolNombre in listaRoles)
+                                    listaRolesAObtener = listaRolesAObtener.OrderBy(x => x.id).ToList();
+                                    foreach (Roles rolNombre in listaRolesAObtener)
                                     {
-                                        //string rolNombreTemporal = rolNombre.rol;
                                         rolesOrdenados.Add(rolNombre.rol);
                                     }
                                     string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
-
-                                    UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
-                                    UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
-                                    listaRoles = null;
-                                    rolesOrdenados = null;
+                                    UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
+                                    listaRolesAObtener.Clear();
+                                    rolesOrdenados.Clear();
                                 }
                             }
                             else
                             {
-                                contador = -1;
+                                encontrado = true;
                             }
 
                         }
@@ -176,42 +174,26 @@ namespace ProgramaRoles.Utils
                 //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
                 else
                 {
-                    //if (roles.Count() == 1 && roles.First() == "")
-                    //{
-                    //    string rolesArreglado = "";
-                    //    UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
-                    //    UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
-                    //}
                     foreach (string rol in roles)
                     {
-                       if ((rolElegido.Equals(rol)) && contador!=-1)
+                       if ((rolElegido.Equals(rol)))
                        {
-                                contador++;
-                                if (contador == roles.Count())
-                                {
                                         foreach (string rol2 in roles)
                                         {
-                                            Roles rolClase = UsSecRepo.BuscarRol(rol2);
-                                            listaRoles.Add(rolClase);
+                                            Roles rolClase = listaRoles.Find(x => x.rol == rol2);
+                                            listaRolesAObtener.Add(rolClase);
                                         }
-                                        listaRoles = listaRoles.OrderBy(x => x.id).ToList();
-                                        foreach (Roles rolNombre in listaRoles)
+                                        listaRolesAObtener.Remove(listaRoles.Find(x => x.rol == rolElegido));
+                                        listaRolesAObtener = listaRolesAObtener.OrderBy(x => x.id).ToList();
+                                        foreach (Roles rolNombre in listaRolesAObtener)
                                         {
-                                            //string rolNombreTemporal = rolNombre.rol;
                                             rolesOrdenados.Add(rolNombre.rol);
-                                        }
-                                        rolesOrdenados.Remove(rol);                        
+                                        }                        
                                         string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
-                                        UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(i), rolesArreglado);
-                                        UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
-                                 }
+                                        UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
                         }
-                        else
-                        {
-                            contador = -1;
-                        }
-
                     }
+
                 }
             }
         }

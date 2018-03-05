@@ -125,7 +125,7 @@ namespace ProgramaRoles.Controllers
                 foreach (ViewMuestra item in listaVMU)
                 {
                     UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(item.id), item.nombreRoles);
-                    UsSecRepo.ModificarRolesUsuarioSector(usuariosector.id, usuariosector.idSector, usuariosector.idUsuario, usuariosector.roles);
+                    UsSecRepo.ModificarRolesUsuarioSector(item.id, usuariosector.roles);
                 }
 
                 return RedirectToAction("ObtenerUsuariosSectores");
