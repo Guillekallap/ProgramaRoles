@@ -56,6 +56,7 @@ namespace ProgramaRoles.Controllers
         public ActionResult EditarUsuarioSector(string datosUsuarios, string rol)
         {
             ViewBag.rol = rol;
+            ViewBag.listadoRoles = UsSecRepo.ListarTodosRoles();
             string nomsec = null;
             string nomusu = null;
             string dni = null;
