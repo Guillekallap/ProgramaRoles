@@ -183,7 +183,7 @@ namespace ProgramaRoles.Repository
 
                 //com.Parameters.AddWithValue("@idUsuario", idUsuario);
 
-                com.Parameters.AddWithValue("@roles", roles);
+                com.Parameters.AddWithValue("@roles", string.IsNullOrEmpty(roles) ? (object)DBNull.Value : roles);
 
             try
             {

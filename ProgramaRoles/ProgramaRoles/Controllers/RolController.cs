@@ -99,7 +99,7 @@ namespace ProgramaRoles.Controllers
         {
             UtilsString utils = new UtilsString();
             utils.ModificarDatosRolSegunChequeos(lista_VMUsSec,rolElegido);
-            return View("EditarUsuarioSector",rolElegido);
+            return RedirectToAction("Index","UsuariosSectores");
         }
 
     }

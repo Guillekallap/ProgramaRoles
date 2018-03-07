@@ -126,7 +126,11 @@ namespace ProgramaRoles.Utils
 
             foreach (ViewModel item in lista_VMUsSec)
             {
-                roles = item.roles.Split(',').ToList();
+                if (item.roles == null)
+                    roles.Add(item.roles);
+                else {
+                    roles = item.roles.Split(',').ToList();
+                }
                 //Ver si está en vacío la lista
 
                 int contador=0;
@@ -134,7 +138,7 @@ namespace ProgramaRoles.Utils
                 //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
                 if (item.Chked)
                 {
-                    if (roles.Count() == 1 && roles.First() ==""){
+                    if (roles.Count() == 1 && roles.First() ==null){
                         string rolesArreglado = rolElegido;
                         UsSecRepo.ModificarRolesUsuarioSector(item.Id,rolesArreglado);
                     }
@@ -144,14 +148,19 @@ namespace ProgramaRoles.Utils
                             if (!(rolElegido.Equals(rol)) && (encontrado == false))
                             {
                                 contador++;
+
                                 if (contador == roles.Count())
                                 {
+                                    //Se Añade el Rol elegido a la lista.
+                                    listaRolesAObtener.Add(listaRoles.Find(x => x.rol == rolElegido));
+                                    //Se Cargan los otros Roles que poseía el UsuarioSector en el string. 
                                     foreach (string rol2 in roles)
                                     {
-                                        Roles rolClase = listaRoles.Find(x => x.rol == rol2);
-                                        listaRolesAObtener.Add(rolClase);
-                                        
+                                        Roles rolClaseTemp = listaRoles.Find(x => x.rol == rol2);
+                                        listaRolesAObtener.Add(rolClaseTemp);                                        
                                     }
+                                    
+
                                     listaRolesAObtener = listaRolesAObtener.OrderBy(x => x.id).ToList();
                                     foreach (Roles rolNombre in listaRolesAObtener)
                                     {
@@ -190,6 +199,7 @@ namespace ProgramaRoles.Utils
                                             rolesOrdenados.Add(rolNombre.rol);
                                         }                        
                                         string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
+                                        if (rolesArreglado == "") { rolesArreglado = null; }
                                         UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
                         }
                     }
