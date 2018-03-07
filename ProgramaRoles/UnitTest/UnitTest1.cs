@@ -96,6 +96,7 @@ namespace UnitTest
             UsSecRepository UsSec = new UsSecRepository();
             UsuariosSectores UsuarioSec = UsSec.BuscarUsuarioSector(2011);
             ViewModel vm = new ViewModel(UsuarioSec, rolSeleccionado);
+            List<UsuariosSectores 
             List<UsuariosSectores> aux = UsSec.ListarTodosUsuariosSectores("39","juan",null);
             foreach (var item in aux)
             {
@@ -103,7 +104,8 @@ namespace UnitTest
                 lista.Add(vModel);
             }
             Utils.ModificarDatosRolSegunChequeos(lista, rolSeleccionado);
-            Assert.IsNotNull(vm);
+            
+            Assert.IsTrue();
         }
     }
 }
