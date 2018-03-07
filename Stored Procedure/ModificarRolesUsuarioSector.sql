@@ -10,13 +10,11 @@ GO
 
 CREATE procedure [dbo].[ModificarRolesUsuarioSector](
 	@id int,
-	@idSector int,
-	@idUsuario int,
 	@roles varchar(MAX)
 )
 AS
 BEGIN 
-	update Usuario.UsuariosSectores set roles= @roles where id= @id and idSector = @idSector and idUsuario=@idUsuario
+	update Usuario.UsuariosSectores set roles= @roles where id= @id
 END 
 GO
 
