@@ -124,88 +124,100 @@ namespace ProgramaRoles.Utils
             List<Roles> listaRoles = UsSecRepo.ListarTodosRoles();
             List<Roles> listaRolesAObtener = new List<Roles>();
 
-            foreach (ViewModel item in lista_VMUsSec)
+            try
             {
-                if (item.roles == null)
-                    roles.Add(item.roles);
-                else {
-                    roles = item.roles.Split(',').ToList();
-                }
-                //Ver si está en vacío la lista
 
-                int contador=0;
-                bool encontrado=false;
-                //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
-                if (item.Chked)
+                foreach (ViewModel item in lista_VMUsSec)
                 {
-                    if (roles.Count() == 1 && roles.First() ==null){
-                        string rolesArreglado = rolElegido;
-                        UsSecRepo.ModificarRolesUsuarioSector(item.Id,rolesArreglado);
-                    }
-                    else { 
-                        foreach (string rol in roles)
-                        {                            
-                            if (!(rolElegido.Equals(rol)) && (encontrado == false))
-                            {
-                                contador++;
-
-                                if (contador == roles.Count())
-                                {
-                                    //Se Añade el Rol elegido a la lista.
-                                    listaRolesAObtener.Add(listaRoles.Find(x => x.rol == rolElegido));
-                                    //Se Cargan los otros Roles que poseía el UsuarioSector en el string. 
-                                    foreach (string rol2 in roles)
-                                    {
-                                        Roles rolClaseTemp = listaRoles.Find(x => x.rol == rol2);
-                                        listaRolesAObtener.Add(rolClaseTemp);                                        
-                                    }
-                                    
-
-                                    listaRolesAObtener = listaRolesAObtener.OrderBy(x => x.id).ToList();
-                                    foreach (Roles rolNombre in listaRolesAObtener)
-                                    {
-                                        rolesOrdenados.Add(rolNombre.rol);
-                                    }
-                                    string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
-                                    UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
-                                    listaRolesAObtener.Clear();
-                                    rolesOrdenados.Clear();
-                                }
-                            }
-                            else
-                            {
-                                encontrado = true;
-                            }
-
-                        }
-                    }
-                }
-                //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
-                else
-                {
-                    foreach (string rol in roles)
+                    if (item.roles == null)
+                        roles.Add(item.roles);
+                    else
                     {
-                       if ((rolElegido.Equals(rol)))
-                       {
+                        roles = item.roles.Split(',').ToList();
+                    }
+                    //Ver si está en vacío la lista
+
+                    int contador = 0;
+                    bool encontrado = false;
+                    //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
+                    if (item.Chked)
+                    {
+                        if (roles.Count() == 1 && roles.First() == null)
+                        {
+                            string rolesArreglado = rolElegido;
+                            UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
+                        }
+                        else
+                        {
+                            foreach (string rol in roles)
+                            {
+                                if (!(rolElegido.Equals(rol)) && (encontrado == false))
+                                {
+                                    contador++;
+
+                                    if (contador == roles.Count())
+                                    {
+                                        //Se Añade el Rol elegido a la lista.
+                                        listaRolesAObtener.Add(listaRoles.Find(x => x.rol == rolElegido));
+                                        //Se Cargan los otros Roles que poseía el UsuarioSector en el string. 
                                         foreach (string rol2 in roles)
                                         {
-                                            Roles rolClase = listaRoles.Find(x => x.rol == rol2);
-                                            listaRolesAObtener.Add(rolClase);
+                                            Roles rolClaseTemp = listaRoles.Find(x => x.rol == rol2);
+                                            listaRolesAObtener.Add(rolClaseTemp);
                                         }
-                                        listaRolesAObtener.Remove(listaRoles.Find(x => x.rol == rolElegido));
+
+
                                         listaRolesAObtener = listaRolesAObtener.OrderBy(x => x.id).ToList();
                                         foreach (Roles rolNombre in listaRolesAObtener)
                                         {
                                             rolesOrdenados.Add(rolNombre.rol);
-                                        }                        
+                                        }
                                         string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
-                                        if (rolesArreglado == "") { rolesArreglado = null; }
                                         UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
+                                        listaRolesAObtener.Clear();
+                                        rolesOrdenados.Clear();
+                                    }
+                                }
+                                else
+                                {
+                                    encontrado = true;
+                                }
+
+                            }
                         }
                     }
+                    //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
+                    else
+                    {
+                        foreach (string rol in roles)
+                        {
+                            if ((rolElegido.Equals(rol)))
+                            {
+                                foreach (string rol2 in roles)
+                                {
+                                    Roles rolClase = listaRoles.Find(x => x.rol == rol2);
+                                    listaRolesAObtener.Add(rolClase);
+                                }
+                                listaRolesAObtener.Remove(listaRoles.Find(x => x.rol == rolElegido));
+                                listaRolesAObtener = listaRolesAObtener.OrderBy(x => x.id).ToList();
+                                foreach (Roles rolNombre in listaRolesAObtener)
+                                {
+                                    rolesOrdenados.Add(rolNombre.rol);
+                                }
+                                string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
+                                if (rolesArreglado == "") { rolesArreglado = null; }
+                                UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
+                            }
+                        }
 
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
         }
     }
 }
