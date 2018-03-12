@@ -3,6 +3,8 @@
     ViewBag.Title = "PartialList";
 }
 
+<script src="~/Scripts/tbody.hover.action.js"></script>
+
 @using (Html.BeginForm("ControladorPartialView", "UsuariosSectores", FormMethod.Post))
 {
 
@@ -15,7 +17,7 @@
                 <th class="col-md-4">Nombre de Sector</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="redColorHover">
             @for (int i = 0; i < Model.Count(); i++)
             {
                 <tr>

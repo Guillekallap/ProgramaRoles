@@ -5,6 +5,8 @@
     ViewBag.Title = "ObtenerRoles";
 }
 
+<script src="~/Scripts/tbody.hover.action.js"></script>
+
 <h2>ObtenerRoles</h2>
 
 @using (Html.BeginForm("ObtenerRoles", "Rol", FormMethod.Post))
@@ -17,7 +19,7 @@
                 <th style="padding-left:1%">Nombre de Roles</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="redColorHover">
             @for (int i = 0; i < Model.Count(); i++)
             {
                 <tr>
@@ -49,19 +51,3 @@
         <a style="text-align:center" class="btn btn-default btn-success" href="~/UsuariosSectores/Index" title="Volver Atrás">Atrás</a>
     </div>
 }
-
-<script>
-    $(document).ready(function () {
-
-        // Evento que se ejecuta al pulsar en un checkbox
-        $("input[type=checkbox]").change(function () {
-
-            // Cogemos el elemento actual
-            var elemento = this;
-
-            $("input[type=checkbox]").prop('checked', false);
-            $(elemento).prop('checked', true);
-
-        });
-    });
-</script>

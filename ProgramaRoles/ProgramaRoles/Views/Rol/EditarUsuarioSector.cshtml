@@ -1,9 +1,12 @@
 ﻿@model List<ProgramaRoles.Models.ViewModel>
 @{
+    /**/
+
     ViewBag.Title = "EditarUsuarioSector";
     string rol = ViewBag.rol;
 }
 
+<script src="~/Scripts/tbody.hover.action.js"></script>
 
 
 @using (Html.BeginForm("EditarUsuarioSector", "Rol", FormMethod.Post))
@@ -44,12 +47,21 @@
         <div class="col-xs-4"></div>
 
         <div class="col-xs-2 col-xs-offset-1">
-            <a id="PasoFiltro" style="text-align:center" class="btn btn-default btn-success" value="@rol" title="Filtrar">Filtrar</a>
-
+            <a id="PasoFiltro" style="text-align:center" class="btn btn-default btn-success btn-block" value="@rol" title="Filtrar">Filtrar</a>
         </div>
 
         <div class="col-xs-4 col-xs-offset-1"></div>
     </div>
+
+    @*<div class="row">
+            <div class="col-xs-4"></div>
+
+            <div class="col-xs-2 col-xs-offset-1">
+                <input type="submit" value="Filtrar" class="btn btn-primary btn-success btn-block" />
+            </div>
+
+            <div class="col-xs-4 col-xs-offset-1"></div>
+        </div>*@
 
     <div class="text-center">
         <br />
@@ -71,27 +83,23 @@
         <tbody id="redColorHover">
             @for (int i = 0; i < Model.Count(); i++)
             {
-                <tr>
+                <tr title="Lista de Roles" data-html="true"
+                    data-toggle="popover" data-trigger="hover"
+                    data-content="">
                     <td>@Html.CheckBoxFor(m => m[i].Chked)</td>
                     <td>@Html.DisplayFor(m => m[i].dni)</td>
                     <td>@Html.DisplayFor(m => m[i].nombreUsu)</td>
-                    <td title="Lista de Roles" data-html="true"
-                        data-toggle="popover" data-trigger="hover"
-                        data-content="Some content jlkfsañjkf <br> Hola como va dflkajsñlfkj ">
-                        @Html.DisplayFor(m => m[i].nombreSec)
-                    </td>
-                    <td id="listaRoles">@Html.DisplayFor(m => m[i].roles)</td>
-                </tr>
+                    <td>@Html.DisplayFor(m => m[i].nombreSec)</td>
 
-                @Html.HiddenFor(m => m[i].Id)
-                @Html.HiddenFor(m => m[i].dni)
-                @Html.HiddenFor(m => m[i].nombreUsu)
-                @Html.HiddenFor(m => m[i].nombreSec)
-                @Html.HiddenFor(m => m[i].roles)
+                    @Html.HiddenFor(m => m[i].Id)
+                    @Html.HiddenFor(m => m[i].dni)
+                    @Html.HiddenFor(m => m[i].nombreUsu)
+                    @Html.HiddenFor(m => m[i].nombreSec)
+                    @Html.HiddenFor(m => m[i].roles)
+                </tr>
             }
 
         </tbody>
-
     </table>
 
     <br /><br />
@@ -101,106 +109,33 @@
 
         <div class="col-xs-2 col-xs-offset-1">
             @* <a style="text-align:center" class="btn btn-default btn-success" href="~/Rol/EditarUsuarioSector" title="Siguiente">Siguiente</a>*@
-            <input type="submit" name="Grabar" value="Grabar" class="btn btn-default btn-success" />
+            <input type="submit" name="Grabar" value="Grabar" class="btn btn-default btn-success btn-block" />
         </div>
 
         <div class="col-xs-4 col-xs-offset-1"></div>
     </div>
+
 }
 
 <script>
 
-    @{
-        List<ProgramaRoles.Models.Roles> lstRoles = ViewBag.listadoRoles;
-        List<ProgramaRoles.Models.ViewModel> lstChkdRoles = Model;
-    }
+        var mifiltro = document.getElementById('PasoFiltro');
 
+        mifiltro.onclick = function (e) {
+            var dni = "";
+            var usuario = "";
+            var sector = "";
+            var rolselecc = "";
 
-    var jsonObjlstRoles = @Html.Raw(Json.Encode(lstRoles));
-    var roles = [];
+            dni = document.getElementById("DNI").value;
+            usuario = document.getElementById("Usuario").value;
+            sector = document.getElementById("Sector").value;
 
+            datosUsers = "dni=" + dni + " user=" + usuario + " sec=" + sector;
+            rolselecc = document.getElementById("mirol").innerText;
 
-    for (i = 0; i < jsonObjlstRoles.length; i++)
-    {
-        roles.push(jsonObjlstRoles[i].rol);
-    }
+            mifiltro.href = "/Rol/PasarFiltros/" + rolselecc + "/" + datosUsers;
 
-
-    /*var jsonObjlstChkdRoles =*/ /*Html.Raw(Json.Encode(lstChkdRoles));*/
-
-
-    /*var f = [];
-    var cant = 2;
-    for (var i = 0; i < cant; i++) {
-        f.push([]);
-        for (var j = 0; j < 2; j++) {
-            f[i].push(i*cant+j);
-        }
-        debugger;
-    }*/
-
-
-    /*chkedRolesUsu.push(["a", "b", "c"]);
-    chkedRolesUsu.push(["x", "y", "z"]);
-
-    debugger;
-    alert(chkedRolesUsu[0][0]); // a
-    alert(chkedRolesUsu[0][1]); // b
-    alert(chkedRolesUsu[0][2]); // c
-    alert(chkedRolesUsu[1][0]); // x*/
-
-    /*for (i = 0; i < jsonObjlstChkdRoles.length; i++)
-    {
-        chkedRolesUsu.push(jsonObjlstChkdRoles[i].Id);
-    }
-    debugger;*/
-
-    var mifiltro = document.getElementById('PasoFiltro')
-
-    mifiltro.onclick = function (e) {
-        var dni = "";
-        var usuario = "";
-        var sector = "";
-        var rolselecc = "";
-
-        dni = document.getElementById("DNI").value;
-        usuario = document.getElementById("Usuario").value;
-        sector = document.getElementById("Sector").value;
-
-        datosUsers = "dni=" + dni + " user=" + usuario + " sec=" + sector;
-        rolselecc = document.getElementById("mirol").innerText;
-
-         mifiltro.href = "/Rol/PasarFiltros/" + rolselecc + "/" + datosUsers;
-
-    };
-
-
-    var tablaHover = document.getElementById('redColorHover')
-
-    tablaHover.onmousemove = function (e) {
-
-        var colOcultaValue;
-        var colPopover;
-        var chkedRolesUsu;
-        e.target.parentNode.style.backgroundColor = "#ffdddd"
-
-        //colOcultaValue = e.target.parentNode.lastElementChild.innerText;
-        //chkedRolesUsu = colOcultaValue.split(',');
-
-        colPopover = e.target.parentNode.firstElementChild.nextElementSibling.nextElementSibling.nextElementSibling.dataset; //.content
-        debugger;
-
-    };
-    tablaHover.onmouseout = function (e) {
-        e.target.parentNode.style.backgroundColor = ""
-    };
-
-    $(document).ready(function () {
-        //$('td:nth-child(1)').hide();
-        //if your table has header(th), use this
-        $('td:nth-child(5),th:nth-child(5)').hide();
-
-        $('[data-toggle="popover"]').popover();
-    });
+        };
 
 </script>
