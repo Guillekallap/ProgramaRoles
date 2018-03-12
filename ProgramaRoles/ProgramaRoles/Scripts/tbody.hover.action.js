@@ -17,7 +17,6 @@ function HoverTable() {
 
     $('tbody#redColorHover tr').mouseenter(function (e) {
 
-
         e.target.parentNode.style.backgroundColor = "#ffdddd"
 
         var colOcultaValue;
@@ -47,16 +46,18 @@ function ChkedFila() {
 
     var nColumnas = $("#redColorHover tr:last td").length;
 
-    /*// Evento que se ejecuta al pulsar en un checkbox
+    /*// Evento que se ejecuta al pulsar en un checkbox*/
     $("input[type=checkbox]").change(function () {
 
-      // Cogemos el elemento actual
+       //Cogemos el elemento actual
       var elemento = this;
 
-      $("input[type=checkbox]").prop('checked', false);
-      //$(elemento).prop('checked', true);
+      if (nColumnas === 2) {
+          $("input[type=checkbox]").prop('checked', false);
+          $(elemento).prop('checked', true);
+      }  
 
-    });*/
+    });
 
     var rows = tablaHover.rows;
     for (var i = 0; i < rows.length; i++) {
@@ -65,6 +66,7 @@ function ChkedFila() {
 
             if (nColumnas === 2)
                 $("input[type=checkbox]").prop('checked', false);
+
             e.target.parentNode.firstElementChild.firstElementChild.checked = !e.target.parentNode.firstElementChild.firstElementChild.checked;
 
         };
