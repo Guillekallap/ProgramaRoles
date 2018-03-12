@@ -4,7 +4,15 @@
 }
 
 <h2>Index</h2>
+<button class="btn btn-default badge" title="Roles a Usuarios">
+    @Html.ActionLink("Editar Roles a traves de Usuarios", "ObtenerUsuariosSectores", "UsuariosSectores")
+    <i class="glyphicon glyphicon-book">
+    </i>
+</button>
 
-@Html.ActionLink("Hipervinculo a Editar Roles a traves de Usuarios", "ObtenerUsuariosSectores", "UsuariosSectores")
 <br />
-@Html.ActionLink("Hipervinculo a Editar Roles de Usuarios a traves de Roles", "ObtenerRoles", "Rol")
+<button class="btn btn-default badge" title="Usuarios a Roles">
+    @Html.ActionLink("Editar Roles de Usuarios a través de Roles", "ObtenerRoles", "Rol")
+    <i class="glyphicon glyphicon-heart">
+    </i>
+</button>
