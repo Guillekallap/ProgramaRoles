@@ -129,6 +129,7 @@ namespace ProgramaRoles.Utils
 
                 foreach (ViewModel item in lista_VMUsSec)
                 {
+                    roles.Clear();
                     if (item.roles == null)
                         roles.Add(item.roles);
                     else
@@ -207,6 +208,8 @@ namespace ProgramaRoles.Utils
                                 string rolesArreglado = string.Join(",", rolesOrdenados.ToArray());
                                 if (rolesArreglado == "") { rolesArreglado = null; }
                                 UsSecRepo.ModificarRolesUsuarioSector(item.Id, rolesArreglado);
+                                listaRolesAObtener.Clear();
+                                rolesOrdenados.Clear();
                             }
                         }
 
