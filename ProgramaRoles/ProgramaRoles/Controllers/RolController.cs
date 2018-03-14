@@ -46,7 +46,6 @@ namespace ProgramaRoles.Controllers
             return RedirectToAction("EditarUsuarioSector","Rol",new { rolSeleccionado.rol });
         }
 
-
         public ActionResult PasarFiltros(string rrol, string ddatosUsuarios)
         {
             var url = Url.Action("EditarUsuarioSector", "Rol", new { datosUsuarios = ddatosUsuarios, rol=rrol});

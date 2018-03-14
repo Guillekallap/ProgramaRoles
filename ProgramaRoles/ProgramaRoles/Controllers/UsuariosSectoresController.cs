@@ -51,13 +51,11 @@ namespace ProgramaRoles.Controllers
                 return View("ObtenerUsuariosSectores");
             }
 
-
             TempData["dni"] = dni2;
             TempData["nombreUsuario"] = nomusu;
             TempData["nombreSector"] = nomsec;
             return View();
         }
-
 
         public ActionResult ControladorPartialView1()
         {

@@ -1,13 +1,13 @@
 ﻿function HoverTable() {
     var tablaHover = document.getElementsByClassName('redColorHover');
 
-    $('tbody.redColorHover tr').mouseenter(function (e) {
-
+    $('tbody.redColorHover tr').mouseenter(function (e)
+    {
         e.target.parentNode.style.backgroundColor = "#ffdddd"
-
     });
 
-    $('tbody.redColorHover tr').mouseleave(function (e) {
+    $('tbody.redColorHover tr').mouseleave(function (e)
+    {
         e.target.parentNode.style.backgroundColor = ""
     });
 }
@@ -73,22 +73,7 @@ function ChkedFila() {
 
     });
 
-    /*var rows = tablaHover.ge;
-    for (var i = 0; i < rows.length; i++) {
-
-        rows[i].onclick = function (e) {
-
-            if (nColumnas === 2)
-                $("input[type=checkbox]").prop('checked', false);
-
-            debugger;
-            e.target.parentNode.firstElementChild.firstElementChild.checked = !e.target.parentNode.firstElementChild.firstElementChild.checked;
-
-        };
-    }*/
 }
-
-
 
 function MarcarDesmarcarchk()
 {

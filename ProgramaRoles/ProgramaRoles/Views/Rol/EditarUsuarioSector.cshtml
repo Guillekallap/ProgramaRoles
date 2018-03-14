@@ -1,17 +1,11 @@
 ﻿@model List<ProgramaRoles.Models.ViewModel>
 @{
-    /**/
-
     ViewBag.Title = "EditarUsuarioSector";
     string rol = ViewBag.rol;
 }
-
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
-
-
 <label id="mirol">@rol</label>
-
 
 <div style="margin-left:20%;margin-top:30px">
     <div class="row">
@@ -100,7 +94,6 @@
         <div class="col-xs-4"></div>
 
         <div class="col-xs-2 col-xs-offset-1">
-            @* <a style="text-align:center" class="btn btn-default btn-success" href="~/Rol/EditarUsuarioSector" title="Siguiente">Siguiente</a>*@
             <input id="botonmalo" type="submit" name="Grabar" value="Grabar" class="btn btn-default btn-success btn-block" />
         </div>
 
@@ -112,9 +105,6 @@
 <script>
 
     $(document).ready(function () {
-        var elemento = document.getElementById("botonmalo");
-        elemento.blur();
-
         HoverTable();
         ChkedFila();
         LoadPopover();
@@ -130,7 +120,7 @@
         var usuario = "";
         var sector = "";
         var rolselecc = "";
-        debugger;
+
         dni = document.getElementById("DNI").value;
         usuario = document.getElementById("Usuario").value;
         sector = document.getElementById("Sector").value;
@@ -142,25 +132,9 @@
 
     };
 
-
-
     $(".filtrable").keydown(function (e) {
-        debugger;
-        if (e.which == 13) {
-            debugger;
-
-            //var vid = document.getElementById("botonmalo");
-            ////vid.onabort = function ()
-            ////{
-            ////    alert("ahhhh");
-            ////};
-            e.stopPropagation();
-            e.isDefaultPrevented = true;
+        if (e.which == 13)
             document.getElementById("PasoFiltro").click();
-
-            //$('#PasoFiltro').trigger('click');
-
-        }
     });
 
 </script>

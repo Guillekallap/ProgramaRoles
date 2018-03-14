@@ -4,14 +4,12 @@
 
     ViewBag.Title = "ObtenerRoles";
 }
-
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
 <h2>ObtenerRoles</h2>
 
 @using (Html.BeginForm("ObtenerRoles", "Rol", FormMethod.Post))
 {
-
     <table class="table-bordered table-hover table-striped">
         <thead>
             <tr>
@@ -30,11 +28,9 @@
                 @Html.HiddenFor(m => m[i].RolSeleccionado)
                 @Html.HiddenFor(m => m[i].roles.rol)
             }
-
         </tbody>
 
     </table>
-
 
     <div class="row">
         <div class="col-xs-4"></div>

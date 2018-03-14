@@ -2,12 +2,10 @@
 @{
     ViewBag.Title = "PartialList";
 }
-
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
 @using (Html.BeginForm("ControladorPartialView", "UsuariosSectores", FormMethod.Post))
 {
-
     <table class="table table-bordered table-hover table-striped">
         <thead>
             <tr>
@@ -32,9 +30,7 @@
                 @Html.HiddenFor(m => m[i].nombreUsu)
                 @Html.HiddenFor(m => m[i].nombreSec)
             }
-
         </tbody>
-
     </table>
 
     <br /><br />
@@ -48,5 +44,4 @@
 
         <div class="col-xs-4 col-xs-offset-1"></div>
     </div>
-
 }

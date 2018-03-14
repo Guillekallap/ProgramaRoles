@@ -126,7 +126,6 @@ namespace ProgramaRoles.Utils
 
             try
             {
-
                 foreach (ViewModel item in lista_VMUsSec)
                 {
                     roles.Clear();
