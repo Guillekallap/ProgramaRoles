@@ -2,16 +2,16 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-<button class="btn btn-default badge" title="Roles a Usuarios">
+<h2>Inicio</h2>
+<button class="btn btn-default bottom" title="Roles a Usuarios">
     @Html.ActionLink("Editar Roles a traves de Usuarios", "ObtenerUsuariosSectores", "UsuariosSectores")
-    <i class="glyphicon glyphicon-book">
+    <i class="glyphicon glyphicon-user">
     </i>
 </button>
-
 <br />
-<button class="btn btn-default badge" title="Usuarios a Roles">
+<br />
+<button class="btn btn-default bottom" title="Usuarios a Roles">
     @Html.ActionLink("Editar Roles de Usuarios a través de Roles", "ObtenerRoles", "Rol")
-    <i class="glyphicon glyphicon-heart">
+    <i class="glyphicon glyphicon-registration-mark">
     </i>
 </button>
