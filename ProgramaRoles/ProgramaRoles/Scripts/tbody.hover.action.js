@@ -1,65 +1,79 @@
-﻿
+﻿function HoverTable() {
+    var tablaHover = document.getElementsByClassName('redColorHover');
 
-$(document).ready(function () {
-
-    //Oculta una columna
-    //$('td:nth-child(1)').hide();
-    //Oculta columna si tiene (th)
-    //$('td:nth-child(5),th:nth-child(5)').hide();
-    HoverTable();
-    ChkedFila();
-
-    $('[data-toggle="popover"]').popover();
-});
-
-function HoverTable() {
-    var tablaHover = document.getElementById('redColorHover');
-
-    $('tbody#redColorHover tr').mouseenter(function (e) {
+    $('tbody.redColorHover tr').mouseenter(function (e) {
 
         e.target.parentNode.style.backgroundColor = "#ffdddd"
 
-        var colOcultaValue;
+    });
+
+    $('tbody.redColorHover tr').mouseleave(function (e) {
+        e.target.parentNode.style.backgroundColor = ""
+    });
+}
+
+function LoadPopover()
+{
+    var tablaHover = document.getElementsByClassName('redColorHover');
+
+    $('tbody.redColorHover tr').mouseenter(function (e) {
+
+        var colDeValues;
         var colPopover;
         var chkedRolesUsu;
 
-        colOcultaValue = e.target.parentNode.lastElementChild.value;
+        colDeValues = e.target.parentNode.lastElementChild.value;
         colPopover = e.target.parentNode;
 
         colPopover.dataset.content = "";
-        chkedRolesUsu = colOcultaValue.split(',');
+        chkedRolesUsu = colDeValues.split(',');
 
-        for (i = 0; i < chkedRolesUsu.length; i++) {
+        for (i = 0; i < chkedRolesUsu.length; i++)
+        {
             colPopover.dataset.content += chkedRolesUsu[i] + "<br> ";
             colPopover.value
         }
 
     });
-
-    tablaHover.onmouseout = function (e) {
-        e.target.parentNode.style.backgroundColor = ""
-    };
 }
 
 function ChkedFila() {
-    var tablaHover = document.getElementById('redColorHover');
+    var tablaHover = document.getElementsByClassName('redColorHover');
+    var myFunction = function () {
+        var rows = this.getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++)
+        {
+            rows[i].onclick = function (e) {
+                if (nColumnas === 2)
+                    $("input[type=checkbox]").prop('checked', false);
 
-    var nColumnas = $("#redColorHover tr:last td").length;
+                e.target.parentNode.firstElementChild.firstElementChild.checked = !e.target.parentNode.firstElementChild.firstElementChild.checked;
+            };
+        }
+    };
+
+    for (var i = 0; i < tablaHover.length; i++)
+    {
+        tablaHover[i].addEventListener('click', myFunction,true);
+    }
+
+    var nColumnas = $(".redColorHover tr:last td").length;
 
     /*// Evento que se ejecuta al pulsar en un checkbox*/
     $("input[type=checkbox]").change(function () {
 
-       //Cogemos el elemento actual
-      var elemento = this;
+        //Cogemos el elemento actual
+        var elemento = this;
 
-      if (nColumnas === 2) {
-          $("input[type=checkbox]").prop('checked', false);
-          $(elemento).prop('checked', true);
-      }  
+        if (nColumnas === 2)
+        {
+            $("input[type=checkbox]").prop('checked', false);
+            $(elemento).prop('checked', true);
+        }
 
     });
 
-    var rows = tablaHover.rows;
+    /*var rows = tablaHover.ge;
     for (var i = 0; i < rows.length; i++) {
 
         rows[i].onclick = function (e) {
@@ -67,8 +81,22 @@ function ChkedFila() {
             if (nColumnas === 2)
                 $("input[type=checkbox]").prop('checked', false);
 
+            debugger;
             e.target.parentNode.firstElementChild.firstElementChild.checked = !e.target.parentNode.firstElementChild.firstElementChild.checked;
 
         };
-    }
+    }*/
+}
+
+
+
+function MarcarDesmarcarchk()
+{
+    $('#chkPrincipal').change(function ()
+    {
+        if ($('#chkPrincipal').is(':checked'))
+            $("input[type=checkbox]").prop('checked', true);
+        else
+            $("input[type=checkbox]").prop('checked', false);
+    });
 }

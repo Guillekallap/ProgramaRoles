@@ -11,13 +11,13 @@
     <table class="table table-bordered table-hover table-striped">
         <thead>
             <tr>
-                <th class="container text-center"></th>
+                <th class="container text-center"><input type="checkbox" id="chkPrincipal"></th>
                 <th class="col-md-4">DNI</th>
                 <th class="col-md-4">Nombre de Usuario</th>
                 <th class="col-md-4">Nombre de Sector</th>
             </tr>
         </thead>
-        <tbody id="redColorHover">
+        <tbody class="redColorHover">
             @for (int i = 0; i < Model.Count(); i++)
             {
                 <tr>
