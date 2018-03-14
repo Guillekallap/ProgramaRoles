@@ -140,7 +140,7 @@ namespace ProgramaRoles.Controllers
                 return RedirectToAction("ObtenerUsuariosSectores");
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return RedirectToAction("ObtenerUsuariosSectores");
             }
