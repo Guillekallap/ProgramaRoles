@@ -56,50 +56,60 @@ namespace ProgramaRoles.Controllers
         public ActionResult EditarUsuarioSector(string datosUsuarios, string rol)
         {
             ViewBag.rol = rol;
-            ViewBag.listadoRoles = UsSecRepo.ListarTodosRoles();
-            string nomsec = null;
-            string nomusu = null;
-            string dni = null;
-            string[] datos;
-            string[] datosUsu;
-            List<string> datosUUsu=new List<string>();
-            List<ViewModel> lista_VMUsSec = new List<ViewModel>();
-
-            if (datosUsuarios != null)
+            if(ViewBag.rol != null)
             {
-                datos = datosUsuarios.Split(' ');
-                foreach (var i in datos)
+
+                ViewBag.listadoRoles = UsSecRepo.ListarTodosRoles();
+                string nomsec = null;
+                string nomusu = null;
+                string dni = null;
+                string[] datos;
+                string[] datosUsu;
+                List<string> datosUUsu = new List<string>();
+                List<ViewModel> lista_VMUsSec = new List<ViewModel>();
+
+                if (datosUsuarios != null)
                 {
-                    datosUsu = i.Split('=');
-                    foreach (var j in datosUsu)
-                        datosUUsu.Add(j);
+                    datos = datosUsuarios.Split(' ');
+                    foreach (var i in datos)
+                    {
+                        datosUsu = i.Split('=');
+                        foreach (var j in datosUsu)
+                            datosUUsu.Add(j);
+                    }
+
+                    if (datosUUsu[1].Length <= 8)       /* DNI */
+                        dni = datosUUsu[1];
+
+                    if (datosUUsu[3].Length <= 255)     /* USUARIO */
+                        nomusu = datosUUsu[3];
+
+                    if (datosUUsu[5].Length <= 100)     /* SECTOR */
+                        nomsec = datosUUsu[5];
                 }
 
-                if (datosUUsu[1].Length <= 8)       /* DNI */
-                    dni = datosUUsu[1];
+                List<UsuariosSectores> lista_aux = UsSecRepo.ListarTodosUsuariosSectores(dni, nomusu, nomsec);
+                foreach (var item in lista_aux)
+                {
+                    ViewModel vModel = new ViewModel(item, rol);
+                    lista_VMUsSec.Add(vModel);
+                }
+                return View(lista_VMUsSec);
 
-                if (datosUUsu[3].Length <= 255)     /* USUARIO */
-                    nomusu = datosUUsu[3];
-
-                if (datosUUsu[5].Length <= 100)     /* SECTOR */
-                    nomsec = datosUUsu[5];
             }
-
-            List<UsuariosSectores> lista_aux = UsSecRepo.ListarTodosUsuariosSectores(dni, nomusu, nomsec);
-            foreach (var item in lista_aux)
-            {
-                ViewModel vModel = new ViewModel(item, rol);
-                lista_VMUsSec.Add(vModel);
-            }
-            return View(lista_VMUsSec);
+            return RedirectToAction("ObtenerRoles", "Rol");
         }
 
         [HttpPost]
         public ActionResult EditarUsuarioSector(List<ViewModel> lista_VMUsSec, string rolElegido)
         {
-            UtilsString utils = new UtilsString();
-            utils.ModificarDatosRolSegunChequeos(lista_VMUsSec,rolElegido);
-            return RedirectToAction("Index","UsuariosSectores");
+            if(rolElegido!= null) {
+
+                UtilsString utils = new UtilsString();
+                utils.ModificarDatosRolSegunChequeos(lista_VMUsSec, rolElegido);
+                return RedirectToAction("Index", "UsuariosSectores");
+            }
+            return RedirectToAction("ObtenerRoles", "Rol");
         }
 
     }

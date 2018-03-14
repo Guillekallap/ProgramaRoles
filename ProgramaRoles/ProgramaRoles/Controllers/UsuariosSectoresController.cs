@@ -88,27 +88,36 @@ namespace ProgramaRoles.Controllers
         [HttpPost]
         public ActionResult ControladorPartialView(List<ViewModel> lista_users)
         {
-            List<UsuariosSectores> usec = new List<UsuariosSectores>();
-            UsSecRepository UsSecRepo = new UsSecRepository();
+                    List<UsuariosSectores> usec = new List<UsuariosSectores>();
+                    UsSecRepository UsSecRepo = new UsSecRepository();
+                    if (lista_users == null)
+                    {
+                        return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
+                    }
+                    foreach (ViewModel item in lista_users)
+                    {
+                        if (item.Chked)
+                        {
+                            var i = item.Id;
+                            usec.Add(UsSecRepo.BuscarUsuarioSector(i));
+                        }
+                    }
+                    List<ViewMuestra> lista = new List<ViewMuestra>();
+                    List<Roles> roles = UsSecRepo.ListarTodosRoles();
+                    foreach (var item in usec)
+                    {
+                        ViewMuestra vModel = new ViewMuestra(item, roles);
+                        lista.Add(vModel);
+                    }
+                    TempData["listaSeleccion"] = lista;
+                    if (lista.Count() == 0)
+                    {
+                        return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
+                    }
+                    return RedirectToAction("EditarRoles", "UsuariosSectores");
 
-            foreach (ViewModel item in lista_users)
-            {
-                if (item.Chked)
-                {
-                    var i = item.Id;
-                    usec.Add(UsSecRepo.BuscarUsuarioSector(i));
-                }
-            }
-            List<ViewMuestra> lista = new List<ViewMuestra>();
-            List<Roles> roles = UsSecRepo.ListarTodosRoles();
-            foreach (var item in usec)
-            {
-                ViewMuestra vModel = new ViewMuestra(item, roles);
-                lista.Add(vModel);
-            }
-            TempData["listaSeleccion"] = lista;
-            return RedirectToAction("EditarRoles");
         }
+
         public ActionResult EditarRoles()
         {
             List<ViewMuestra> listaRecibida = (List<ViewMuestra>)TempData["listaSeleccion"];
@@ -133,9 +142,9 @@ namespace ProgramaRoles.Controllers
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                return RedirectToAction("ObtenerUsuariosSectores");
             }
-            
+
         }
 
     }
