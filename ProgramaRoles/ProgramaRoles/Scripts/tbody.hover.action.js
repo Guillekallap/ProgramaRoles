@@ -9,6 +9,7 @@
     $('tbody.redColorHover tr').mouseleave(function (e)
     {
         e.target.parentNode.style.backgroundColor = ""
+        debugger;
     });
 }
 
