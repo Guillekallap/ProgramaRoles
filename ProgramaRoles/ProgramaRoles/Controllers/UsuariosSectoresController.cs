@@ -1,5 +1,6 @@
 using ProgramaRoles.Models;
 using ProgramaRoles.Repository;
+using ProgramaRoles.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +75,7 @@ namespace ProgramaRoles.Controllers
             ModelState.Clear();
 
             List<UsuariosSectores> aux = UsSecRepo.ListarTodosUsuariosSectores(dni, nombreUsuario, nombreSector);
-
+            
             foreach (var item in aux)
             {
                 ViewModel vModel = new ViewModel(item);
@@ -100,11 +101,11 @@ namespace ProgramaRoles.Controllers
                             usec.Add(UsSecRepo.BuscarUsuarioSector(i));
                         }
                     }
-                    List<ViewMuestra> lista = new List<ViewMuestra>();
+                    List<ViewModelUsuarioRol> lista = new List<ViewModelUsuarioRol>();
                     List<Roles> roles = UsSecRepo.ListarTodosRoles();
                     foreach (var item in usec)
                     {
-                        ViewMuestra vModel = new ViewMuestra(item, roles);
+                        ViewModelUsuarioRol vModel = new ViewModelUsuarioRol(item, roles);                        
                         lista.Add(vModel);
                     }
                     TempData["listaSeleccion"] = lista;
@@ -118,24 +119,72 @@ namespace ProgramaRoles.Controllers
 
         public ActionResult EditarRoles()
         {
-            List<ViewMuestra> listaRecibida = (List<ViewMuestra>)TempData["listaSeleccion"];
+            var viewModelUsMuestra = new ViewModelUsuarioMuestra
+            {
+                listaUsuarioRol = (List<ViewModelUsuarioRol>)TempData["listaSeleccion"],
+                listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
+            };
 
-            return View(listaRecibida);
+            foreach (var item in viewModelUsMuestra.listaUsuarioRol)
+            {
+                //Logica de los roles Anteriores
+                ViewModelUsuarioRolHorario VMUsRolHorario = new ViewModelUsuarioRolHorario(item);
+                viewModelUsMuestra.listaUsuarioRolHorario.Add(VMUsRolHorario);
+            }
+            return View(viewModelUsMuestra);
         }
 
         [HttpPost]
-        public ActionResult EditarRoles(List<ViewMuestra> listaVMU)
+        public ActionResult EditarRoles(ViewModelUsuarioMuestra listaTotal)
         {
-            try{
-                List<UsuariosSectores> usec = new List<UsuariosSectores>();
-                UsSecRepository UsSecRepo = new UsSecRepository();
-                foreach (ViewMuestra item in listaVMU)
-                {
-                    UsuariosSectores usuariosector = new UsuariosSectores(UsSecRepo.BuscarUsuarioSector(item.id), item.nombreRoles);
-                    UsSecRepo.ModificarRolesUsuarioSector(item.id, usuariosector.roles);
-                }
+            UsSecRepository UsSecRepo = new UsSecRepository();
+            UtilsString utils = new UtilsString();
+            List <UsuarioRolHorario> listaUsRolHorario = null;
+            try
+            {
 
-                return RedirectToAction("ObtenerUsuariosSectores");
+                foreach (var item in listaTotal.listaUsuarioRolHorario)
+               {
+                    if(item.Chked == true)
+                    {
+                        List<DateTime> listaDeFechas = utils.conversionStringAFecha(item.fechas, item.horas);
+                        //Logica de los roles nuevos                   
+                        List<Sroles> rolesAEditar = listaTotal.listaUsuarioRol.First(x => x.id == item.idUsuarioSector).nombreRoles;
+                        item.rolesNuevos = utils.TraducirRolesAString(rolesAEditar);
+
+                        //Logica de las fechas y hora por cada usuarioSector(listaUsuarioRolHorario)
+                        while (listaDeFechas.Count>1)
+                        {
+                            item.fechaInicio = listaDeFechas.First();
+                            listaDeFechas.RemoveAt(0);
+                            item.fechaFin = listaDeFechas.First();
+                            listaDeFechas.RemoveAt(0);
+                            UsuarioRolHorario usRolHorario = new UsuarioRolHorario(item);
+                            listaUsRolHorario.Add(usRolHorario);
+                        }
+                        //if(item.emailChked == true)
+                        //{
+                        //    //Logica del email
+                        //    (new UtilsEmail()).EnviarEmail(item.email,item.nombreUsuario,item.rolesNuevos);
+                        //}
+                    }
+                    else
+                    {
+                        List<Sroles> rolesAEditar = listaTotal.listaUsuarioRol.First(x => x.id == item.idUsuarioSector).nombreRoles;
+                        string roles = utils.TraducirRolesAString(rolesAEditar);
+                        UsSecRepo.ModificarRolesUsuarioSector(item.idUsuarioSector, roles);
+
+                    }
+               }
+                if(listaUsRolHorario != null)
+                {
+                    foreach(var usRolHorario in listaUsRolHorario)
+                    {
+                        UsSecRepo.AgregarUsuarioSectorRolHorario(usRolHorario.idUsuarioSector, usRolHorario.nombreUsuario, usRolHorario.rolesAnteriores, usRolHorario.rolesNuevos, usRolHorario.email, usRolHorario.emailChked, usRolHorario.fechaInicio, usRolHorario.fechaFin,usRolHorario.fechaActual,usRolHorario.vigente);
+                    }
+
+                }
+               return RedirectToAction("ObtenerUsuariosSectores");
 
             }
             catch (Exception)

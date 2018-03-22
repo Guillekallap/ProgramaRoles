@@ -46,6 +46,7 @@ namespace ProgramaRoles.Repository
                                   idUsuario = Convert.ToInt32(dr["idUsuario"]),
                                   nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
                                   dni = Convert.ToString(dr["dni"]),
+                                  email = Convert.ToString(dr["email"]),
                                   roles = Convert.ToString(dr["roles"]),
                               }).ToList();
 
@@ -88,6 +89,7 @@ namespace ProgramaRoles.Repository
                             idUsuario = Convert.ToInt32(dr["idUsuario"]),
                             nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
                             dni = Convert.ToString(dr["dni"]),
+                            email = Convert.ToString(dr["email"]),
                             roles = Convert.ToString(dr["roles"]),
                         }).FirstOrDefault();
 
@@ -103,6 +105,7 @@ namespace ProgramaRoles.Repository
             }
 
         }
+
         public List<Roles> ListarTodosRoles()
         {
             connection();
@@ -168,7 +171,7 @@ namespace ProgramaRoles.Repository
             }
         }
 
-        public void ModificarRolesUsuarioSector(int id,/* int idSector, int idUsuario*/ string roles)
+        public void ModificarRolesUsuarioSector(int id, string roles)
         {
                 connection();
                 SqlCommand com = new SqlCommand("ModificarRolesUsuarioSector", con);
@@ -178,10 +181,6 @@ namespace ProgramaRoles.Repository
                 DataTable dt = new DataTable();
                 
                 com.Parameters.AddWithValue("@id", id);
-
-                //com.Parameters.AddWithValue("@idSector", idSector);
-
-                //com.Parameters.AddWithValue("@idUsuario", idUsuario);
 
                 com.Parameters.AddWithValue("@roles", string.IsNullOrEmpty(roles) ? (object)DBNull.Value : roles);
 
@@ -196,6 +195,90 @@ namespace ProgramaRoles.Repository
             }
         }
 
+        public void AgregarUsuarioSectorRolHorario(int idUsuarioSector, string nombreUsuario, string rolesAnteriores, string rolesNuevos, string email, bool emailChked, DateTime fechaInicio, DateTime fechaFin, DateTime fechaActual, bool vigente)
+        {
+            
+            string constr = ConfigurationManager.ConnectionStrings["klinicos_interno"].ToString();
+            con = new SqlConnection(constr);
+            SqlCommand com = new SqlCommand("AgregarUsuarioSectorRolHorario", con);
+
+            com.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataTable dt = new DataTable();
+            
+            com.Parameters.AddWithValue("@idUsuarioSector", idUsuarioSector);
+            com.Parameters.AddWithValue("@nombreUsuario", string.IsNullOrEmpty(nombreUsuario) ? (object)DBNull.Value : nombreUsuario);
+            com.Parameters.AddWithValue("@rolesAnteriores", string.IsNullOrEmpty(rolesAnteriores) ? (object)DBNull.Value : rolesAnteriores);
+            com.Parameters.AddWithValue("@rolesNuevos", string.IsNullOrEmpty(rolesNuevos) ? (object)DBNull.Value : rolesNuevos);
+            com.Parameters.AddWithValue("@email", string.IsNullOrEmpty(email) ? (object)DBNull.Value : email);
+            com.Parameters.AddWithValue("@emailChked", emailChked ? (object)DBNull.Value : emailChked);
+            com.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+            com.Parameters.AddWithValue("@fechaFin", fechaFin);
+            com.Parameters.AddWithValue("@fechaActual", fechaActual);
+            com.Parameters.AddWithValue("@vigente", vigente);
+            
+            try
+            {
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public List<UsuarioRolHorario> ListarUsuarioRolHorario(int idUsuarioSector, DateTime fechaInicio, DateTime fechaFin)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["klinicos_interno"].ToString();
+            con = new SqlConnection(constr);
+            List<UsuarioRolHorario> listaUsRolHorario = new List<UsuarioRolHorario>();
+            SqlCommand com = new SqlCommand("ListarUsuarioRolHorario", con);
+            com.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataTable dt = new DataTable();
+            try
+            {
+
+                con.Open();
+                com.Parameters.AddWithValue("@idUsuarioSector", idUsuarioSector);
+                com.Parameters.AddWithValue("@fechaInicio", fechaInicio);
+                com.Parameters.AddWithValue("@fechaFin", fechaFin);
+
+                da.Fill(dt);
+                con.Close();
+                listaUsRolHorario = (from DataRow dr in dt.Rows
+
+                                     select new UsuarioRolHorario()
+                                     {
+                                         id = Convert.ToInt32(dr["id"]),
+                                         idUsuarioSector = Convert.ToInt32(dr["idUsuarioSector"]),
+                                         nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
+                                         rolesAnteriores = Convert.ToString(dr["rolesAnteriores"]),
+                                         rolesNuevos = Convert.ToString(dr["rolesNuevos"]),
+                                         email = Convert.ToString(dr["email"]),
+                                         emailChked = Convert.ToBoolean(dr["emailChked"]),
+                                         fechaInicio = Convert.ToDateTime(dr["fechaInicio"]),
+                                         fechaFin = Convert.ToDateTime(dr["fechaFin"]),
+                                         fechaActual = Convert.ToDateTime(dr["fechaActual"]),
+                                         vigente = Convert.ToBoolean(dr["vigente"])
+
+                                     }).ToList();
+
+                return listaUsRolHorario;
+
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+        
+        
+        
         //public UsuariosSectores BuscarUsuarioSectorPorRol(int id, int idSector, int idUsuario, string roles)
         //{
 
@@ -243,6 +326,6 @@ namespace ProgramaRoles.Repository
 
         //    }
 
-        
+
     }
 }

@@ -94,6 +94,7 @@ namespace ProgramaRoles.Utils
             return resultado;
         }
 
+        //Para la segunda parte del proyecto
         public bool VerificarRolEnUsuarioSector(UsuariosSectores usSec, string rolSeleccionado)
         {
             bool resultado = false;
@@ -220,6 +221,56 @@ namespace ProgramaRoles.Utils
                 throw new Exception(e.Message);
             }
 
+        }
+        //Para tercera parte del proyecto
+        public string ConvertirDeListaDeSRolesAListaNombreRoles(List<Sroles> listadoDeSRoles)
+        {
+            List<string> listaRolesString = new List<string>();
+
+            foreach (var rol in listadoDeSRoles)
+            {
+                if (rol.RolSeleccionado == true)
+                    listaRolesString.Add(rol.roles.rol);
+            }
+            string rolesArreglado = string.Join(",", listaRolesString.ToArray());
+
+            return rolesArreglado;
+        }
+
+        public List<DateTime> conversionStringAFecha(string fechas,string horas)
+        {
+            List<string> stringFechas = fechas.Split(',','-').ToList();
+            string[] stringHoras = horas.Split(':', '-', ',');
+            int i = 0;
+            List<DateTime> listaDeFechas = new List<DateTime>();
+            foreach (string s in stringFechas)
+            {
+                int j = 0;
+                string[] fechaDatos = s.Split('/');
+                int dia = Convert.ToInt32(fechaDatos[j]);
+                j++;
+                int mes = Convert.ToInt32(fechaDatos[j]);
+                j++;
+                int año = Convert.ToInt32(fechaDatos[j]);
+
+                int hora = Convert.ToInt32(stringHoras[i]);
+                i++;
+                int minuto = Convert.ToInt32(stringHoras[i]);
+                i++;
+                DateTime fecha = new DateTime(año,mes,dia,hora,minuto,0);
+                listaDeFechas.Add(fecha);
+            }
+            return listaDeFechas;
+        }
+
+        public bool verificarFechaVigenciaDeRol(DateTime fechaInicio)
+        {
+            if(fechaInicio.CompareTo(DateTime.Now)<1)
+                return true;
+            else
+            {
+                return false;
+            }
         }
     }
 }

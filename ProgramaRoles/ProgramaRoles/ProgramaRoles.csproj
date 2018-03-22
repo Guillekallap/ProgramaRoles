@@ -144,12 +144,16 @@
     <Compile Include="Models\Roles.cs" />
     <Compile Include="Models\Sectores.cs" />
     <Compile Include="Models\Sroles.cs" />
+    <Compile Include="Models\UsuarioRolHorario.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosSectores.cs" />
     <Compile Include="Models\ViewModel.cs" />
-    <Compile Include="Models\ViewMuestra.cs" />
+    <Compile Include="Models\ViewModelUsuarioMuestra.cs" />
+    <Compile Include="Models\ViewModelUsuarioRolHorario.cs" />
+    <Compile Include="Models\ViewModelUsuarioRol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\UsSecRepository.cs" />
+    <Compile Include="Utils\UtilsEmail.cs" />
     <Compile Include="Utils\UtilsString.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -105,5 +105,25 @@ namespace UnitTest
             Utils.ModificarDatosRolSegunChequeos(lista, rolSeleccionado);
             Assert.IsNull(lista);
         }
+
+        [TestMethod]
+        public void ConversionDeFechasCorrecta()
+        {
+            List<DateTime> listafechas=(new UtilsString()).conversionStringAFecha("22/08/1998-22/08/1998,23/08/1998-24/08/1998", "09:00-09:30,10:50-11:45");
+            Assert.IsNotNull(listafechas);
+        }
+
+        [TestMethod]
+        public void VerificarFechaCorrecta()
+        {
+            DateTime fecha = new DateTime(2018,03,22,12,4,50);
+            bool resultado = (new UtilsString()).verificarFechaVigenciaDeRol(fecha);
+            Assert.IsTrue(resultado);
+        }
+        //[TestMethod]
+        //public void EnvioDeEmailCorrecto()
+        //{
+        //       (new UtilsEmail()).EnviarEmail("guillekallap@hotmail.com", "guille", "ROLE_USUARIOS_ADMINISTRADOR");
+        //}
     }
 }

@@ -22,6 +22,7 @@ namespace ProgramaRoles.Models
         public int idUsuario { get; set; }
         public string nombreUsuario {get; set;}
         public string dni { get; set; }
+        public string email { get; set; }
         public string roles { get; set; }
 
         public UsuariosSectores(UsuariosSectores usec,List<Sroles> RolesAEditar)
@@ -41,7 +42,5 @@ namespace ProgramaRoles.Models
             this.roles = rolesArreglado;
         }
     }
-
-     
 
 }
