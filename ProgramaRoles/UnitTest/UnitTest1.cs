@@ -120,10 +120,10 @@ namespace UnitTest
             bool resultado = (new UtilsString()).verificarFechaVigenciaDeRol(fecha);
             Assert.IsTrue(resultado);
         }
-        //[TestMethod]
-        //public void EnvioDeEmailCorrecto()
-        //{
-        //       (new UtilsEmail()).EnviarEmail("guillekallap@hotmail.com", "guille", "ROLE_USUARIOS_ADMINISTRADOR");
-        //}
+        [TestMethod]
+        public void EnvioDeEmailCorrecto()
+        {
+            (new UtilsEmail()).EnviarEmail("guillekallap@hotmail.com", "guille", "ROLE_USUARIOS_ADMINISTRADOR");
+        }
     }
 }

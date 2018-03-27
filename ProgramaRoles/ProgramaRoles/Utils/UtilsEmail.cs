@@ -12,7 +12,7 @@ namespace ProgramaRoles.Utils
     public class UtilsEmail
     {
         public void EnviarEmail(string email, string nombreUsuario, string roles){
-            //La cadena "servidor" es el servidor de correo que enviará tu mensaje
+            //La cadena "servidor" es el servidor de correo que enviará el mensaje
             string servidor = "smtp.gmail.com";
             // Crea el mensaje estableciendo quién lo manda y quién lo recibe
             MailMessage mensaje = new MailMessage(

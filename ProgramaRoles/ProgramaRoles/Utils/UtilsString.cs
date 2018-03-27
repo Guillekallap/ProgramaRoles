@@ -222,17 +222,37 @@ namespace ProgramaRoles.Utils
             }
 
         }
+        
         //Para tercera parte del proyecto
-        public string ConvertirDeListaDeSRolesAListaNombreRoles(List<Sroles> listadoDeSRoles)
-        {
-            List<string> listaRolesString = new List<string>();
 
-            foreach (var rol in listadoDeSRoles)
+
+        //Aplicar la comparacion de string roles que tenia el usuarioSector y los nuevos que acaba de ingresar por la view para tener los roles temporales en un campo directo hacia UsuarioRolHorario
+        public string OrdenarListaDeRolesTemporales(string roles1, List<Sroles> roles2)
+        {
+            List<string> listaRoles1 = roles1.Split(',').ToList();
+            List<string> listaRoles2 = new List<string>();
+            List<string> rolesFinales = null;
+
+            if (roles2 == null)
             {
-                if (rol.RolSeleccionado == true)
-                    listaRolesString.Add(rol.roles.rol);
+
             }
-            string rolesArreglado = string.Join(",", listaRolesString.ToArray());
+
+            foreach (var rol2 in roles2)
+            {
+                if (rol2.RolSeleccionado == true)
+                    listaRoles2.Add(rol2.roles.rol);
+            }
+
+            foreach(var rol2 in listaRoles2)
+            {
+                bool encontrado = listaRoles1.Contains(rol2);
+                if (encontrado == false)
+                {
+                    rolesFinales.Add(rol2);
+                }
+            }
+            string rolesArreglado = string.Join(",", rolesFinales.ToArray());
 
             return rolesArreglado;
         }

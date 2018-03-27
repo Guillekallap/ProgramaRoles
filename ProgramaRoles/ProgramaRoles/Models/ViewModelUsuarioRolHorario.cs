@@ -12,8 +12,7 @@ namespace ProgramaRoles.Models
         public int id { get; set; }
         public int idUsuarioSector { get; set; }
         public string nombreUsuario { get; set; }
-        public string rolesAnteriores { get; set; }
-        public string rolesNuevos { get; set; }
+        public string rolesTemporales { get; set; }
         public string email { get; set; }
         public DateTime fechaActual { get; set; }
         public DateTime fechaInicio { get; set; }
@@ -31,8 +30,6 @@ namespace ProgramaRoles.Models
             this.Chked = false;
             this.emailChked = false;
             this.email = vMuestra.email;
-            this.rolesAnteriores = (new UtilsString()).ConvertirDeListaDeSRolesAListaNombreRoles(vMuestra.nombreRoles);
-            
         }
     }
 

@@ -195,7 +195,7 @@ namespace ProgramaRoles.Repository
             }
         }
 
-        public void AgregarUsuarioSectorRolHorario(int idUsuarioSector, string nombreUsuario, string rolesAnteriores, string rolesNuevos, string email, bool emailChked, DateTime fechaInicio, DateTime fechaFin, DateTime fechaActual, bool vigente)
+        public void AgregarUsuarioSectorRolHorario(int idUsuarioSector, string nombreUsuario, string rolesTemporales, string email, bool emailChked, DateTime fechaInicio, DateTime fechaFin, DateTime fechaModificacion, bool vigente)
         {
             
             string constr = ConfigurationManager.ConnectionStrings["klinicos_interno"].ToString();
@@ -208,13 +208,12 @@ namespace ProgramaRoles.Repository
             
             com.Parameters.AddWithValue("@idUsuarioSector", idUsuarioSector);
             com.Parameters.AddWithValue("@nombreUsuario", string.IsNullOrEmpty(nombreUsuario) ? (object)DBNull.Value : nombreUsuario);
-            com.Parameters.AddWithValue("@rolesAnteriores", string.IsNullOrEmpty(rolesAnteriores) ? (object)DBNull.Value : rolesAnteriores);
-            com.Parameters.AddWithValue("@rolesNuevos", string.IsNullOrEmpty(rolesNuevos) ? (object)DBNull.Value : rolesNuevos);
+            com.Parameters.AddWithValue("@rolesNuevos", string.IsNullOrEmpty(rolesTemporales) ? (object)DBNull.Value : rolesTemporales);
             com.Parameters.AddWithValue("@email", string.IsNullOrEmpty(email) ? (object)DBNull.Value : email);
             com.Parameters.AddWithValue("@emailChked", emailChked ? (object)DBNull.Value : emailChked);
             com.Parameters.AddWithValue("@fechaInicio", fechaInicio);
             com.Parameters.AddWithValue("@fechaFin", fechaFin);
-            com.Parameters.AddWithValue("@fechaActual", fechaActual);
+            com.Parameters.AddWithValue("@fechaActual", fechaModificacion);
             com.Parameters.AddWithValue("@vigente", vigente);
             
             try
@@ -256,13 +255,12 @@ namespace ProgramaRoles.Repository
                                          id = Convert.ToInt32(dr["id"]),
                                          idUsuarioSector = Convert.ToInt32(dr["idUsuarioSector"]),
                                          nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
-                                         rolesAnteriores = Convert.ToString(dr["rolesAnteriores"]),
-                                         rolesNuevos = Convert.ToString(dr["rolesNuevos"]),
+                                         rolesTemporales = Convert.ToString(dr["rolesTemporales"]),
                                          email = Convert.ToString(dr["email"]),
                                          emailChked = Convert.ToBoolean(dr["emailChked"]),
                                          fechaInicio = Convert.ToDateTime(dr["fechaInicio"]),
                                          fechaFin = Convert.ToDateTime(dr["fechaFin"]),
-                                         fechaActual = Convert.ToDateTime(dr["fechaActual"]),
+                                         fechaModificacion = Convert.ToDateTime(dr["fechaModificacion"]),
                                          vigente = Convert.ToBoolean(dr["vigente"])
 
                                      }).ToList();
@@ -275,9 +273,7 @@ namespace ProgramaRoles.Repository
             {
                 throw new Exception(e.Message);
             }
-        }
-        
-        
+        }                
         
         //public UsuariosSectores BuscarUsuarioSectorPorRol(int id, int idSector, int idUsuario, string roles)
         //{
@@ -312,8 +308,6 @@ namespace ProgramaRoles.Repository
         //                         dni = Convert.ToString(dr["dni"]),
         //                         roles = Convert.ToString(dr["roles"]),
         //                     });
-
-
 
 
         //        return (Usec);
