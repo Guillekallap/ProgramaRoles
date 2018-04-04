@@ -235,7 +235,7 @@ namespace ProgramaRoles.Utils
 
             if (roles2 == null)
             {
-
+            	//Implementar Logica
             }
 
             foreach (var rol2 in roles2)

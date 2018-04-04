@@ -23,6 +23,7 @@ namespace ProgramaRoles.Models
         {
         
         }
+
         public UsuarioRolHorario(ViewModelUsuarioRolHorario vmUsRolHorario)
         {
             this.idUsuarioSector = vmUsRolHorario.idUsuarioSector;
