@@ -16,7 +16,7 @@ CREATE procedure [dbo].[ListarUsuarioSector]
 )
 as
 begin
-	select usec.id as id, usec.idSector as idSector, sec.nombre as nombreSector, usec.idUsuario as idUsuario, us.nombreUsuario as nombreUsuario,  us.numeroDocumento as dni, usec.roles as roles from Usuario.UsuariosSectores usec 
+	select usec.id as id, usec.idSector as idSector, sec.nombre as nombreSector, usec.idUsuario as idUsuario, us.nombreUsuario as nombreUsuario,  us.numeroDocumento as dni, us.email as email, usec.roles as roles from Usuario.UsuariosSectores usec 
 	 join GeneralLocal.Sectores sec on usec.idSector = sec.id  
 	 join Usuario.Usuarios us on usec.idUsuario = us.id
 	 where (us.numeroDocumento like  '%'+@dni+'%'  or @dni is null) and ( us.nombreUsuario like '%'+@nombreUsuario+'%'  or @nombreUsuario is null) and (sec.nombre like '%'+@nombreSector+'%' or @nombreSector is null)

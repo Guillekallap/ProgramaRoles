@@ -233,9 +233,9 @@ namespace ProgramaRoles.Utils
             List<string> listaRoles2 = new List<string>();
             List<string> rolesFinales = null;
 
-            if (roles2 == null)
+            if (roles2.Count==0)
             {
-            	//Implementar Logica
+            	
             }
 
             foreach (var rol2 in roles2)

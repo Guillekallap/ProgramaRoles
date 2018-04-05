@@ -140,7 +140,6 @@ namespace ProgramaRoles.Controllers
             List <UsuarioRolHorario> listaUsRolHorario = null;
             try
             {
-
                 foreach (var item in listaTotal.listaUsuarioRolHorario)
                {
                     if(item.Chked == true)
