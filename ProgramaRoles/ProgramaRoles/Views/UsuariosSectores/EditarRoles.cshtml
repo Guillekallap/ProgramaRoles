@@ -1,7 +1,8 @@
-﻿@model List<ProgramaRoles.Models.ViewModelUsuarioMuestra>
+﻿@model ProgramaRoles.Models.ViewModelUsuarioMuestra
 
 @{
     ViewBag.Title = "Editar Roles";
+    //List<ProgramaRoles.Models.ViewModelUsuarioRol> listaUsuarioRol;
 }
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
@@ -9,35 +10,38 @@
 @using (Html.BeginForm("EditarRoles", "UsuariosSectores", FormMethod.Post))
 {
 
-    for (int i = 0; i < Model.Count(); i++)
+    for (int i = 0; i < Model.listaUsuarioRol.Count(); i++)
     {
         <table class="table-hover table-striped table-bordered">
             <thead>
                 <tr>
                     <th class="container text-center"></th>
-                    <th class="col-md-4 text-center">N° ID: @Html.DisplayFor(x => x[i].id)</th>
-                    <th class="col-md-4 text-center">Nombre Usuario: @Html.DisplayFor(x => x[i].nombreUsuario)</th>
-                    <th class="col-md-4 text-center">Nombre Sector: @Html.DisplayFor(x => x[i].nombreSector)</th>
+
+                    <th class="col-md-4 text-center">N° ID: @Html.DisplayFor(x => x.listaUsuarioRol[i].id)</th>
+                    <th class="col-md-4 text-center">Nombre Usuario: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreUsuario)</th>
+                    <th class="col-md-4 text-center">Nombre Sector: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreSector)</th>
                 </tr>
             </thead>
             <tbody class="redColorHover">
-                @Html.HiddenFor(x => x[i].id)
+                    @Html.HiddenFor(x => x.listaUsuarioRol[i].id)
 
-                @for (int j = 0; j < Model[i].nombreRoles.Count(); j++)
-                {
-                    <tr>
-                        <td style="text-align:center">
-                            @Html.CheckBoxFor(x => x[i].nombreRoles[j].RolSeleccionado)
-                        </td>
-                        <td style="padding-left:1%">
-                            @Model[i].nombreRoles[j].roles.rol
-                        </td>
-                        @Html.HiddenFor(x => x[i].nombreRoles[j].roles.rol)
-                        <td></td>
-                        <td></td>
-                    </tr>
-                }
-            </tbody>
+                    @for (int j = 0; j < Model.listaUsuarioRol[i].nombreRoles.Count(); j++)
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                @Html.CheckBoxFor(x => x.listaUsuarioRol[i].nombreRoles[j].RolSeleccionado)
+                            </td>
+                            <td style="padding-left:1%">
+                                @Model.listaUsuarioRol[i].nombreRoles[j].roles.rol
+                            </td>
+
+                            @Html.HiddenFor(x => x.listaUsuarioRol[i].nombreRoles[j].roles.rol)
+                            
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
         </table>
         <br />
     }
