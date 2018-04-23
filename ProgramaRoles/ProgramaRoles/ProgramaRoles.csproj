@@ -157,7 +157,6 @@
     <Compile Include="Models\ViewModelUsuarioRol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\UsSecRepository.cs" />
-    <Compile Include="Utils\UtilsEmail.cs" />
     <Compile Include="Utils\UtilsString.cs" />
   </ItemGroup>
   <ItemGroup>

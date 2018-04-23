@@ -113,12 +113,11 @@ namespace ProgramaRoles.Controllers
                         return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
                     }
                     return RedirectToAction("EditarRoles", "UsuariosSectores");
-
         }
 
         public ActionResult EditarRoles()
         {
-            var viewModelUsMuestra = new ViewModelUsuarioMuestra
+            ViewModelUsuarioMuestra viewModelUsMuestra = new ViewModelUsuarioMuestra
             {
                 listaUsuarioRol = (List<ViewModelUsuarioRol>)TempData["listaSeleccion"],
                 listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
@@ -144,7 +143,7 @@ namespace ProgramaRoles.Controllers
                {
                     if(item.Chked == true)
                     {
-                        List<DateTime> listaDeFechas = utils.conversionStringAFecha(item.fechas, item.horas);
+                        //List<DateTime> listaDeFechas = utils.conversionStringAFecha(item.fechas, item.horas);
                         //Logica de los roles nuevos                   
                         List<Sroles> rolesAEditar = listaTotal.listaUsuarioRol.First(x => x.id == item.idUsuarioSector).nombreRoles;
                         string roles = UsSecRepo.BuscarUsuarioSector(item.idUsuarioSector).roles;
@@ -152,12 +151,12 @@ namespace ProgramaRoles.Controllers
 
 
                         //Logica de las fechas y hora por cada usuarioSector(listaUsuarioRolHorario)
-                        while (listaDeFechas.Count>0)//1
+                        while (item.listaFechas.Count>0)//1
                         {
-                            item.fechaInicio = listaDeFechas.First();
-                            listaDeFechas.RemoveAt(0);
-                            item.fechaFin = listaDeFechas.First();
-                            listaDeFechas.RemoveAt(0);
+                            item.fechaInicio = item.listaFechas.First();
+                            item.listaFechas.RemoveAt(0);
+                            item.fechaFin = item.listaFechas.First();
+                            item.listaFechas.RemoveAt(0);
                             UsuarioRolHorario usRolHorario = new UsuarioRolHorario(item);
                             listaUsRolHorario.Add(usRolHorario);
                         }

@@ -22,6 +22,7 @@ namespace ProgramaRoles.Models
         public bool Chked { get; set; }
         public string fechas { get; set; }
         public string horas { get; set; }
+        public List<DateTime> listaFechas { get; set; }
 
         public ViewModelUsuarioRolHorario(ViewModelUsuarioRol vMuestra)
         {

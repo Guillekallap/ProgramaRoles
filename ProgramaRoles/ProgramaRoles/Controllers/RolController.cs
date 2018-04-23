@@ -110,7 +110,6 @@ namespace ProgramaRoles.Controllers
             }
             return RedirectToAction("ObtenerRoles", "Rol");
         }
-        //saddsfsdsdffdsdsf
-        //prueba123
+
     }
 }

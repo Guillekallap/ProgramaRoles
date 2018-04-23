@@ -187,7 +187,7 @@ namespace ProgramaRoles.Utils
                             }
                         }
                     }
-                    //Verifico que esté chequeado el rol en el ViewModel paracomprobar si fue modificado o no. 
+                    //Verifico que esté chequeado el rol en el ViewModel para comprobar si fue modificado o no. 
                     else
                     {
                         foreach (string rol in roles)
@@ -233,9 +233,10 @@ namespace ProgramaRoles.Utils
             List<string> listaRoles2 = new List<string>();
             List<string> rolesFinales = null;
 
+            //Reveer
             if (roles2.Count==0)
             {
-            	
+                listaRoles2 = null;
             }
 
             foreach (var rol2 in roles2)
@@ -257,6 +258,18 @@ namespace ProgramaRoles.Utils
             return rolesArreglado;
         }
 
+        public bool VerificarFechaVigenciaDeRol(DateTime fechaInicio)
+        {
+            if(fechaInicio.CompareTo(DateTime.Now)<1)
+                return true;
+            else
+            {
+                return false;
+            }
+        }
+
+
+        /*
         public List<DateTime> conversionStringAFecha(string fechas,string horas)
         {
             List<string> stringFechas = fechas.Split(',','-').ToList();
@@ -282,15 +295,6 @@ namespace ProgramaRoles.Utils
             }
             return listaDeFechas;
         }
-
-        public bool verificarFechaVigenciaDeRol(DateTime fechaInicio)
-        {
-            if(fechaInicio.CompareTo(DateTime.Now)<1)
-                return true;
-            else
-            {
-                return false;
-            }
-        }
+        */
     }
 }

@@ -33,7 +33,7 @@ namespace ProgramaRoles.Models
             this.fechaModificacion = DateTime.Now;
             this.fechaInicio = vmUsRolHorario.fechaInicio;
             this.fechaFin = vmUsRolHorario.fechaFin;
-            this.vigente = (new UtilsString()).verificarFechaVigenciaDeRol(fechaInicio);
+            this.vigente = (new UtilsString()).VerificarFechaVigenciaDeRol(fechaInicio);
             this.emailChked = vmUsRolHorario.emailChked;
         }
 
