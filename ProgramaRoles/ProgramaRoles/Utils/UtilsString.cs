@@ -266,15 +266,13 @@ namespace ProgramaRoles.Utils
             {
                 return false;
             }
-        }
+        }    
 
-
-        /*
-        public List<DateTime> conversionStringAFecha(string fechas,string horas)
+        public List<DateTime> conversionStringAFecha(string fechas)
         {
-            List<string> stringFechas = fechas.Split(',','-').ToList();
-            string[] stringHoras = horas.Split(':', '-', ',');
-            int i = 0;
+            List<string> stringFechas = fechas.Split(',').ToList();
+            //string[] stringHoras = horas.Split(':', '-', ',');
+            //int i = 0;
             List<DateTime> listaDeFechas = new List<DateTime>();
             foreach (string s in stringFechas)
             {
@@ -286,15 +284,70 @@ namespace ProgramaRoles.Utils
                 j++;
                 int año = Convert.ToInt32(fechaDatos[j]);
 
-                int hora = Convert.ToInt32(stringHoras[i]);
-                i++;
-                int minuto = Convert.ToInt32(stringHoras[i]);
-                i++;
-                DateTime fecha = new DateTime(año,mes,dia,hora,minuto,0);
+                //int hora = Convert.ToInt32(stringHoras[i]);
+                //i++;
+                //int minuto = Convert.ToInt32(stringHoras[i]);
+                //i++;
+                DateTime fecha = new DateTime(año, mes, dia);
                 listaDeFechas.Add(fecha);
             }
             return listaDeFechas;
         }
-        */
+
+        public List<DateTime> identificarFechaInicioFechaFin(List<DateTime> listaFechas)
+        {
+            //Logica de las fechas por cada usuarioSector(listaUsuarioRolHorario)
+            bool fechaSiguiente = false;
+            int contadorDias = 0;
+            DateTime primerFecha = listaFechas.First();
+            List<DateTime> fechasInicioFin = new List<DateTime>();
+            fechasInicioFin.Add(primerFecha);
+            foreach (var fecha in listaFechas)
+            {
+                if (primerFecha.AddDays(1) == fecha && fechaSiguiente)
+                {
+                    contadorDias++;
+                    fechaSiguiente = true;
+                    if (contadorDias == 1 && primerFecha!=fechasInicioFin.First())
+                    {
+                        fechasInicioFin.Add(primerFecha);
+                    }
+                    primerFecha = fecha;
+                }
+                else
+                {
+
+                    if (contadorDias==0 && fechaSiguiente) {
+                        fechasInicioFin.Add(primerFecha);
+                        if (primerFecha.AddDays(1) != fecha && primerFecha!=fechasInicioFin.First())
+                        {
+                            fechasInicioFin.Add(primerFecha);
+                        }
+                        primerFecha = fecha;
+                    }
+                    if (contadorDias!=0){
+                        
+                            fechasInicioFin.Add(fechasInicioFin.Last().AddDays(contadorDias));//Fecha Fin del rango
+                            primerFecha = fecha;
+                            contadorDias = 0;
+                        
+                    }
+                }
+
+                if (fecha == listaFechas.Last())
+                {
+                    fechasInicioFin.Add(fecha);//Fecha inicio
+                }
+                fechaSiguiente = true;
+            }
+
+            if (fechasInicioFin.Count() % 2 == 1)
+            {
+                DateTime aux = fechasInicioFin.Last();
+                fechasInicioFin.Add(aux);
+            }
+
+            return fechasInicioFin;
+        }
     }
 }

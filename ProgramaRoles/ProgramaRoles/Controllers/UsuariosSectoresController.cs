@@ -16,6 +16,7 @@ namespace ProgramaRoles.Controllers
         {
             return View();
         }
+
         public ActionResult ObtenerUsuariosSectores()
         {
             return View();
@@ -143,15 +144,15 @@ namespace ProgramaRoles.Controllers
                {
                     if(item.Chked == true)
                     {
-                        //List<DateTime> listaDeFechas = utils.conversionStringAFecha(item.fechas, item.horas);
+                        //Redundante
+                        item.listaFechas = utils.conversionStringAFecha(item.fechas);
+                        item.listaFechas = utils.identificarFechaInicioFechaFin(item.listaFechas);
                         //Logica de los roles nuevos                   
                         List<Sroles> rolesAEditar = listaTotal.listaUsuarioRol.First(x => x.id == item.idUsuarioSector).nombreRoles;
                         string roles = UsSecRepo.BuscarUsuarioSector(item.idUsuarioSector).roles;
                         item.rolesTemporales = utils.OrdenarListaDeRolesTemporales(roles, rolesAEditar);
 
-
-                        //Logica de las fechas y hora por cada usuarioSector(listaUsuarioRolHorario)
-                        while (item.listaFechas.Count>0)//1
+                        while (item.listaFechas.Count > 0)//1
                         {
                             item.fechaInicio = item.listaFechas.First();
                             item.listaFechas.RemoveAt(0);
@@ -161,13 +162,6 @@ namespace ProgramaRoles.Controllers
                             listaUsRolHorario.Add(usRolHorario);
                         }
                         //Validacion de fechas cruzadas.
-
-                    
-                        //if (item.emailChked == true)
-                        //{
-                        //    //Logica del email
-                        //    (new UtilsEmail()).EnviarEmail(item.email, item.nombreUsuario, item.rolesNuevos);
-                        //}
                     }
                     else
                     {
