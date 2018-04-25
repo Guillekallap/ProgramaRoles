@@ -27,10 +27,6 @@
         </div>
     </div>
 
-    <div id="calendario"></div>
-    <br />
-    <textarea id="altField" cols="80" rows="8"></textarea>
-
     <br /><br />
 
     <div class="row">
@@ -58,106 +54,6 @@
         HoverTable();
         ChkedFila();
         MarcarDesmarcarchk();
-    });
-
-    var dateArray = ["03/03/2018", "03/04/2018", "03/05/2018", "03/06/2018", "03/07/2018", "03/08/2018"]
-    var select;
-    var selectConKeyDown;
-    var shiftpressed = false;
-
-    var hoy = new Date();
-    var fechaHoy = hoy.getMonth + "/" + hoy.getDate + "/" + hoy.getFullYear;
-
-    document.body.onkeydown = function (e) {
-        shiftpressed = true;
-    };
-
-    document.body.onkeyup = function (e) {
-        shiftpressed = false;
-    };
-
-    var eventDates = {};
-    eventDates[new Date('03/22/2018')] = new Date('03/22/2018');
-    eventDates[new Date('03/1/2018')] = new Date('03/1/2018');
-    eventDates[new Date('03/8/2018')] = new Date('03/8/2018');
-    eventDates[new Date('03/15/2018')] = new Date('03/15/2018');
-
-
-
-
-    //$(".ui-state-default").on("mouseenter", function () {
-    //    $("mdp-demo").attr('title', 'This is the hover-over text');  // title attribute will be shown during the hover
-    //});
-
-
-
-    $('#calendario').multiDatesPicker({
-
-        //addDates: ['01/14/' + y, '01/16/' + y, '01/18/' + y, '01/20/' + y],
-        numberOfMonths: [2, 1],
-        defaultDate: fechaHoy,
-        dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
-        //monthNamesShort: ["Enero", "Febrero", "Marzo", "Abril",
-        //                  "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
-        //                  "Octubre", "Noviembre", "Diciembre"],
-        monthNames: ["Enero", "Febrero", "Marzo", "Abril",
-            "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
-            "Octubre", "Noviembre", "Diciembre"],
-        //dateFormat: 'dd/mm/yy',
-        //beforeShowDay: $.datepicker.noWeekends,
-
-        timeFormat: 'hh:mm',
-        altField: '#altField',
-        //dateFormat: 'dd/mm/yy',
-
-        /*mode: 'daysRange',
-        autoselectRange: [0, 60],*/
-
-        /*beforeShowDay: function (date) {
-            var highlight = eventDates[date];
-            if (highlight) {
-                return [true, "event", '5:00 - 22.00'];
-            } else {
-                return [true, '', ''];
-            }
-        },*/
-
-        onSelect: function (selectedDate) {
-            //for (i = 1; i < 6; i++)
-            //    $(this).multiDatesPicker('addDates', '01/0' + i + '/2018');
-
-            //$(this).multiDatesPicker('toggleDate', '01/01/2018');
-
-            if (shiftpressed == false)
-                select = selectedDate;
-            else
-                selectConKeyDown = selectedDate;
-
-            var fechaInicio = new Date(select);
-            var fechaFin = new Date(selectConKeyDown);
-
-            var diff = fechaFin.getTime() - fechaInicio.getTime();
-            // (1000*60*60*24) --> milisegundos -> segundos -> minutos -> horas -> días
-            diff = Math.abs(diff / (1000 * 60 * 60 * 24));
-
-            var dias = [];
-            var fec = new Date();
-
-            if (select != null || selectConKeyDown != null) {
-                var fec = fechaFin.getTime() < fechaInicio.getTime() ? fechaFin : fechaInicio;
-
-                for (i = 0; i < diff; i++) {
-                    fec.setDate(fec.getDate() + 1);
-                    dias.push(new Date(fec));
-
-                    if (i == diff - 1)
-                        selectConKeyDown = "";
-                }
-
-                $(this).multiDatesPicker('addDates', dias);
-            }
-
-        },
     });
 
 </script>

@@ -9,7 +9,6 @@
     $('tbody.redColorHover tr').mouseleave(function (e)
     {
         e.target.parentNode.style.backgroundColor = ""
-        debugger;
     });
 }
 
@@ -40,6 +39,7 @@ function LoadPopover()
 
 function ChkedFila() {
     var tablaHover = document.getElementsByClassName('redColorHover');
+
     var myFunction = function () {
         var rows = this.getElementsByTagName('tr');
         for (var i = 0; i < rows.length; i++)
@@ -55,11 +55,11 @@ function ChkedFila() {
 
     for (var i = 0; i < tablaHover.length; i++)
     {
-        tablaHover[i].addEventListener('click', myFunction,true);
+        tablaHover[i].addEventListener('click', myFunction, true);
     }
 
     var nColumnas = $(".redColorHover tr:last td").length;
-
+    debugger;
     /*// Evento que se ejecuta al pulsar en un checkbox*/
     $("input[type=checkbox]").change(function () {
 
