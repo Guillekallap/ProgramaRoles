@@ -8,6 +8,10 @@ namespace ProgramaRoles.Models
 {
     public class UsuarioRolHorario
     {
+        public UsuarioRolHorario()
+        {
+
+        }
         public int id { get; set; }
         public int idUsuarioSector { get; set; }
         public string nombreUsuario { get; set; }
@@ -19,22 +23,19 @@ namespace ProgramaRoles.Models
         public bool vigente { get; set; }
         public bool emailChked { get; set; }
 
-        public UsuarioRolHorario()
-        {
-        
-        }
+ 
 
-        public UsuarioRolHorario(ViewModelUsuarioRolHorario vmUsRolHorario)
+        public UsuarioRolHorario(int idUsuarioSector, string nombreUsuario, string rolesTemporales, string email, DateTime fechaInicio, DateTime fechaFin, bool emailChked)
         {
-            this.idUsuarioSector = vmUsRolHorario.idUsuarioSector;
-            this.nombreUsuario = vmUsRolHorario.nombreUsuario;
-            this.rolesTemporales = vmUsRolHorario.rolesTemporales;
-            this.email = vmUsRolHorario.email;
+            this.idUsuarioSector = idUsuarioSector;
+            this.nombreUsuario = nombreUsuario;
+            this.rolesTemporales = rolesTemporales;
+            this.email = email;
             this.fechaModificacion = DateTime.Now;
-            this.fechaInicio = vmUsRolHorario.fechaInicio;
-            this.fechaFin = vmUsRolHorario.fechaFin;
+            this.fechaInicio = fechaInicio;
+            this.fechaFin = fechaFin;
             this.vigente = (new UtilsString()).VerificarFechaVigenciaDeRol(fechaInicio);
-            this.emailChked = vmUsRolHorario.emailChked;
+            this.emailChked = emailChked;
         }
 
 

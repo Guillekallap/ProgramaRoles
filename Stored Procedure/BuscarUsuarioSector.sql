@@ -1,14 +1,14 @@
 USE [KLINICOS]
 GO
 
-/****** Object:  StoredProcedure [dbo].[BuscarUsuarioSector]    Script Date: 4/4/2018 14:18:40 ******/
+/****** Object:  StoredProcedure [dbo].[BuscarUsuarioSector]    Script Date: 7/5/2018 12:16:23 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-ALTER procedure [dbo].[BuscarUsuarioSector]
+CREATE procedure [dbo].[BuscarUsuarioSector]
 (
 	@id int
 )

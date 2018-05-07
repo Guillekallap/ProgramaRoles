@@ -1,7 +1,7 @@
 USE [KLINICOS]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ListarUsuarioSector]    Script Date: 23/2/2018 13:50:49 ******/
+/****** Object:  StoredProcedure [dbo].[ListarUsuarioSector]    Script Date: 7/5/2018 12:20:45 ******/
 SET ANSI_NULLS ON
 GO
 

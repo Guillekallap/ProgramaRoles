@@ -23,7 +23,9 @@
                     <th class="col-md-4 text-center">Nombre Usuario: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreUsuario)</th>
                     <th class="col-md-2 text-center">Nombre Sector: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreSector)</th>
                     <th id="prop" class="col-md-2 text-center caja">
-                        <input name="emailChked_@i" type='checkbox' checked='checked' > Enviar E-mail <br />
+
+                        @Html.CheckBox("emailChked_" + i,true)Enviar Email
+                        @*<input name="emailChked_@i" type='checkbox' checked='checked'> Enviar E-mail <br />*@
                         @*<input name="Chked_fechaString_@i" hidden class="chkedFechaString" type='checkbox' checked=""> <br />*@
                         <input name="fechaString_@i" class="caja multiDatepickerClass" readonly placeholder="Click aqui, fechas..." style="text-align: center">
                     </th>

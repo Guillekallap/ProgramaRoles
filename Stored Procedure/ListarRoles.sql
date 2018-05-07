@@ -1,7 +1,7 @@
 USE [KLINICOS]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ListarRoles]    Script Date: 23/2/2018 13:50:35 ******/
+/****** Object:  StoredProcedure [dbo].[ListarRoles]    Script Date: 7/5/2018 12:17:01 ******/
 SET ANSI_NULLS ON
 GO
 

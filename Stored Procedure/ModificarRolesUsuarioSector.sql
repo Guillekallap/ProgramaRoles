@@ -1,7 +1,7 @@
 USE [KLINICOS]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ModificarRolesUsuarioSector]    Script Date: 23/2/2018 13:51:03 ******/
+/****** Object:  StoredProcedure [dbo].[ModificarRolesUsuarioSector]    Script Date: 7/5/2018 12:20:38 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -14,7 +14,7 @@ CREATE procedure [dbo].[ModificarRolesUsuarioSector](
 )
 AS
 BEGIN 
-	update Usuario.UsuariosSectores set roles= @roles where id= @id
+	update Usuario.UsuariosSectores set roles= @roles, fechaModi=GETDATE() where id= @id
 END 
 GO
 

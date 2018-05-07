@@ -9,6 +9,10 @@ namespace ProgramaRoles.Models
 {
     public class ViewModelUsuarioRolHorario
     {
+        public ViewModelUsuarioRolHorario(){
+
+        }
+
         public int id { get; set; }
         public int idUsuarioSector { get; set; }
         public string nombreUsuario { get; set; }

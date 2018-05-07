@@ -208,12 +208,12 @@ namespace ProgramaRoles.Repository
             
             com.Parameters.AddWithValue("@idUsuarioSector", idUsuarioSector);
             com.Parameters.AddWithValue("@nombreUsuario", string.IsNullOrEmpty(nombreUsuario) ? (object)DBNull.Value : nombreUsuario);
-            com.Parameters.AddWithValue("@rolesNuevos", string.IsNullOrEmpty(rolesTemporales) ? (object)DBNull.Value : rolesTemporales);
+            com.Parameters.AddWithValue("@rolesTemporales", string.IsNullOrEmpty(rolesTemporales) ? (object)DBNull.Value : rolesTemporales);
             com.Parameters.AddWithValue("@email", string.IsNullOrEmpty(email) ? (object)DBNull.Value : email);
-            com.Parameters.AddWithValue("@emailChked", emailChked ? (object)DBNull.Value : emailChked);
+            com.Parameters.AddWithValue("@emailChked", emailChked);
             com.Parameters.AddWithValue("@fechaInicio", fechaInicio);
             com.Parameters.AddWithValue("@fechaFin", fechaFin);
-            com.Parameters.AddWithValue("@fechaActual", fechaModificacion);
+            com.Parameters.AddWithValue("@fechaModificacion", fechaModificacion);
             com.Parameters.AddWithValue("@vigente", vigente);
             
             try

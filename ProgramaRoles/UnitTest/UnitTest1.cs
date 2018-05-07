@@ -6,7 +6,7 @@ using ProgramaRoles.Utils;
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-
+using System.Linq;
 
 namespace UnitTest
 {
@@ -145,6 +145,18 @@ namespace UnitTest
             List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
             Assert.IsNull(listaFinalFechas4);
         }
+
+        [TestMethod]
+        public void ordenarRolesTemporales()
+        {
+            UsuariosSectores user = (new UsSecRepository()).BuscarUsuarioSector(1016);
+            List<string> listaRoles = user.roles.Split(',').ToList();
+            string rolesOtro =(new UsSecRepository()).BuscarUsuarioSector(4).roles;
+            string Roles= (new UtilsString()).OrdenarListaDeRolesTemporales("ROLE_USUARIOS_ADMINISTRADOR,ROLE_ADMISION_BASE,ROLE_TURNOS_MULTISECTOR,ROLE_TURNOS,ROLE_REGISTRO_MEDICO_EDICION,ROLE_INGRESO", listaRoles);
+            Assert.IsNotNull(Roles);
+        }
+        
+
 
         //[TestMethod]
         //public void ConversionDeFechasCorrecta()

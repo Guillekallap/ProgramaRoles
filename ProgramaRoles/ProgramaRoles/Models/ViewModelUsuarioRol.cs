@@ -17,6 +17,7 @@ namespace ProgramaRoles.Models
         public string nombreSector { get; set; }
         public string email { get; set; }
         public List<Sroles> nombreRoles { get; set; }
+        public string roles { get; set; }
 
         public ViewModelUsuarioRol(UsuariosSectores usec,List<Roles> RolesTotales)
         {
@@ -27,6 +28,7 @@ namespace ProgramaRoles.Models
             UtilsString Auxiliar = new UtilsString();
             List<string> lista_string =Auxiliar.ConvertirDeListaDeRolesAListaNombreRoles(RolesTotales);
             this.nombreRoles = Auxiliar.ParsearPropiedadRoles(usec,lista_string);
+            this.roles = usec.roles;
         }
         
 
