@@ -443,5 +443,34 @@ namespace ProgramaRoles.Utils
 
             return rolesArreglado;
         }
+
+
+        public List<DateTime> listadoDeFechasPorUsuarioRolHorario(List<UsuarioRolHorario> listaUSRH)
+        {
+            List<DateTime> listadoFechas = new List<DateTime>();
+            if(listaUSRH == null)
+            {
+                return listadoFechas;
+            }
+
+            foreach(var entity in listaUSRH)
+            {
+                TimeSpan span = entity.fechaFin - entity.fechaInicio;
+                if (span.Days > 0)
+                {
+                    for (int i = 0; i < (span.Days+1); i++)
+                    {
+                        listadoFechas.Add(entity.fechaInicio.AddDays(i));
+                    }
+                }
+                else
+                {
+                    listadoFechas.Add(entity.fechaInicio);
+                }
+            }
+
+            listadoFechas = listadoFechas.Select(x => x.Date).Distinct().Where(x=>x.Date>DateTime.Now).OrderBy(x => x.Date).ToList();
+            return listadoFechas;
+        }
     }
 }

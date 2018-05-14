@@ -155,7 +155,15 @@ namespace UnitTest
             string Roles= (new UtilsString()).OrdenarListaDeRolesTemporales("ROLE_USUARIOS_ADMINISTRADOR,ROLE_ADMISION_BASE,ROLE_TURNOS_MULTISECTOR,ROLE_TURNOS,ROLE_REGISTRO_MEDICO_EDICION,ROLE_INGRESO", listaRoles);
             Assert.IsNotNull(Roles);
         }
-        
+
+
+        [TestMethod]
+        public void ComprobarListadoDeFechasUSRH()
+        {
+            List<UsuarioRolHorario> listadoFechas = (new UsSecRepository()).ListarUsuarioRolHorario(1007, (new UtilsString()).conversionStringAFecha("14/05/2018").First(), (new UtilsString()).conversionStringAFecha("30/06/2018").First());
+            //List<DateTime> listadoFec = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(1007));        
+            Assert.IsNotNull(listadoFechas);
+        }
 
 
         //[TestMethod]

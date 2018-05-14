@@ -34,6 +34,7 @@ namespace ProgramaRoles.Models
             this.Chked = false;
             this.emailChked = false;
             this.email = vMuestra.email;
+            this.listaFechas = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(vMuestra.id));
         }
     }
 

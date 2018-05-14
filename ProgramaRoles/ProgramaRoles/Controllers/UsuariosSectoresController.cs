@@ -75,11 +75,11 @@ namespace ProgramaRoles.Controllers
 
             ModelState.Clear();
 
-            List<UsuariosSectores> aux = UsSecRepo.ListarTodosUsuariosSectores(dni, nombreUsuario, nombreSector);
+            List<UsuariosSectores> listaUserSectorAux = UsSecRepo.ListarTodosUsuariosSectores(dni, nombreUsuario, nombreSector);
             
-            foreach (var item in aux)
+            foreach (var entity in listaUserSectorAux)
             {
-                ViewModel vModel = new ViewModel(item);
+                ViewModel vModel = new ViewModel(entity);
                 lista.Add(vModel);
             }
             return PartialView("_PartialView", lista);
@@ -147,7 +147,7 @@ namespace ProgramaRoles.Controllers
         }
         //Modificar Estructura
         [HttpPost]
-        public ActionResult EditarRoles( FormCollection collection)
+        public ActionResult EditarRoles(FormCollection collection)
         {
             try
             {
@@ -220,9 +220,7 @@ namespace ProgramaRoles.Controllers
                         //Como resultado en rolesTemporales obtengo aquellos que no se agregaron.
                         userHora.rolesTemporales = (new UtilsString()).OrdenarListaDeRolesTemporales(user.roles, listaRolesString);
 
-                        //UsSecRepo.ModificarRolesUsuarioSector(user.id, user.roles);
-
-                        //Realizar parte de Fechas
+                        //Parte de Fechas
 
                         List<DateTime> listaFechas = (new UtilsString()).conversionStringAFecha(fecha);
                         listaFechas = (new UtilsString()).identificarFechaInicioFechaFin(listaFechas);
@@ -268,12 +266,10 @@ namespace ProgramaRoles.Controllers
                         }
                         else
                         {
-                            return View("EditarRoles");
+                            return View("ObtenerUsuariosSectores");
                         }
                     }
-
                 }
-
                 return RedirectToAction("ObtenerUsuariosSectores");
             }
             catch (Exception ex) {

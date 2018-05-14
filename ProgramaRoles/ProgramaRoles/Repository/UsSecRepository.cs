@@ -93,17 +93,12 @@ namespace ProgramaRoles.Repository
                             roles = Convert.ToString(dr["roles"]),
                         }).FirstOrDefault();
 
-
-
-
             return (usec);
-
 
             }catch(Exception e){
                 throw new Exception(e.Message);
 
             }
-
         }
 
         public List<Roles> ListarTodosRoles()
@@ -266,53 +261,77 @@ namespace ProgramaRoles.Repository
                                      }).ToList();
 
                 return listaUsRolHorario;
-
-
             }
             catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
-        }                
-        
-        //public UsuariosSectores BuscarUsuarioSectorPorRol(int id, int idSector, int idUsuario, string roles)
+        }
+
+
+        public List<UsuarioRolHorario> BuscarUsuarioSectorRolHorario(int idUsuarioSector)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["klinicos_interno"].ToString();
+            con = new SqlConnection(constr);
+            List<UsuarioRolHorario> listaUsRolHorario = new List<UsuarioRolHorario>();
+            SqlCommand com = new SqlCommand("BuscarUsuarioRolHorario", con);
+            com.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataTable dt = new DataTable();
+            try
+            {
+
+                con.Open();
+                com.Parameters.AddWithValue("@idUsuarioSector", idUsuarioSector);
+
+                da.Fill(dt);
+                con.Close();
+                listaUsRolHorario = (from DataRow dr in dt.Rows
+
+                                     select new UsuarioRolHorario()
+                                     {
+                                         id = Convert.ToInt32(dr["id"]),
+                                         idUsuarioSector = Convert.ToInt32(dr["idUsuarioSector"]),
+                                         nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
+                                         rolesTemporales = Convert.ToString(dr["rolesTemporales"]),
+                                         email = Convert.ToString(dr["email"]),
+                                         emailChked = Convert.ToBoolean(dr["emailChked"]),
+                                         fechaInicio = Convert.ToDateTime(dr["fechaInicio"]),
+                                         fechaFin = Convert.ToDateTime(dr["fechaFin"]),
+                                         fechaModificacion = Convert.ToDateTime(dr["fechaModificacion"]),
+                                         vigente = Convert.ToBoolean(dr["vigente"])
+
+                                     }).ToList();
+
+                return listaUsRolHorario;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        //public void DeleteInspector(int InspectorID)
         //{
+        //    SqlConnection conn = dBAccess.GetConnection();
+        //    SqlCommand com = new SqlCommand("sp_Inspector_Update", conn);
+        //    Inspector inspector = GetInspectorByID(InspectorID);
 
-        //    connection();
-        //    SqlCommand com = new SqlCommand("BuscarUsuarioSectorPorRol", con);
+        //    com.Parameters.AddWithValue("@IdInspector", inspector.IDInspector);
+        //    com.Parameters.AddWithValue("@Apellido", inspector.Apellido);
+        //    com.Parameters.AddWithValue("@Nombre", inspector.Nombre);
+        //    com.Parameters.AddWithValue("@Legajo", inspector.Legajo);
+        //    com.Parameters.AddWithValue("@Sexo", inspector.Sexo);
+        //    com.Parameters.AddWithValue("@Habilitado", false);
+        //    com.Parameters.AddWithValue("@FechaNacimiento", inspector.FechaNacimiento);
+        //    com.Parameters.AddWithValue("@UsuarioModific", "To do");
 
-        //    UsuariosSectores Usec = new UsuariosSectores();
         //    com.CommandType = CommandType.StoredProcedure;
-        //    SqlDataAdapter da = new SqlDataAdapter(com);
-        //    DataTable dt = new DataTable();
-
-        //    com.Parameters.AddWithValue("@id", id);
-        //    com.Parameters.AddWithValue("@idSector", idSector);
-        //    com.Parameters.AddWithValue("@idUsuario", idUsuario);
-        //    com.Parameters.AddWithValue("@roles", roles);
         //    try
         //    {
-
-        //        con.Open();
-        //        da.Fill(dt);
-        //        con.Close();
-        //        Usec = (from DataRow dr in dt.Rows
-        //                     select new UsuariosSectores()
-        //                     {
-
-        //                         id = Convert.ToInt32(dr["id"]),
-        //                         idSector = Convert.ToInt32(dr["idSector"]),
-        //                         nombreSector = Convert.ToString(dr["nombreSector"]),
-        //                         idUsuario = Convert.ToInt32(dr["idUsuario"]),
-        //                         nombreUsuario = Convert.ToString(dr["nombreUsuario"]),
-        //                         dni = Convert.ToString(dr["dni"]),
-        //                         roles = Convert.ToString(dr["roles"]),
-        //                     });
-
-
-        //        return (Usec);
-
-
+        //        conn.Open();
+        //        com.ExecuteNonQuery();
+        //        conn.Close();
         //    }
         //    catch (Exception e)
         //    {
@@ -320,6 +339,7 @@ namespace ProgramaRoles.Repository
 
         //    }
 
+        //}
 
     }
 }

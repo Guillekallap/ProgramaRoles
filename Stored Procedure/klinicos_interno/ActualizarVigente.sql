@@ -1,7 +1,7 @@
 USE [KLINICOS_INTERNO]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ActualizarVigente]    Script Date: 7/5/2018 12:14:38 ******/
+/****** Object:  StoredProcedure [dbo].[ActualizarVigente]    Script Date: 14/5/2018 11:14:16 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -12,8 +12,7 @@ CREATE procedure [dbo].[ActualizarVigente]
 as
 begin
 	update dbo.UsuarioRolHorario set vigente=1 where fechaInicio < GETDATE() and fechaFin > GETDATE()
-	--update dbo.UsuarioRolHorario set vigente=0 where fechaFin<GETDATE()
-	--update dbo.UsuarioRolHorario set vigente=0 where fechaInicio<GETDATE()
+	update dbo.UsuarioRolHorario set vigente=0 where GETDATE()> fechaFin and vigente=1
 end
 GO
 
