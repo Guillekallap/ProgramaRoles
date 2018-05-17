@@ -358,6 +358,12 @@ namespace ProgramaRoles.Utils
             int contadorDias = 0;
             DateTime primerFecha = listaFechas.First();
             List<DateTime> fechasInicioFin = new List<DateTime>();
+            //Agregado Desde VSC
+            if(listaFechas!=null)
+            {
+                listaFechas.Remove(listaFechas.Where(x=> x < DateTime.Now))
+            }
+
             fechasInicioFin.Add(primerFecha);
             foreach (var fecha in listaFechas)
             {
@@ -443,7 +449,6 @@ namespace ProgramaRoles.Utils
 
             return rolesArreglado;
         }
-
 
         public List<DateTime> listadoDeFechasPorUsuarioRolHorario(List<UsuarioRolHorario> listaUSRH)
         {
