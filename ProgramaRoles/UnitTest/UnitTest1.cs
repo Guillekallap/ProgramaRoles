@@ -165,6 +165,13 @@ namespace UnitTest
             Assert.IsNotNull(listadoFechas);
         }
 
+        [TestMethod]
+        public void eliminarFechasMenorALaActual()
+        {
+            List<DateTime> listaFechas = (new UtilsString()).conversionStringAFecha("20/08/1998,22/08/1998,24/08/1998,25/08/1998,27/08/1998,28/08/1998,30/08/1998,18/05/2018");
+            listaFechas=(new UtilsString()).identificarFechaInicioFechaFin(listaFechas);
+            Assert.IsNotNull(listaFechas);
+        }
 
         //[TestMethod]
         //public void ConversionDeFechasCorrecta()

@@ -151,6 +151,8 @@ namespace ProgramaRoles.Controllers
         {
             try
             {
+
+
                 int cantidadDeParametros = (int)TempData["cantidadUser"];
                 List<string> listaRoles = (List<string>)TempData["listaRoles"];
                 List<string> listaNombreUsuario = (List<string>)TempData["listaNombreUsuarios"];
@@ -237,6 +239,7 @@ namespace ProgramaRoles.Controllers
                     }
                 }
 
+                Response.Write(ModelState.ToString());
 
                 //Tramitar los repetidos
 
@@ -266,7 +269,8 @@ namespace ProgramaRoles.Controllers
                         else
                         {
                             //Agregar un alert o algo parecido.
-                            Response.Write("bolaaa");
+                            Response.Write(ModelState.ToString());
+
                             //if(Response.Buffer == true){
                             //    Response.RedirectToRoute("~/UsuariosSectores/ObtenerUsuariosSectores");
                             //}

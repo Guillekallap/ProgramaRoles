@@ -317,12 +317,7 @@ namespace ProgramaRoles.Utils
 
         public bool VerificarFechaVigenciaDeRol(DateTime fechaInicio)
         {
-            if (fechaInicio.CompareTo(DateTime.Now) < 1)
-                return true;
-            else
-            {
-                return false;
-            }
+            return fechaInicio.CompareTo(DateTime.Now) < 1 ? true:false;           
         }
 
         public List<DateTime> conversionStringAFecha(string fechas)
@@ -351,18 +346,27 @@ namespace ProgramaRoles.Utils
             return listaDeFechas;
         }
 
+        public static bool VerificarFechaMenorALaActual(DateTime fecha)
+        {
+            return fecha<DateTime.Now?true:false;
+        }
+
         public List<DateTime> identificarFechaInicioFechaFin(List<DateTime> listaFechas)
         {
             //Logica de las fechas por cada usuarioSector(listaUsuarioRolHorario)
             bool fechaSiguiente = false;
             int contadorDias = 0;
-            DateTime primerFecha = listaFechas.First();
             List<DateTime> fechasInicioFin = new List<DateTime>();
             //Agregado Desde VSC
             if(listaFechas!=null)
             {
-                listaFechas.Remove(listaFechas.Where(x=> x < DateTime.Now))
+                listaFechas.RemoveAll(VerificarFechaMenorALaActual);
+                listaFechas=listaFechas.OrderBy(x => x.Date).ToList();
+                if (listaFechas.Count()==0) {
+                    return listaFechas;
+                }
             }
+            DateTime primerFecha = listaFechas.First();
 
             fechasInicioFin.Add(primerFecha);
             foreach (var fecha in listaFechas)
