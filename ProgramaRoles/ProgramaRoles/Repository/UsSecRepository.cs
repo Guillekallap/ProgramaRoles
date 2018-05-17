@@ -268,7 +268,6 @@ namespace ProgramaRoles.Repository
             }
         }
 
-
         public List<UsuarioRolHorario> BuscarUsuarioSectorRolHorario(int idUsuarioSector)
         {
             string constr = ConfigurationManager.ConnectionStrings["klinicos_interno"].ToString();

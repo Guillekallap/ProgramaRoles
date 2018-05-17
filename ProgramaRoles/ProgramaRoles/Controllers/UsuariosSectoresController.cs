@@ -190,7 +190,7 @@ namespace ProgramaRoles.Controllers
                     //Se encuentran los roles otorgados por los usuarios
                     string rolesNuevos = (new UtilsString()).OrdenarRolesPorID(listaClaseRoles, listaRolesString);
 
-                    //Resolución y guardado  a partir de la fecha.
+                    //Resoluciï¿½n y guardado  a partir de la fecha.
                     if (fecha == "")
                     {
                         //Guardado como siempre sin fechas.
@@ -242,11 +242,11 @@ namespace ProgramaRoles.Controllers
 
                 if (listaUsuarioRolhorario != null)
                 {
+                    List<DateTime> listaFechasUSRH = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario(listaUsuarioRolhorario);
                     foreach (var usRolHorario in listaUsuarioRolhorario)
                     {
                         int cantVecesRepetido = 0;
-
-                        //Reveer más adelante
+                        //Reveer mï¿½s adelante
                         List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(usRolHorario.idUsuarioSector, usRolHorario.fechaInicio, usRolHorario.fechaFin);
                         foreach (var user in miniListaUsRoHorario)
                         {
@@ -255,7 +255,6 @@ namespace ProgramaRoles.Controllers
                                 cantVecesRepetido++;
                             }
                             if (cantVecesRepetido != 0) { break; }
-
                         }
 
                         //Se puede buscar una manera eficiente de informar al usuario
@@ -266,7 +265,14 @@ namespace ProgramaRoles.Controllers
                         }
                         else
                         {
-                            return View("ObtenerUsuariosSectores");
+                            //Agregar un alert o algo parecido.
+                            Response.Write("bolaaa");
+                            //if(Response.Buffer == true){
+                            //    Response.RedirectToRoute("~/UsuariosSectores/ObtenerUsuariosSectores");
+                            //}
+                            //ModelState.AddModelError("cursos", "Debe seleccionar por lo menos un curso");
+
+                            //return View("ObtenerUsuariosSectores");
                         }
                     }
                 }
@@ -321,7 +327,7 @@ namespace ProgramaRoles.Controllers
 //        foreach(var usRolHorario in listaUsRolHorario)
 //        {
 //            int cantVecesRepetido = 0;
-//            //Reveer más adelante
+//            //Reveer mï¿½s adelante
 //            List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(usRolHorario.idUsuarioSector, usRolHorario.fechaInicio, usRolHorario.fechaFin);
 //            foreach (var user in miniListaUsRoHorario)
 //            {
