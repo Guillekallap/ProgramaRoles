@@ -5,7 +5,7 @@
 }
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
-<div>Seleccionados: <span id="seleccionados"></span></div>
+@*<div>Seleccionados: <span id="seleccionados"></span></div>*@
 
 <h2>Editar Roles</h2>
 @using (Html.BeginForm("EditarRoles", "UsuariosSectores", FormMethod.Post))
@@ -23,7 +23,7 @@
                     <th class="col-md-2 text-center">Nombre Sector: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreSector)</th>
                     <th id="prop" class="col-md-2 text-center caja">
 
-                        @Html.CheckBox("emailChked_" + i,true)Enviar Email
+                        @Html.CheckBox("emailChked_" + i, true)Enviar Email
                         @*<input name="emailChked_@i" type='checkbox' checked='checked'> Enviar E-mail <br />*@
                         @*<input name="Chked_fechaString_@i" hidden class="chkedFechaString" type='checkbox' checked=""> <br />*@
                         <input name="fechaString_@i" class="caja multiDatepickerClass" readonly placeholder="Click aqui, fechas..." style="text-align: center">
@@ -44,6 +44,8 @@
                         </td>
 
                         @Html.HiddenFor(x => x.listaUsuarioRol[i].nombreRoles[j].roles.rol)
+
+
                         <td></td>
                         <td></td>
                         <td></td>
@@ -75,15 +77,25 @@
 
     var hoy = new Date();
     var fechasInput;
-    
-    /* function */
-    /*function doThing()
-    {
-        if (this.value == "")
-            document.getElementsByClassName("chkedFechaString")[0].prop('checked', false);
-        else
-            document.getElementsByClassName("chkedFechaString")[0].prop('checked', true);
-    }*/
+
+    var jsonObj = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
+    var eventDates = [];
+
+    for (i = 0; i < jsonObj.length; i++) {
+        for (j = 0; j < jsonObj[i].listaFechas.length; j++) {
+            var cadena = jsonObj[i].listaFechas[j];
+
+            cadena = cadena.replace("/Date(", "")
+            cadena = cadena.replace(")/", "")
+            var aux = new Date();
+            aux.setTime(cadena);
+
+            cadena = aux.getMonth() + "/" + aux.getDate() + "/" + aux.getFullYear();
+            debugger;
+            eventDates[new Date(cadena)] = new Date(cadena);
+            //eventDates.push(new Date(cadena));
+        }
+    }
 
     $(document).ready(function () {
 
@@ -100,22 +112,23 @@
         var shiftpressed = false;
 
         document.body.onkeydown = function (e) {
-            $("#seleccionados").html("true" + hoy);
+            //$("#seleccionados").html("true" + hoy);
             shiftpressed = true;
             //hoy.setMonth(hoy.getMonth() + 6);
         };
 
         document.body.onkeyup = function (e) {
-            $("#seleccionados").html("false" + hoy);
+            //$("#seleccionados").html("false" + hoy);
             shiftpressed = false;
+            debugger;
+            //eventDates.splice(x, 1);  //borra a partir del elemento x
+            //eventDates.pop();         //borra el ultimo el elemento del array
+            eventDates = [];          //Borra todo el array
+            
+            
         };
 
         var dateArray = ["03/03/2018", "03/04/2018", "03/05/2018", "03/06/2018", "03/07/2018", "03/08/2018"]
-        var eventDates = {};
-        eventDates[new Date('03/22/2018')] = new Date('03/22/2018');
-        eventDates[new Date('03/1/2018')] = new Date('03/1/2018');
-        eventDates[new Date('03/8/2018')] = new Date('03/8/2018');
-        eventDates[new Date('03/15/2018')] = new Date('03/15/2018');
 
         $(".multiDatepickerClass").multiDatesPicker({
 
@@ -131,7 +144,7 @@
             monthNames: ["Enero", "Febrero", "Marzo", "Abril",
                 "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
                 "Octubre", "Noviembre", "Diciembre"],
-            
+
             //beforeShowDay: $.datepicker.noWeekends,
 
             //altField: '#altField',
@@ -139,14 +152,14 @@
             /*mode: 'daysRange',
             autoselectRange: [0, 60],*/
 
-            /*beforeShowDay: function (date) {
+            beforeShowDay: function (date) {
                 var highlight = eventDates[date];
                 if (highlight) {
                     return [true, "event", '5:00 - 22.00'];
                 } else {
                     return [true, '', ''];
                 }
-            },*/
+            },
 
             onSelect: function (selectedDate) {
                 var aux = selectedDate.split('/');
@@ -164,9 +177,8 @@
 
                 // (1000*60*60*24) --> milisegundos -> segundos -> minutos -> horas -> días
                 diff = Math.abs(diff / (1000 * 60 * 60 * 24));
-
                 var fec = new Date();
-                
+
                 if (select != "" && selectConKeyDown != "")
                 {
                     fec = fechaFin.getTime() < fechaInicio.getTime() ? fechaFin : fechaInicio;
@@ -178,11 +190,9 @@
                         $(".multiDatepickerClass").multiDatesPicker('toggleDate', datestring);
                     }
                     selectConKeyDown = "";
-                    
+
                 }
 
-                /* event listener */
-                //document.getElementsByClassName("multiDatepickerClass")[0].addEventListener('focusout', doThing);
 
             }
         });
@@ -203,5 +213,10 @@
         box-sizing: border-box;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
+    }
+    .event a {
+        background-color: #0094ff !important;
+        background-image: none !important;
+        color: #ffffff !important;
     }
 </style>

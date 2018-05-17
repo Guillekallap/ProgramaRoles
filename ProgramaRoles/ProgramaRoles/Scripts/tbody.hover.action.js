@@ -59,7 +59,7 @@ function ChkedFila() {
     }
 
     var nColumnas = $(".redColorHover tr:last td").length;
-    debugger;
+
     /*// Evento que se ejecuta al pulsar en un checkbox*/
     $("input[type=checkbox]").change(function () {
 
