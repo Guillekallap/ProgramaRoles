@@ -79,8 +79,9 @@
     var fechasInput;
 
     var jsonObj = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
+    //var eventDates = {};
     var eventDates = [];
-
+   
     for (i = 0; i < jsonObj.length; i++) {
         for (j = 0; j < jsonObj[i].listaFechas.length; j++) {
             var cadena = jsonObj[i].listaFechas[j];
@@ -92,8 +93,8 @@
 
             cadena = aux.getMonth() + 1 + "/" + aux.getDate() + "/" + aux.getFullYear();
 
-            eventDates[new Date(cadena)] = new Date(cadena);
             //eventDates.push(new Date(cadena));
+            //eventDates[new Date(cadena)] = new Date(cadena);
         }
     }
 
@@ -105,7 +106,6 @@
         //$('td:nth-child(5),th:nth-child(5)').hide();
         HoverTable();
         ChkedFila();
-
 
         var select = "";
         var selectConKeyDown = "";
@@ -124,15 +124,15 @@
             //eventDates.splice(x, 1);  //borra a partir del elemento x
             //eventDates.pop();         //borra el ultimo el elemento del array
             eventDates = [];          //Borra todo el array
-            
+            debugger;
             
         };
 
         //var dateArray = ["03/03/2018", "03/04/2018", "03/05/2018", "03/06/2018", "03/07/2018", "03/08/2018"]
 
+        var auxiliar = "#" + $(".multiDatepickerClass")[0].id;
         debugger;
-
-        $("#fechaString_0").multiDatesPicker({
+        $(auxiliar).multiDatesPicker({
             beforeShowDay: function (date) {
                 var highlight = eventDates[date];
                 if (highlight) {
@@ -165,8 +165,6 @@
             /*mode: 'daysRange',
             autoselectRange: [0, 60],*/
 
-            
-
             onSelect: function (selectedDate) {
                 var aux = selectedDate.split('/');
                 selectedDate = aux[1] + "/" + aux[0] + "/" + aux[2];
@@ -198,10 +196,10 @@
                     selectConKeyDown = "";
 
                 }
-
-
             }
         });
+
+
     });
 </script>
 
