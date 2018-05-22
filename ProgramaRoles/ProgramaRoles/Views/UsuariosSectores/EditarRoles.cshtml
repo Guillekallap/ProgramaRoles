@@ -1,0 +1,228 @@
+﻿@model ProgramaRoles.Models.ViewModelUsuarioMuestra
+
+@{
+    ViewBag.Title = "Editar Roles";
+}
+<script src="~/Scripts/tbody.hover.action.js"></script>
+
+<div>Seleccionados: <span id="seleccionados"></span></div>
+
+<h2>Editar Roles</h2>
+@using (Html.BeginForm("EditarRoles", "UsuariosSectores", FormMethod.Post))
+{
+
+    for (int i = 0; i < Model.listaUsuarioRol.Count(); i++)
+    {
+        <table class="table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="container text-center"></th>
+
+                    <th class="col-md-4 text-center">N° ID: @Html.DisplayFor(x => x.listaUsuarioRol[i].id)</th>
+                    <th class="col-md-4 text-center">Nombre Usuario: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreUsuario)</th>
+                    <th class="col-md-2 text-center">Nombre Sector: @Html.DisplayFor(x => x.listaUsuarioRol[i].nombreSector)</th>
+                    <th id="prop" class="col-md-2 text-center caja">
+
+                        @Html.CheckBox("emailChked_" + i, true)Enviar Email
+                        @*<input name="emailChked_@i" type='checkbox' checked='checked'> Enviar E-mail <br />*@
+                        @*<input name="Chked_fechaString_@i" hidden class="chkedFechaString" type='checkbox' checked=""> <br />*@
+                        <input name="fechaString_@i" class="caja multiDatepickerClass" readonly placeholder="Click aqui, fechas..." style="text-align: center">
+                    </th>
+            </thead>
+
+            <tbody class="redColorHover">
+                @Html.HiddenFor(x => x.listaUsuarioRol[i].id)
+
+                @for (int j = 0; j < Model.listaUsuarioRol[i].nombreRoles.Count(); j++)
+                {
+                    <tr>
+                        <td style="text-align:center">
+                            @Html.CheckBoxFor(x => x.listaUsuarioRol[i].nombreRoles[j].RolSeleccionado)
+                        </td>
+                        <td style="padding-left:1%">
+                            @Model.listaUsuarioRol[i].nombreRoles[j].roles.rol
+                        </td>
+
+                        @Html.HiddenFor(x => x.listaUsuarioRol[i].nombreRoles[j].roles.rol)
+
+
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    }
+
+    <br /><br />
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <button type="submit" class="btn btn-primary btn-success active btn-block">Grabar</button>
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+
+    <div class="text-center">
+        <br />
+        <a style="text-align:center" class="btn btn-default btn-success" href="~/UsuariosSectores/ObtenerUsuariosSectores" title="Volver Atrás">Atrás</a>
+    </div>
+}
+
+<script>
+
+    var hoy = new Date();
+    var fechasInput;
+
+    var jsonObj = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
+    var eventDates = [];
+
+    for (i = 0; i < jsonObj.length; i++) {
+        for (j = 0; j < jsonObj[i].listaFechas.length; j++) {
+            var cadena = jsonObj[i].listaFechas[j];
+
+            cadena = cadena.replace("/Date(", "")
+            cadena = cadena.replace(")/", "")
+            var aux = new Date();
+            aux.setTime(cadena);
+
+            cadena = aux.getMonth() + 1 + "/" + aux.getDate() + "/" + aux.getFullYear();
+
+            eventDates[new Date(cadena)] = new Date(cadena);
+            //eventDates.push(new Date(cadena));
+        }
+    }
+
+    $(document).ready(function () {
+
+        //Oculta una columna solo (td)
+        //$('td:nth-child(1)').hide();
+        //Oculta columna si tiene (th)
+        //$('td:nth-child(5),th:nth-child(5)').hide();
+        HoverTable();
+        ChkedFila();
+
+
+        var select = "";
+        var selectConKeyDown = "";
+        var shiftpressed = false;
+
+        document.body.onkeydown = function (e) {
+            $("#seleccionados").html("true" + hoy);
+            shiftpressed = true;
+            //hoy.setMonth(hoy.getMonth() + 6);
+        };
+
+        document.body.onkeyup = function (e) {
+            $("#seleccionados").html("false" + hoy);
+            shiftpressed = false;
+
+            //eventDates.splice(x, 1);  //borra a partir del elemento x
+            //eventDates.pop();         //borra el ultimo el elemento del array
+            eventDates = [];          //Borra todo el array
+            
+            
+        };
+
+        //var dateArray = ["03/03/2018", "03/04/2018", "03/05/2018", "03/06/2018", "03/07/2018", "03/08/2018"]
+
+        debugger;
+
+        $("#fechaString_0").multiDatesPicker({
+            beforeShowDay: function (date) {
+                var highlight = eventDates[date];
+                if (highlight) {
+                    return [true, "event", '5:00 - 22.00'];
+                } else {
+                    return [true, '', ''];
+                }
+            },
+        });
+
+        $(".multiDatepickerClass").multiDatesPicker({
+        
+            //addDates: ['01/14/' + y, '01/16/' + y, '01/18/' + y, '01/20/' + y],
+            dateFormat: 'dd/mm/yy',
+            numberOfMonths: [2, 3],
+            defaultDate: hoy,
+            dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+            monthNamesShort: ["Enero", "Febrero", "Marzo", "Abril",
+                "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+                "Octubre", "Noviembre", "Diciembre"],
+
+            monthNames: ["Enero", "Febrero", "Marzo", "Abril",
+                "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+                "Octubre", "Noviembre", "Diciembre"],
+
+            //beforeShowDay: $.datepicker.noWeekends,
+
+            //altField: '#altField',
+
+            /*mode: 'daysRange',
+            autoselectRange: [0, 60],*/
+
+            
+
+            onSelect: function (selectedDate) {
+                var aux = selectedDate.split('/');
+                selectedDate = aux[1] + "/" + aux[0] + "/" + aux[2];
+
+                if (shiftpressed == false)
+                    select = selectedDate;
+                else
+                    selectConKeyDown = selectedDate;
+
+                var fechaInicio = new Date(select);
+                var fechaFin = new Date(selectConKeyDown);
+
+                diff = fechaFin.getTime() - fechaInicio.getTime();
+
+                // (1000*60*60*24) --> milisegundos -> segundos -> minutos -> horas -> días
+                diff = Math.abs(diff / (1000 * 60 * 60 * 24));
+                var fec = new Date();
+
+                if (select != "" && selectConKeyDown != "")
+                {
+                    fec = fechaFin.getTime() < fechaInicio.getTime() ? fechaFin : fechaInicio;
+
+                    for (i = 0; i < diff - 1; i++) {
+                        fec.setDate(fec.getDate() + 1);
+                        var datestring = fec.getDate() + "/" + (fec.getMonth() + 1) + "/" + fec.getFullYear();
+
+                        $(this).multiDatesPicker('toggleDate', datestring);
+                    }
+                    selectConKeyDown = "";
+
+                }
+
+
+            }
+        });
+    });
+</script>
+
+<style>
+    .sinborde {
+        border: 0;
+    }
+
+    .caja {
+        padding: 0;
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    .event a {
+        background-color: #0094ff !important;
+        background-image: none !important;
+        color: #ffffff !important;
+    }
+</style>

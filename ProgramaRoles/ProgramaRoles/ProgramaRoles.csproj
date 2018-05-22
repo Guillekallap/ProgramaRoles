@@ -165,7 +165,6 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\UsuariosSectores\EditarRoles.cshtml" />
     <Content Include="Views\UsuariosSectores\ObtenerUsuariosSectores.cshtml" />
     <Content Include="Views\Shared\_PartialView.cshtml" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
@@ -180,6 +179,7 @@
     <Content Include="Views\Rol\ObtenerRoles.cshtml" />
     <Content Include="Views\UsuariosSectores\Index.cshtml" />
     <Content Include="Views\Rol\EditarUsuarioSector.cshtml" />
+    <Content Include="Views\UsuariosSectores\EditarRoles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

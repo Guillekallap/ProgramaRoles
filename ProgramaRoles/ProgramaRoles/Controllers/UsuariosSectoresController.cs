@@ -287,6 +287,16 @@ namespace ProgramaRoles.Controllers
             }
         }
 
+        public ActionResult GrabarUsuario()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult GrabarUsuario(List<UsuarioRolHorario> ListUSRH)
+        {
+            return RedirectToAction("ObtenerUsuariosSectores");
+        }
     }
 }
 
