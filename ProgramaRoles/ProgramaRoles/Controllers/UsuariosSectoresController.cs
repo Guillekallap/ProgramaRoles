@@ -145,14 +145,12 @@ namespace ProgramaRoles.Controllers
 
             return View(viewModelUsMuestra);
         }
-        //Modificar Estructura
+
         [HttpPost]
         public ActionResult EditarRoles(FormCollection collection)
         {
             try
-            {
-
-
+            {                
                 int cantidadDeParametros = (int)TempData["cantidadUser"];
                 List<string> listaRoles = (List<string>)TempData["listaRoles"];
                 List<string> listaNombreUsuario = (List<string>)TempData["listaNombreUsuarios"];
@@ -239,8 +237,6 @@ namespace ProgramaRoles.Controllers
                     }
                 }
 
-                Response.Write(ModelState.ToString());
-
                 //Tramitar los repetidos
 
                 if (listaUsuarioRolhorario != null)
@@ -265,12 +261,16 @@ namespace ProgramaRoles.Controllers
                         if (cantVecesRepetido == 0)
                         {
                             UsSecRepo.AgregarUsuarioSectorRolHorario(usRolHorario.idUsuarioSector, usRolHorario.nombreUsuario, usRolHorario.rolesTemporales, usRolHorario.email, usRolHorario.emailChked, usRolHorario.fechaInicio, usRolHorario.fechaFin, usRolHorario.fechaModificacion, usRolHorario.vigente);
+                            if (ModelState.IsValid)
+                            {
+                                return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
+                            }
                         }
                         else
                         {
                             //Agregar un alert o algo parecido.
                             Response.Write(ModelState.ToString());
-
+                            var prueba = ModelState.Values;
                             //if(Response.Buffer == true){
                             //    Response.RedirectToRoute("~/UsuariosSectores/ObtenerUsuariosSectores");
                             //}
