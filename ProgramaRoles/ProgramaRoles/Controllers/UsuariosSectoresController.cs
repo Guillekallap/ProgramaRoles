@@ -1,5 +1,6 @@
 using ProgramaRoles.Models;
 using ProgramaRoles.Repository;
+using ProgramaRoles.ViewModels;
 using ProgramaRoles.Utils;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace ProgramaRoles.Controllers
     public class UsuariosSectoresController : Controller
     {
         UsSecRepository UsSecRepo = new UsSecRepository();
+
 
         public ActionResult Index()
         {
@@ -136,8 +138,8 @@ namespace ProgramaRoles.Controllers
                 listaRol.Add(item.roles);
                 listaNombreUsuario.Add(item.nombreUsuario);
                 listaEmail.Add(item.email);
-
             }
+
             TempData["cantidadUser"] = viewModelUsMuestra.listaUsuarioRol.Count();
             TempData["listaRoles"] = listaRol;
             TempData["listaNombreUsuarios"] = listaNombreUsuario;
@@ -149,28 +151,32 @@ namespace ProgramaRoles.Controllers
         [HttpPost]
         public ActionResult EditarRoles(FormCollection collection)
         {
+            int cantidadDeParametros = (int)TempData["cantidadUser"];
+            List<string> listaRoles = (List<string>)TempData["listaRoles"];
+            List<string> listaNombreUsuario = (List<string>)TempData["listaNombreUsuarios"];
+            List<string> listaEmail = (List<string>)TempData["listaEmails"];
+
             try
             {                
-                int cantidadDeParametros = (int)TempData["cantidadUser"];
-                List<string> listaRoles = (List<string>)TempData["listaRoles"];
-                List<string> listaNombreUsuario = (List<string>)TempData["listaNombreUsuarios"];
-                List<string> listaEmail = (List<string>)TempData["listaEmails"];
-
                 List<Roles> listaClaseRoles = UsSecRepo.ListarTodosRoles();
                 int cantRoles = listaClaseRoles.Count();
-                List<UsuarioRolHorario> listaUsuarioRolhorario = new List<UsuarioRolHorario>();
+                List<UsuarioRolHorario> listaUSRHAGrabar = new List<UsuarioRolHorario>();
+                List<UsuarioRolHorario> listaUSRHAGrabarInvalido = new List<UsuarioRolHorario>();
+                List<UsuariosSectores> listUserAGrabar = new List<UsuariosSectores>();
 
                 for (int i = 0; i < cantidadDeParametros; i++)
-                {
+                {                    
                     UsuariosSectores user = new UsuariosSectores();
                     UsuarioRolHorario userHora = new UsuarioRolHorario();
                     List<string> listaRolesString = new List<string>();
 
+                    //FechaString luego a validar y convertida en listaFechas
                     string fecha = collection["fechaString_" + i].ToString();
+
+                    //Obtener IDUsuarioSector
                     user.id = Convert.ToInt32(collection["listaUsuarioRol[" + i + "].id"].ToString());
 
                     //Mecanica de los roles
-
                     for (int j = 0; j < cantRoles; j++)
                     {
 
@@ -188,13 +194,13 @@ namespace ProgramaRoles.Controllers
                     }
 
                     //Se encuentran los roles otorgados por los usuarios
-                    string rolesNuevos = (new UtilsString()).OrdenarRolesPorID(listaClaseRoles, listaRolesString);
+                    user.roles = (new UtilsString()).OrdenarRolesPorID(listaClaseRoles, listaRolesString);
 
-                    //Resoluci�n y guardado  a partir de la fecha.
+                    //Resolucion y Validacion a partir de la fecha.
                     if (fecha == "")
                     {
-                        //Guardado como siempre sin fechas.
-                        UsSecRepo.ModificarRolesUsuarioSector(user.id, rolesNuevos);
+                        //Luego para Enviar A Vista GrabarValido
+                        listUserAGrabar.Add(user);
 
                         //Borra lo que no necesita para designarlo correctamente a UsuarioRolHorario
                         listaRoles.RemoveAt(0);
@@ -203,175 +209,157 @@ namespace ProgramaRoles.Controllers
                     }
                     else
                     {
-
-                        //Realizar lo de UsuarioRolHorario
+                        //Verifica el emailChecked para UsuarioRolHorario
                         if (collection["emailChked_" + i].Contains("true")) { userHora.emailChked = true; }
                         else { userHora.emailChked = false; }
 
                         //Obtener roles "anteriores" a partir de la vista.
                         user.roles = listaRoles.First();
                         listaRoles.RemoveAt(0);
+                        //Obtener nombreUsuario a partir de la vista.
                         userHora.nombreUsuario = listaNombreUsuario.First();
                         listaNombreUsuario.RemoveAt(0);
+                        //Obtener email a partir de la vista.
                         userHora.email = listaEmail.First();
                         listaEmail.RemoveAt(0);
 
-                        //Ya tengo en listaRolesString todos los que fue eligiendo el usuario.
-                        //Como resultado en rolesTemporales obtengo aquellos que no se agregaron.
+                        /*Ya tengo en listaRolesString todos los que fue eligiendo el usuario.
+                          Como resultado en rolesTemporales obtengo aquellos que no se agregaron.*/
                         userHora.rolesTemporales = (new UtilsString()).OrdenarListaDeRolesTemporales(user.roles, listaRolesString);
 
-                        //Parte de Fechas
-
+                        //Parte de Fechas, Primero conversion de string a fecha, luego se busca el inicio y fin.
                         List<DateTime> listaFechas = (new UtilsString()).conversionStringAFecha(fecha);
                         listaFechas = (new UtilsString()).identificarFechaInicioFechaFin(listaFechas);
 
-                        while (listaFechas.Count() > 0)//1
+                        for (int j=0; j<listaFechas.Count();j++)
                         {
                             userHora.fechaInicio = listaFechas.First();
                             listaFechas.RemoveAt(0);
                             userHora.fechaFin = listaFechas.First();
                             listaFechas.RemoveAt(0);
-                            UsuarioRolHorario usRolHorario = new UsuarioRolHorario(user.id, userHora.nombreUsuario, userHora.rolesTemporales, userHora.email, userHora.fechaInicio, userHora.fechaFin, userHora.emailChked);
-                            listaUsuarioRolhorario.Add(usRolHorario);
+
+                            UsuarioRolHorario USRH = new UsuarioRolHorario(user.id, userHora.nombreUsuario, userHora.rolesTemporales, userHora.email, userHora.fechaInicio, userHora.fechaFin, userHora.emailChked);
+
+                            List<DateTime> listaFechasUSRH = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario(USRH);
+
+                            int cantVecesRepetido = 0;
+                            List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(USRH.idUsuarioSector, USRH.fechaInicio, USRH.fechaFin);
+
+                            foreach (var miniUSRH in miniListaUsRoHorario)
+                            {
+                                if (!(((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) < 1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) < 1)) || ((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) > -1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) > -1))))
+                                {
+                                    cantVecesRepetido++;
+                                }
+                                if (cantVecesRepetido != 0) { break; }
+                            }
+
+                            if (cantVecesRepetido == 0)
+                            {
+                                listaUSRHAGrabar.Add(USRH);
+                            }
+                            else
+                            {
+                                listaUSRHAGrabarInvalido.Add(USRH);
+                            }
                         }
                     }
                 }
 
-                //Tramitar los repetidos
-
-                if (listaUsuarioRolhorario != null)
+                TempData["listUsuarioSector"] = listUserAGrabar;
+                TempData["listUSRHV"] = listaUSRHAGrabar;
+                if (listaUSRHAGrabarInvalido.Count()!=0)
                 {
-                    List<DateTime> listaFechasUSRH = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario(listaUsuarioRolhorario);
-                    foreach (var usRolHorario in listaUsuarioRolhorario)
-                    {
-                        int cantVecesRepetido = 0;
-                        //Reveer m�s adelante
-                        List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(usRolHorario.idUsuarioSector, usRolHorario.fechaInicio, usRolHorario.fechaFin);
-                        foreach (var user in miniListaUsRoHorario)
-                        {
-                            if (!(((usRolHorario.fechaInicio.CompareTo(user.fechaInicio) < 1) && (usRolHorario.fechaFin.CompareTo(user.fechaInicio) < 1)) && ((usRolHorario.fechaInicio.CompareTo(user.fechaFin) < 1) && (usRolHorario.fechaFin.CompareTo(user.fechaFin) < 1)) || ((usRolHorario.fechaInicio.CompareTo(user.fechaInicio) > -1) && (usRolHorario.fechaFin.CompareTo(user.fechaInicio) > -1)) && ((usRolHorario.fechaInicio.CompareTo(user.fechaFin) > -1) && (usRolHorario.fechaFin.CompareTo(user.fechaFin) > -1))))
-                            {
-                                cantVecesRepetido++;
-                            }
-                            if (cantVecesRepetido != 0) { break; }
-                        }
-
-                        //Se puede buscar una manera eficiente de informar al usuario
-                        //Como decir este UsuarioRolHorario no puede ser ingresado a la bdd o un alert('Los UsuarioRolHorario que no han sido ingresados son los siguientes: "mostrar id y fechas."')
-                        if (cantVecesRepetido == 0)
-                        {
-                            UsSecRepo.AgregarUsuarioSectorRolHorario(usRolHorario.idUsuarioSector, usRolHorario.nombreUsuario, usRolHorario.rolesTemporales, usRolHorario.email, usRolHorario.emailChked, usRolHorario.fechaInicio, usRolHorario.fechaFin, usRolHorario.fechaModificacion, usRolHorario.vigente);
-                            if (ModelState.IsValid)
-                            {
-                                return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
-                            }
-                        }
-                        else
-                        {
-                            //Agregar un alert o algo parecido.
-                            Response.Write(ModelState.ToString());
-                            var prueba = ModelState.Values;
-                            //if(Response.Buffer == true){
-                            //    Response.RedirectToRoute("~/UsuariosSectores/ObtenerUsuariosSectores");
-                            //}
-                            //ModelState.AddModelError("cursos", "Debe seleccionar por lo menos un curso");
-
-                            //return View("ObtenerUsuariosSectores");
-                        }
-                    }
+                    TempData["listUSRHI"] = listaUSRHAGrabarInvalido;
+                    return RedirectToAction("GrabarUserInvalido");
                 }
-                return RedirectToAction("ObtenerUsuariosSectores");
+                return RedirectToAction("GrabarUserValido");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
 
-        public ActionResult GrabarUsuario()
+        public ActionResult GrabarUserValido()
         {
-            return View();
+            List<UsuariosSectores> listUserAGrabar = (List<UsuariosSectores>)TempData["listUsuarioSector"];
+            List<UsuarioRolHorario> listaUSRHAGrabar = (List<UsuarioRolHorario>)TempData["listUSRHV"];
+
+            ViewModelUserValido viewModelUserValido = new ViewModelUserValido {
+                listaUsuario = new List<ViewModel>(),
+                listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
+            };
+
+            //Guardado como siempre sin fechas.
+            foreach (UsuariosSectores user  in listUserAGrabar)
+            {
+                UsSecRepo.ModificarRolesUsuarioSector(user.id, user.roles);
+                ViewModel vmUser = new ViewModel(user);
+                viewModelUserValido.listaUsuario.Add(vmUser);
+            }
+            //Guardado USRH validos.
+            foreach (UsuarioRolHorario USRH in listaUSRHAGrabar)
+            {
+                UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
+                ViewModelUsuarioRolHorario vmUserHora = new ViewModelUsuarioRolHorario(USRH);
+                viewModelUserValido.listaUsuarioRolHorario.Add(vmUserHora);
+            }
+
+            return View(viewModelUserValido);
+        }
+
+        public ActionResult GrabarUserInvalido()
+        {
+            List<UsuarioRolHorario> listaUSRHAGrabarInvalido = (List<UsuarioRolHorario>)TempData["listUSRHI"];
+            List<UsuariosSectores> listUserAGrabar = (List<UsuariosSectores>)TempData["listUsuarioSector"];
+            List<UsuarioRolHorario> listaUSRHAGrabar = (List<UsuarioRolHorario>)TempData["listUSRHV"];
+
+            ViewModelUserValido viewModelUserInvalido = new ViewModelUserValido
+            {
+                listaUsuario = new List<ViewModel>(),
+                listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
+            };
+
+            //foreach (UsuariosSectores user in listUserAGrabar)
+            //{
+            //    UsSecRepo.ModificarRolesUsuarioSector(user.id, user.roles);
+            //    ViewModel vmUser = new ViewModel(user);
+            //    viewModelUserInvalido.listaUsuario.Add(vmUser);
+            //}
+
+
+            //Guardado USRH invalidos.
+            foreach (UsuarioRolHorario USRH in listaUSRHAGrabarInvalido)
+            {
+                //UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
+                ViewModelUsuarioRolHorario vmUserHora = new ViewModelUsuarioRolHorario(USRH);
+                viewModelUserInvalido.listaUsuarioRolHorario.Add(vmUserHora);
+            }
+
+            TempData["listUsuarioSector"] = listUserAGrabar;
+            TempData["listUSRHV"] = listaUSRHAGrabar;
+
+            return View(viewModelUserInvalido);
         }
 
         [HttpPost]
-        public ActionResult GrabarUsuario(List<UsuarioRolHorario> ListUSRH)
+        public ActionResult GrabarUserInvalido(ViewModelUserValido USRHInvalido)
         {
-            return RedirectToAction("ObtenerUsuariosSectores");
+            List<UsuariosSectores> listUserAGrabar = (List<UsuariosSectores>)TempData["listUsuarioSector"];
+            List<UsuarioRolHorario> listaUSRHAGrabar = (List<UsuarioRolHorario>)TempData["listUSRHV"];
+            
+            foreach (ViewModelUsuarioRolHorario USRH in USRHInvalido.listaUsuarioRolHorario)
+            {
+                if (USRH.Chked)
+                {
+                    UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
+                }
+            }
+            TempData["listUsuarioSector"] = listUserAGrabar;
+            TempData["listUSRHV"] = listaUSRHAGrabar;
+
+            return RedirectToAction("GrabarUserValido");
         }
     }
 }
-
-
-//UtilsString utils = new UtilsString();
-//List <UsuarioRolHorario> listaUsRolHorario = null;
-//try
-//{
-//    foreach (var item in listaTotal.listaUsuarioRolHorario)
-//   {
-//        if( == )
-//        {
-//            //Redundante
-//            item.listaFechas = utils.conversionStringAFecha(item.fechas);
-//            item.listaFechas = utils.identificarFechaInicioFechaFin(item.listaFechas);
-//            //Logica de los roles nuevos                   
-//            List<Sroles> rolesAEditar = listaTotal.listaUsuarioRol.First(x => x.id == item.idUsuarioSector).nombreRoles;
-//            string roles = UsSecRepo.BuscarUsuarioSector(item.idUsuarioSector).roles;
-//            item.rolesTemporales = utils.OrdenarListaDeRolesTemporales(roles, rolesAEditar);
-
-//            while (item.listaFechas.Count > 0)//1
-//            {
-//                item.fechaInicio = item.listaFechas.First();
-//                item.listaFechas.RemoveAt(0);
-//                item.fechaFin = item.listaFechas.First();
-//                item.listaFechas.RemoveAt(0);
-//                UsuarioRolHorario usRolHorario = new UsuarioRolHorario(item);
-//                listaUsRolHorario.Add(usRolHorario);
-//            }
-//            //Validacion de fechas cruzadas.
-//        }
-//        else
-//        {
-//            List<Sroles> rolesAEditar = listaTotal.listaUsuarioRol.First(x => x.id == item.idUsuarioSector).nombreRoles;
-//            string roles = utils.TraducirRolesAString(rolesAEditar);
-//            UsSecRepo.ModificarRolesUsuarioSector(item.idUsuarioSector, roles);
-
-//        }
-//   }
-//    if(listaUsRolHorario != null)
-//    {
-//        foreach(var usRolHorario in listaUsRolHorario)
-//        {
-//            int cantVecesRepetido = 0;
-//            //Reveer m�s adelante
-//            List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(usRolHorario.idUsuarioSector, usRolHorario.fechaInicio, usRolHorario.fechaFin);
-//            foreach (var user in miniListaUsRoHorario)
-//            {
-//                if (!(((usRolHorario.fechaInicio.CompareTo(user.fechaInicio) < 1) && (usRolHorario.fechaFin.CompareTo(user.fechaInicio) < 1)) && ((usRolHorario.fechaInicio.CompareTo(user.fechaFin) < 1) && (usRolHorario.fechaFin.CompareTo(user.fechaFin) < 1)) || ((usRolHorario.fechaInicio.CompareTo(user.fechaInicio) > -1) && (usRolHorario.fechaFin.CompareTo(user.fechaInicio)  >-1)) && ((usRolHorario.fechaInicio.CompareTo(user.fechaFin) > -1) && (usRolHorario.fechaFin.CompareTo(user.fechaFin) > -1))))
-//                {
-//                    cantVecesRepetido++;
-//                }
-//                if (cantVecesRepetido != 0) break;
-
-//            }
-
-//            //Se puede buscar una manera eficiente de informar al usuario
-//            //Como decir este UsuarioRolHorario no puede ser ingresado a la bdd o un alert('Los UsuarioRolHorario que no han sido ingresados son los siguientes: "mostrar id y fechas."')
-//            if (cantVecesRepetido == 0) {
-//                UsSecRepo.AgregarUsuarioSectorRolHorario(usRolHorario.idUsuarioSector, usRolHorario.nombreUsuario, usRolHorario.rolesTemporales, usRolHorario.email, usRolHorario.emailChked, usRolHorario.fechaInicio, usRolHorario.fechaFin, usRolHorario.fechaModificacion, usRolHorario.vigente);
-//            }else{
-//                return View("EditarRoles");
-//            }
-//        }
-
-//    }
-//return RedirectToAction("ObtenerUsuariosSectores");
-
-//}
-//catch (Exception)
-//{
-//    return RedirectToAction("ObtenerUsuariosSectores");
-//}
-
-//        }
-
-//    }
-//}

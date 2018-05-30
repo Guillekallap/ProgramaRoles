@@ -3,12 +3,15 @@ using ProgramaRoles.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using ProgramaRoles.ViewModels;
 
 namespace ProgramaRoles.Utils
 {
     public class UtilsString
     {
+
+        //Primera Parte Del Proyecto
+
         public List<string> ConvertirDeListaDeRolesAListaNombreRoles(List<Roles> listaRoles)
         {
             List<string> listaRolesString = new List<string>();
@@ -94,6 +97,7 @@ namespace ProgramaRoles.Utils
             string resultado = string.Join(",", listaRolesSeleccionados.ToArray());
             return resultado;
         }
+
 
         //Para la segunda parte del proyecto
         public bool VerificarRolEnUsuarioSector(UsuariosSectores usSec, string rolSeleccionado)
@@ -224,40 +228,12 @@ namespace ProgramaRoles.Utils
 
         }
 
+
+
         //Para tercera parte del proyecto
 
-
         //Aplicar la comparacion de string roles que tenia el usuarioSector y los nuevos que acaba de ingresar por la view para tener los roles temporales en un campo directo hacia UsuarioRolHorario
-        //public string OrdenarListaDeRolesTemporales(string roles1, List<Sroles> roles2)
-        //{
-        //    List<string> listaRoles1 = roles1.Split(',').ToList();
-        //    List<string> listaRoles2 = new List<string>();
-        //    List<string> rolesFinales = null;
 
-        //    //Reveer
-        //    if (roles2.Count==0)
-        //    {
-        //        listaRoles2 = null;
-        //    }
-
-        //    foreach (var rol2 in roles2)
-        //    {
-        //        if (rol2.RolSeleccionado == true)
-        //            listaRoles2.Add(rol2.roles.rol);
-        //    }
-
-        //    foreach(var rol2 in listaRoles2)
-        //    {
-        //        bool encontrado = listaRoles1.Contains(rol2);
-        //        if (encontrado == false)
-        //        {
-        //            rolesFinales.Add(rol2);
-        //        }
-        //    }
-        //    string rolesArreglado = string.Join(",", rolesFinales.ToArray());
-
-        //    return rolesArreglado;
-        //}
         public string OrdenarListaDeRolesTemporales(string roles1, List<string> roles2)
         {
 
@@ -357,18 +333,41 @@ namespace ProgramaRoles.Utils
             bool fechaSiguiente = false;
             int contadorDias = 0;
             List<DateTime> fechasInicioFin = new List<DateTime>();
-            //Agregado Desde VSC
+          
+            //Buscar la fecha actual
+            DateTime fechaActual =listaFechas.Find(x => (x.Date == DateTime.Now.Date) && (x.Month == DateTime.Now.Month) && (x.Year == DateTime.Now.Year));            
+
+            if (listaFechas.Count() == 1 && listaFechas.First().Day==DateTime.Now.Day && listaFechas.First().Month == DateTime.Now.Month && listaFechas.First().Year == DateTime.Now.Year)
+            {
+                fechasInicioFin.Add(listaFechas.First());
+                fechasInicioFin.Add(listaFechas.First().AddHours(23).AddMinutes(59).AddSeconds(59));
+                return fechasInicioFin;
+            }
+
+            //Eliminar Fechas Menores a la actual
             if(listaFechas!=null)
             {
                 listaFechas.RemoveAll(VerificarFechaMenorALaActual);
                 listaFechas=listaFechas.OrderBy(x => x.Date).ToList();
                 if (listaFechas.Count()==0) {
-                    return listaFechas;
+                    return fechasInicioFin;
+                }
+                if (listaFechas.Count() == 1 && fechaActual== DateTime.MinValue)
+                {
+                    fechasInicioFin.Add(listaFechas.First());
+                    fechasInicioFin.Add(listaFechas.First().AddHours(23).AddMinutes(59).AddSeconds(59));
+                    return fechasInicioFin;
                 }
             }
-            DateTime primerFecha = listaFechas.First();
 
+            //Agrego la primera fecha para tener de referencia en la lista.    
+            if (fechaActual != DateTime.MinValue)
+            {
+                listaFechas.Insert(0, fechaActual);
+            }
+            DateTime primerFecha = listaFechas.First();
             fechasInicioFin.Add(primerFecha);
+
             foreach (var fecha in listaFechas)
             {
                 if (primerFecha.AddDays(1) == fecha && fechaSiguiente)
@@ -479,6 +478,30 @@ namespace ProgramaRoles.Utils
             }
 
             listadoFechas = listadoFechas.Select(x => x.Date).Distinct().Where(x=>x.Date>DateTime.Now).OrderBy(x => x.Date).ToList();
+            return listadoFechas;
+        }
+
+        public List<DateTime> listadoDeFechasPorUsuarioRolHorario(UsuarioRolHorario USRH)
+        {
+            List<DateTime> listadoFechas = new List<DateTime>();
+            if (USRH == null)
+            {
+                return listadoFechas;
+            }
+            TimeSpan span = USRH.fechaFin - USRH.fechaInicio;
+            if (span.Days > 0)
+            {
+                for (int i = 0; i < (span.Days + 1); i++)
+                {
+                    listadoFechas.Add(USRH.fechaInicio.AddDays(i));
+                }
+            }
+            else
+            {
+                listadoFechas.Add(USRH.fechaInicio);
+            }
+            
+            listadoFechas = listadoFechas.Select(x => x.Date).Distinct().Where(x => x.Date > DateTime.Now).OrderBy(x => x.Date).ToList();
             return listadoFechas;
         }
     }

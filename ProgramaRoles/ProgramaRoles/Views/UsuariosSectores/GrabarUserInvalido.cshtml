@@ -1,0 +1,80 @@
+﻿@model ProgramaRoles.ViewModels.ViewModelUserValido
+@{
+    ViewBag.Title = "Registros Erroneos";
+}
+
+<legend>@ViewBag.Title</legend>
+
+@using (Html.BeginForm("GrabarUserValido", "UsuariosSectores", FormMethod.Post))
+{
+    <h2>Estos Registros se encuentran duplicados, ¿Desea que perduren los datos seleccionados?</h2>
+    <label>
+        Klinicos Interno
+    </label>
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th class="col-md-1">Sobreescribir</th>
+                <th class="col-md-1">ID</th>
+                <th class="col-md-1">Nombre Usuario</th>
+                <th class="col-md-3">Roles Temp</th>
+                <th class="col-md-1">Email</th>
+                <th class="col-md-1">Fecha Modificación</th>
+                <th class="col-md-1">Fecha Inicio</th>
+                <th class="col-md-1">Fecha Fin</th>
+                <th class="col-md-1">Vigente</th>
+                <th class="col-md-1">Enviar Email</th>
+            </tr>
+        </thead>
+        <tbody class="redColorHover">
+            @for (int i = 0; i < Model.listaUsuarioRolHorario.Count(); i++)
+            {
+                <tr>
+                    <td>@Html.CheckBoxFor(x => x.listaUsuarioRolHorario[i].Chked)</td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].id) </td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].nombreUsuario)</td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].rolesTemporales) </td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].email)</td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].fechaModificacion) </td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].fechaInicio)</td>
+                    <td>@Html.DisplayFor(x => x.listaUsuarioRolHorario[i].fechaFin) </td>
+                    <td>@Html.CheckBoxFor(x => x.listaUsuarioRolHorario[i].vigente)</td>
+                    <td>@Html.CheckBoxFor(x => x.listaUsuarioRolHorario[i].emailChked)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br /><br />
+
+    <div class="row">
+        <div class="col-xs-4"></div>
+
+        <div class="col-xs-2 col-xs-offset-1">
+            <input type="submit" value="Grabar" class="btn btn-default btn-success btn-block" />
+        </div>
+
+        <div class="col-xs-4 col-xs-offset-1"></div>
+    </div>
+}
+
+@*<div class="text-center">
+        <br />
+        <a style="text-align:center" class="btn btn-default btn-success" href="~/UsuariosSectores/ObtenerUsuariosSectores" title="Grabar">Grabar</a>
+    </div>
+    <br />*@
+
+
+<script>
+    $(document).ready(function () {
+        HoverTable();
+        ChkedFila();
+        MarcarDesmarcarchk();
+    });</script>
+<style>
+
+    .event a {
+        background: #5FBA7D !important;
+        color: #ffffff !important;
+    }
+</style>
+

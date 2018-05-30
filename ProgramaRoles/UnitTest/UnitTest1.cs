@@ -1,7 +1,7 @@
-﻿using ProgramaRoles.Controllers;
-using ProgramaRoles.Models;
+﻿using ProgramaRoles.Models;
 using ProgramaRoles.Repository;
 using ProgramaRoles.Utils;
+using ProgramaRoles.ViewModels;
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -109,7 +109,7 @@ namespace UnitTest
         [TestMethod]
         public void verificarListaDeFechas()
         {
-            List<DateTime> listafechas = (new UtilsString()).conversionStringAFecha("22/08/1998,23/08/1998,24/08/1998,26/08/1998,28/08/1998");
+            List<DateTime> listafechas = (new UtilsString()).conversionStringAFecha("22/08/2018,23/08/2018,24/08/2018,26/08/2018,28/08/2018");
             List<DateTime> listaFinalFechas = (new UtilsString()).identificarFechaInicioFechaFin(listafechas);
             Assert.IsNotNull(listaFinalFechas);
         }
@@ -117,7 +117,7 @@ namespace UnitTest
         [TestMethod]
         public void verificarListaDeFechasPares()
         {
-            List<DateTime> listafechas2 = (new UtilsString()).conversionStringAFecha("20/08/1998,22/08/1998,24/08/1998,26/08/1998,28/08/1998");
+            List<DateTime> listafechas2 = (new UtilsString()).conversionStringAFecha("20/08/2018,22/08/2018,24/08/2018,26/08/2018,28/08/2018");
             List<DateTime> listaFinalFechas2 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas2);
             Assert.IsNull(listaFinalFechas2);
         }
@@ -125,7 +125,7 @@ namespace UnitTest
         [TestMethod]
         public void verificarListaDeFechasConjuntasFinal()
         {
-            List<DateTime> listafechas3 = (new UtilsString()).conversionStringAFecha("20/08/1998,22/08/1998,24/08/1998,25/08/1998,26/08/1998,28/08/1998");
+            List<DateTime> listafechas3 = (new UtilsString()).conversionStringAFecha("20/08/2018,22/08/2018,24/08/2018,25/08/2018,26/08/2018,28/08/2018");
             List<DateTime> listaFinalFechas3 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas3);
             Assert.IsNull(listaFinalFechas3);
         }
@@ -133,7 +133,7 @@ namespace UnitTest
         [TestMethod]
         public void verificarListaDeFechasConjuntas()
         {
-            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("20/08/1998,21/08/1998,22/08/1998,24/08/1998,25/08/1998,26/08/1998,27/08/1998");
+            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("20/08/2018,21/08/2018,22/08/2018,24/08/2018,25/08/2018,26/08/2018,27/08/2018");
             List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
             Assert.IsNull(listaFinalFechas4);
         }
@@ -141,9 +141,41 @@ namespace UnitTest
         [TestMethod]
         public void verificarListaDeFechasRandom()
         {
-            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("20/08/1998,22/08/1998,24/08/1998,25/08/1998,27/08/1998,28/08/1998,30/08/1998");
+            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("20/08/2018,22/08/2018,24/08/2018,25/08/2018,27/08/2018,28/08/2018,30/08/2018");
             List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
             Assert.IsNull(listaFinalFechas4);
+        }
+
+        [TestMethod]
+        public void verificarFechaUnDía()
+        {
+            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("31/05/2018");
+            List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
+            Assert.IsNotNull(listaFinalFechas4);
+        }
+
+        [TestMethod]
+        public void verificarFechaActual()
+        {
+            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("30/05/2018");
+            List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
+            Assert.IsNotNull(listaFinalFechas4);
+        }
+
+        [TestMethod]
+        public void verificarFechaActualMásSiguiente()
+        {
+            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("30/05/2018,31/05/2018");
+            List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
+            Assert.IsNotNull(listaFinalFechas4);
+        }
+
+        [TestMethod]
+        public void verificarFechaActualMásSiguienteYAtrasados()
+        {
+            List<DateTime> listafechas4 = (new UtilsString()).conversionStringAFecha("29/05/2018,30/05/2018,31/05/2018");
+            List<DateTime> listaFinalFechas4 = (new UtilsString()).identificarFechaInicioFechaFin(listafechas4);
+            Assert.IsNotNull(listaFinalFechas4);
         }
 
         [TestMethod]
@@ -156,7 +188,6 @@ namespace UnitTest
             Assert.IsNotNull(Roles);
         }
 
-
         [TestMethod]
         public void ComprobarListadoDeFechasUSRH()
         {
@@ -168,7 +199,7 @@ namespace UnitTest
         [TestMethod]
         public void eliminarFechasMenorALaActual()
         {
-            List<DateTime> listaFechas = (new UtilsString()).conversionStringAFecha("20/08/1998,22/08/1998,24/08/1998,25/08/1998,27/08/1998,28/08/1998,30/08/1998,18/05/2018");
+            List<DateTime> listaFechas = (new UtilsString()).conversionStringAFecha("20/08/2018,22/08/2018,24/08/2018,25/08/2018,27/08/2018,28/08/2018,30/08/2018,18/05/2018");
             listaFechas=(new UtilsString()).identificarFechaInicioFechaFin(listaFechas);
             Assert.IsNotNull(listaFechas);
         }
@@ -176,7 +207,7 @@ namespace UnitTest
         //[TestMethod]
         //public void ConversionDeFechasCorrecta()
         //{
-        //    List<DateTime> listafechas = (new UtilsString()).conversionStringAFecha("22/08/1998-22/08/1998,23/08/1998-24/08/1998", "09:00-09:30,10:50-11:45");
+        //    List<DateTime> listafechas = (new UtilsString()).conversionStringAFecha("22/08/2018-22/08/2018,23/08/2018-24/08/2018", "09:00-09:30,10:50-11:45");
         //    Assert.IsNotNull(listafechas);
         //}
 

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using ProgramaRoles.Utils;
 
 namespace ProgramaRoles.Models
@@ -34,9 +31,7 @@ namespace ProgramaRoles.Models
             this.fechaFin = fechaFin;
             this.vigente = (new UtilsString()).VerificarFechaVigenciaDeRol(fechaInicio);
             this.emailChked = emailChked;
-        }
-
-
+        }            
 
     }
 }

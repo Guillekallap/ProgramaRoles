@@ -1,4 +1,4 @@
-﻿@model ProgramaRoles.Models.ViewModelUsuarioMuestra
+﻿@model ProgramaRoles.ViewModels.ViewModelUsuarioMuestra
 
 @{
     ViewBag.Title = "Editar Roles";
@@ -74,7 +74,6 @@
 }
 
 <script>
-
     var hoy = new Date();
     var fechasInput;
 
@@ -136,7 +135,7 @@
             beforeShowDay: function (date) {
                 var highlight = eventDates[date];
                 if (highlight) {
-                    return [true, "event", '5:00 - 22.00'];
+                    return [true, "event", '8:00 - 18:00'];
                 } else {
                     return [true, '', ''];
                 }

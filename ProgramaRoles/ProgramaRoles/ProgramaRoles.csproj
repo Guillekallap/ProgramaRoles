@@ -151,10 +151,11 @@
     <Compile Include="Models\UsuarioRolHorario.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosSectores.cs" />
-    <Compile Include="Models\ViewModel.cs" />
-    <Compile Include="Models\ViewModelUsuarioMuestra.cs" />
-    <Compile Include="Models\ViewModelUsuarioRolHorario.cs" />
-    <Compile Include="Models\ViewModelUsuarioRol.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelUserValido.cs" />
+    <Compile Include="ViewModels\ViewModelUsuarioMuestra.cs" />
+    <Compile Include="ViewModels\ViewModelUsuarioRolHorario.cs" />
+    <Compile Include="ViewModels\ViewModelUsuarioRol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\UsSecRepository.cs" />
     <Compile Include="Utils\UtilsString.cs" />
@@ -180,6 +181,8 @@
     <Content Include="Views\UsuariosSectores\Index.cshtml" />
     <Content Include="Views\Rol\EditarUsuarioSector.cshtml" />
     <Content Include="Views\UsuariosSectores\EditarRoles.cshtml" />
+    <Content Include="Views\UsuariosSectores\GrabarUserValido.cshtml" />
+    <Content Include="Views\UsuariosSectores\GrabarUserInvalido.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

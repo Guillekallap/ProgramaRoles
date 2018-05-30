@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using ProgramaRoles.Models;
 using ProgramaRoles.Utils;
 using ProgramaRoles.Repository;
-using System.Text.RegularExpressions;
+using ProgramaRoles.ViewModels;
 
 
 namespace ProgramaRoles.Controllers
@@ -102,10 +99,8 @@ namespace ProgramaRoles.Controllers
         [HttpPost]
         public ActionResult EditarUsuarioSector(List<ViewModel> lista_VMUsSec, string rolElegido)
         {
-            if(rolElegido!= null) {
-
-                UtilsString utils = new UtilsString();
-                utils.ModificarDatosRolSegunChequeos(lista_VMUsSec, rolElegido);
+            if(rolElegido!= null) {                
+                (new UtilsString()).ModificarDatosRolSegunChequeos(lista_VMUsSec, rolElegido);
                 return RedirectToAction("Index", "UsuariosSectores");
             }
             return RedirectToAction("ObtenerRoles", "Rol");

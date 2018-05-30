@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using ProgramaRoles.Repository;
 using ProgramaRoles.Utils;
+using ProgramaRoles.Repository;
+using ProgramaRoles.Models;
 
-namespace ProgramaRoles.Models
+namespace ProgramaRoles.ViewModels
 {
     public class ViewModelUsuarioRolHorario
     {
@@ -18,7 +17,7 @@ namespace ProgramaRoles.Models
         public string nombreUsuario { get; set; }
         public string rolesTemporales { get; set; }
         public string email { get; set; }
-        public DateTime fechaActual { get; set; }
+        public DateTime fechaModificacion { get; set; }
         public DateTime fechaInicio { get; set; }
         public DateTime fechaFin { get; set; }
         public bool vigente { get; set; }
@@ -35,6 +34,22 @@ namespace ProgramaRoles.Models
             this.emailChked = false;
             this.email = vMuestra.email;
             this.listaFechas = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(vMuestra.id));
+        }
+        public ViewModelUsuarioRolHorario(UsuarioRolHorario vmUSRH)
+        {
+            this.id = vmUSRH.id;
+            this.idUsuarioSector = vmUSRH.idUsuarioSector;
+            this.nombreUsuario = vmUSRH.nombreUsuario;
+            this.rolesTemporales = vmUSRH.rolesTemporales;
+            this.email = vmUSRH.email;
+            this.fechaModificacion = vmUSRH.fechaModificacion;
+            this.fechaInicio = vmUSRH.fechaInicio;
+            this.fechaFin = vmUSRH.fechaFin;
+            this.vigente = vmUSRH.vigente;
+            this.emailChked = vmUSRH.emailChked;
+            this.Chked = true;
+            //this.fechas = null;
+            //this.listaFechas = null;
         }
     }
 

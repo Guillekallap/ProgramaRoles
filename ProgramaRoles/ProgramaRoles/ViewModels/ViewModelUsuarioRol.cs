@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using ProgramaRoles.Models;
 using ProgramaRoles.Utils;
 
-namespace ProgramaRoles.Models
+namespace ProgramaRoles.ViewModels
 {
     public class ViewModelUsuarioRol
     {
