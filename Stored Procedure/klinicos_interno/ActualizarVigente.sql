@@ -1,7 +1,7 @@
 USE [KLINICOS_INTERNO]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ActualizarVigente]    Script Date: 14/5/2018 11:14:16 ******/
+/****** Object:  StoredProcedure [dbo].[ActualizarVigente]    Script Date: 8/6/2018 10:29:21 ******/
 SET ANSI_NULLS ON
 GO
 

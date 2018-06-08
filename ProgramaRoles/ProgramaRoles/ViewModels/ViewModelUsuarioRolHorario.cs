@@ -8,7 +8,7 @@ namespace ProgramaRoles.ViewModels
 {
     public class ViewModelUsuarioRolHorario
     {
-        public ViewModelUsuarioRolHorario(){
+        public ViewModelUsuarioRolHorario() {
 
         }
 
@@ -33,8 +33,9 @@ namespace ProgramaRoles.ViewModels
             this.Chked = false;
             this.emailChked = false;
             this.email = vMuestra.email;
-            this.listaFechas = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(vMuestra.id));
+            this.listaFechas = (new UtilsFecha()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(vMuestra.id));
         }
+
         public ViewModelUsuarioRolHorario(UsuarioRolHorario vmUSRH)
         {
             this.id = vmUSRH.id;
@@ -48,9 +49,22 @@ namespace ProgramaRoles.ViewModels
             this.vigente = vmUSRH.vigente;
             this.emailChked = vmUSRH.emailChked;
             this.Chked = true;
-            //this.fechas = null;
-            //this.listaFechas = null;
         }
+
+        public ViewModelUsuarioRolHorario(ViewModelUsuarioRolHorario vm)
+        {
+            this.idUsuarioSector = vm.idUsuarioSector;
+            this.nombreUsuario = vm.nombreUsuario;
+            this.rolesTemporales = vm.rolesTemporales;
+            this.email = vm.email;
+            this.fechaModificacion = vm.fechaModificacion;
+            this.fechaInicio = vm.fechaInicio;
+            this.fechaFin = vm.fechaFin;
+            this.vigente = vm.vigente;
+            this.emailChked = vm.emailChked;
+            this.Chked = true;
+        }
+
     }
 
     

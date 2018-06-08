@@ -7,7 +7,7 @@
 
 <div>Seleccionados: <span id="seleccionados"></span></div>
 
-<h2>Editar Roles</h2>
+<h1>@ViewBag.Title</h1>
 @using (Html.BeginForm("EditarRoles", "UsuariosSectores", FormMethod.Post))
 {
 
@@ -24,8 +24,6 @@
                     <th id="prop" class="col-md-2 text-center caja">
 
                         @Html.CheckBox("emailChked_" + i, true)Enviar Email
-                        @*<input name="emailChked_@i" type='checkbox' checked='checked'> Enviar E-mail <br />*@
-                        @*<input name="Chked_fechaString_@i" hidden class="chkedFechaString" type='checkbox' checked=""> <br />*@
                         <input name="fechaString_@i" class="caja multiDatepickerClass" readonly placeholder="Click aqui, fechas..." style="text-align: center">
                     </th>
             </thead>
@@ -61,7 +59,7 @@
         <div class="col-xs-4"></div>
 
         <div class="col-xs-2 col-xs-offset-1">
-            <button type="submit" class="btn btn-primary btn-success active btn-block">Grabar</button>
+            <button type="submit" class="btn btn-default btn-success btn-block">Grabar</button>
         </div>
 
         <div class="col-xs-4 col-xs-offset-1"></div>
@@ -77,13 +75,13 @@
     var hoy = new Date();
     var fechasInput;
 
-    var jsonObj = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
+    var listaUsuarioRolHorario = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
     //var eventDates = {};
     var eventDates = [];
    
-    for (i = 0; i < jsonObj.length; i++) {
-        for (j = 0; j < jsonObj[i].listaFechas.length; j++) {
-            var cadena = jsonObj[i].listaFechas[j];
+    for (i = 0; i < listaUsuarioRolHorario.length; i++) {
+        for (j = 0; j < listaUsuarioRolHorario[i].listaFechas.length; j++) {
+            var cadena = listaUsuarioRolHorario[i].listaFechas[j];
 
             cadena = cadena.replace("/Date(", "")
             cadena = cadena.replace(")/", "")
@@ -122,7 +120,7 @@
 
             //eventDates.splice(x, 1);  //borra a partir del elemento x
             //eventDates.pop();         //borra el ultimo el elemento del array
-            eventDates = [];          //Borra todo el array
+            eventDates = [];          //Vaciar array
             debugger;
             
         };

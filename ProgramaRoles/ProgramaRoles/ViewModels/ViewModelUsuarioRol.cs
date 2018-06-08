@@ -23,7 +23,7 @@ namespace ProgramaRoles.ViewModels
             this.nombreSector = usec.nombreSector;
             this.nombreUsuario = usec.nombreUsuario;
             this.email = usec.email;
-            UtilsString Auxiliar = new UtilsString();
+            UtilsRoles Auxiliar = new UtilsRoles();
             List<string> lista_string =Auxiliar.ConvertirDeListaDeRolesAListaNombreRoles(RolesTotales);
             this.nombreRoles = Auxiliar.ParsearPropiedadRoles(usec,lista_string);
             this.roles = usec.roles;

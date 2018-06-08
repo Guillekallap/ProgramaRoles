@@ -175,7 +175,6 @@ namespace ProgramaRoles.Repository
                 DataTable dt = new DataTable();
                 
                 com.Parameters.AddWithValue("@id", id);
-
                 com.Parameters.AddWithValue("@roles", string.IsNullOrEmpty(roles) ? (object)DBNull.Value : roles);
 
             try
@@ -309,35 +308,27 @@ namespace ProgramaRoles.Repository
             }
         }
 
-        //public void DeleteInspector(int InspectorID)
-        //{
-        //    SqlConnection conn = dBAccess.GetConnection();
-        //    SqlCommand com = new SqlCommand("sp_Inspector_Update", conn);
-        //    Inspector inspector = GetInspectorByID(InspectorID);
+        public void EliminarUsuarioRolHorario(int id)
+        {
+            string constr = ConfigurationManager.ConnectionStrings["klinicos_interno"].ToString();
+            con = new SqlConnection(constr);
+            SqlCommand com = new SqlCommand("EliminarUsuarioRolHorario", con);
+            com.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataTable dt = new DataTable();
 
-        //    com.Parameters.AddWithValue("@IdInspector", inspector.IDInspector);
-        //    com.Parameters.AddWithValue("@Apellido", inspector.Apellido);
-        //    com.Parameters.AddWithValue("@Nombre", inspector.Nombre);
-        //    com.Parameters.AddWithValue("@Legajo", inspector.Legajo);
-        //    com.Parameters.AddWithValue("@Sexo", inspector.Sexo);
-        //    com.Parameters.AddWithValue("@Habilitado", false);
-        //    com.Parameters.AddWithValue("@FechaNacimiento", inspector.FechaNacimiento);
-        //    com.Parameters.AddWithValue("@UsuarioModific", "To do");
-
-        //    com.CommandType = CommandType.StoredProcedure;
-        //    try
-        //    {
-        //        conn.Open();
-        //        com.ExecuteNonQuery();
-        //        conn.Close();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message);
-
-        //    }
-
-        //}
+            com.Parameters.AddWithValue("@id", id);
+            try
+            {
+                con.Open();
+                da.Fill(dt);
+                con.Close();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
     }
 }

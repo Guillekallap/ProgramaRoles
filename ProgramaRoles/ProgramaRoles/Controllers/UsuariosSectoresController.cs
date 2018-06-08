@@ -13,7 +13,6 @@ namespace ProgramaRoles.Controllers
     {
         UsSecRepository UsSecRepo = new UsSecRepository();
 
-
         public ActionResult Index()
         {
             return View();
@@ -225,11 +224,10 @@ namespace ProgramaRoles.Controllers
 
                         /*Ya tengo en listaRolesString todos los que fue eligiendo el usuario.
                           Como resultado en rolesTemporales obtengo aquellos que no se agregaron.*/
-                        userHora.rolesTemporales = (new UtilsString()).OrdenarListaDeRolesTemporales(user.roles, listaRolesString);
-
+                        userHora.rolesTemporales = (new UtilsString()).OrdenarRolesPorID(listaClaseRoles, (new UtilsString()).OrdenarListaDeRolesTemporales(user.roles, listaRolesString).Split(',').ToList());                        
                         //Parte de Fechas, Primero conversion de string a fecha, luego se busca el inicio y fin.
-                        List<DateTime> listaFechas = (new UtilsString()).conversionStringAFecha(fecha);
-                        listaFechas = (new UtilsString()).identificarFechaInicioFechaFin(listaFechas);
+                        List<DateTime> listaFechas = (new UtilsFecha()).conversionStringAFecha(fecha);
+                        listaFechas = (new UtilsFecha()).identificarFechaInicioFechaFin(listaFechas);
 
                         for (int j=0; j<listaFechas.Count();j++)
                         {
@@ -240,8 +238,6 @@ namespace ProgramaRoles.Controllers
 
                             UsuarioRolHorario USRH = new UsuarioRolHorario(user.id, userHora.nombreUsuario, userHora.rolesTemporales, userHora.email, userHora.fechaInicio, userHora.fechaFin, userHora.emailChked);
 
-                            List<DateTime> listaFechasUSRH = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario(USRH);
-
                             int cantVecesRepetido = 0;
                             List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(USRH.idUsuarioSector, USRH.fechaInicio, USRH.fechaFin);
 
@@ -249,7 +245,7 @@ namespace ProgramaRoles.Controllers
                             {
                                 if (!(((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) < 1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) < 1)) || ((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) > -1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) > -1))))
                                 {
-                                    cantVecesRepetido++;
+                                   cantVecesRepetido++;
                                 }
                                 if (cantVecesRepetido != 0) { break; }
                             }
@@ -266,11 +262,14 @@ namespace ProgramaRoles.Controllers
                     }
                 }
 
-                TempData["listUsuarioSector"] = listUserAGrabar;
-                TempData["listUSRHV"] = listaUSRHAGrabar;
+                ViewModelUserValidez vmUserValidez = (new UtilsUserController()).conversionViewModelUserValidez(listUserAGrabar,listaUSRHAGrabar,null);
+                TempData["vmUserValidez"] = vmUserValidez;
+
                 if (listaUSRHAGrabarInvalido.Count()!=0)
                 {
-                    TempData["listUSRHI"] = listaUSRHAGrabarInvalido;
+                    vmUserValidez = (new UtilsUserController()).conversionViewModelUserValidez(listUserAGrabar, listaUSRHAGrabar, listaUSRHAGrabarInvalido);
+                    TempData["vmUserValidez"] = vmUserValidez;
+
                     return RedirectToAction("GrabarUserInvalido");
                 }
                 return RedirectToAction("GrabarUserValido");
@@ -283,27 +282,22 @@ namespace ProgramaRoles.Controllers
 
         public ActionResult GrabarUserValido()
         {
-            List<UsuariosSectores> listUserAGrabar = (List<UsuariosSectores>)TempData["listUsuarioSector"];
-            List<UsuarioRolHorario> listaUSRHAGrabar = (List<UsuarioRolHorario>)TempData["listUSRHV"];
-
-            ViewModelUserValido viewModelUserValido = new ViewModelUserValido {
-                listaUsuario = new List<ViewModel>(),
-                listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
-            };
-
-            //Guardado como siempre sin fechas.
-            foreach (UsuariosSectores user  in listUserAGrabar)
+            ViewModelUserValidez viewModelUserValido = (ViewModelUserValidez) TempData["vmUserValidez"];
+            if(!(viewModelUserValido.listaUsuario.Count()==1 && viewModelUserValido.listaUsuario.First() == null))
             {
-                UsSecRepo.ModificarRolesUsuarioSector(user.id, user.roles);
-                ViewModel vmUser = new ViewModel(user);
-                viewModelUserValido.listaUsuario.Add(vmUser);
+                //Guardado como siempre sin fechas.
+                foreach (ViewModel user in viewModelUserValido.listaUsuario)
+                {
+                    UsSecRepo.ModificarRolesUsuarioSector(user.Id, user.roles);
+                }
             }
-            //Guardado USRH validos.
-            foreach (UsuarioRolHorario USRH in listaUSRHAGrabar)
+            if (!(viewModelUserValido.listaUsuarioRolHorario.Count() == 1 && viewModelUserValido.listaUsuarioRolHorario.First() == null))
             {
-                UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
-                ViewModelUsuarioRolHorario vmUserHora = new ViewModelUsuarioRolHorario(USRH);
-                viewModelUserValido.listaUsuarioRolHorario.Add(vmUserHora);
+                //Guardado USRH validos.
+                foreach (ViewModelUsuarioRolHorario USRH in viewModelUserValido.listaUsuarioRolHorario)
+                {
+                    UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
+                }
             }
 
             return View(viewModelUserValido);
@@ -311,55 +305,31 @@ namespace ProgramaRoles.Controllers
 
         public ActionResult GrabarUserInvalido()
         {
-            List<UsuarioRolHorario> listaUSRHAGrabarInvalido = (List<UsuarioRolHorario>)TempData["listUSRHI"];
-            List<UsuariosSectores> listUserAGrabar = (List<UsuariosSectores>)TempData["listUsuarioSector"];
-            List<UsuarioRolHorario> listaUSRHAGrabar = (List<UsuarioRolHorario>)TempData["listUSRHV"];
-
-            ViewModelUserValido viewModelUserInvalido = new ViewModelUserValido
-            {
-                listaUsuario = new List<ViewModel>(),
-                listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
-            };
-
-            //foreach (UsuariosSectores user in listUserAGrabar)
-            //{
-            //    UsSecRepo.ModificarRolesUsuarioSector(user.id, user.roles);
-            //    ViewModel vmUser = new ViewModel(user);
-            //    viewModelUserInvalido.listaUsuario.Add(vmUser);
-            //}
-
-
-            //Guardado USRH invalidos.
-            foreach (UsuarioRolHorario USRH in listaUSRHAGrabarInvalido)
-            {
-                //UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
-                ViewModelUsuarioRolHorario vmUserHora = new ViewModelUsuarioRolHorario(USRH);
-                viewModelUserInvalido.listaUsuarioRolHorario.Add(vmUserHora);
-            }
-
-            TempData["listUsuarioSector"] = listUserAGrabar;
-            TempData["listUSRHV"] = listaUSRHAGrabar;
+            ViewModelUserValidez viewModelUserInvalido = (ViewModelUserValidez)TempData["vmUserValidez"];
+            TempData["vmUserValidez"] = viewModelUserInvalido;
 
             return View(viewModelUserInvalido);
         }
 
         [HttpPost]
-        public ActionResult GrabarUserInvalido(ViewModelUserValido USRHInvalido)
+        public ActionResult GrabarUserInvalido(ViewModelUserValidez viewModelUserInvalido)
         {
-            List<UsuariosSectores> listUserAGrabar = (List<UsuariosSectores>)TempData["listUsuarioSector"];
-            List<UsuarioRolHorario> listaUSRHAGrabar = (List<UsuarioRolHorario>)TempData["listUSRHV"];
-            
-            foreach (ViewModelUsuarioRolHorario USRH in USRHInvalido.listaUsuarioRolHorario)
+            ViewModelUserValidez vmValidos = (ViewModelUserValidez)TempData["vmUserValidez"];
+
+            //Guardado USRHI Invalidos.
+            foreach (ViewModelUsuarioRolHorario USRHI in viewModelUserInvalido.listaUsuarioRolHorarioInvalido)
             {
-                if (USRH.Chked)
+                if (USRHI.Chked)
                 {
-                    UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
+                    //Logica de separar tuplas por fechas
+                    (new UtilsFecha()).AcortarFechas(UsSecRepo.ListarUsuarioRolHorario(USRHI.idUsuarioSector, USRHI.fechaInicio, USRHI.fechaFin),USRHI.fechaInicio,USRHI.fechaFin);                    
+
+                    vmValidos.listaUsuarioRolHorario.Add(USRHI);
                 }
             }
-            TempData["listUsuarioSector"] = listUserAGrabar;
-            TempData["listUSRHV"] = listaUSRHAGrabar;
+            TempData["vmUserValidez"] = vmValidos;
 
-            return RedirectToAction("GrabarUserValido");
+            return RedirectToAction("GrabarUserValido","UsuariosSectores");
         }
     }
 }

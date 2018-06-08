@@ -1,7 +1,7 @@
 USE [KLINICOS_INTERNO]
 GO
 
-/****** Object:  StoredProcedure [dbo].[BuscarUsuarioRolHorario]    Script Date: 14/5/2018 11:12:04 ******/
+/****** Object:  StoredProcedure [dbo].[BuscarUsuarioRolHorario]    Script Date: 8/6/2018 10:29:40 ******/
 SET ANSI_NULLS ON
 GO
 

@@ -3,7 +3,7 @@
 
     $('tbody.redColorHover tr').mouseenter(function (e)
     {
-        e.target.parentNode.style.backgroundColor = "#ffdddd"
+        e.target.parentNode.style.backgroundColor = "#FFDDDD"
     });
 
     $('tbody.redColorHover tr').mouseleave(function (e)
@@ -18,22 +18,16 @@ function LoadPopover()
 
     $('tbody.redColorHover tr').mouseenter(function (e) {
 
-        var colDeValues;
-        var colPopover;
-        var chkedRolesUsu;
-
-        colDeValues = e.target.parentNode.lastElementChild.value;
-        colPopover = e.target.parentNode;
+        var colDeValues = e.target.parentNode.lastElementChild.value;
+        var colPopover = e.target.parentNode;
 
         colPopover.dataset.content = "";
-        chkedRolesUsu = colDeValues.split(',');
+        var chkedRolesUsu = colDeValues.split(',');
 
         for (i = 0; i < chkedRolesUsu.length; i++)
         {
             colPopover.dataset.content += chkedRolesUsu[i] + "<br> ";
-            colPopover.value
         }
-
     });
 }
 

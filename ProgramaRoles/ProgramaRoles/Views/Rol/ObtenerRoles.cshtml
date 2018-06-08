@@ -1,10 +1,10 @@
 ﻿@model List<ProgramaRoles.Models.Sroles>
 @{
-    ViewBag.Title = "ObtenerRoles";
+    ViewBag.Title = "Obtener Roles";
 }
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
-<h2>Obtener Roles</h2>
+<h1>@ViewBag.Title</h1>
 
 @using (Html.BeginForm("ObtenerRoles", "Rol", FormMethod.Post))
 {

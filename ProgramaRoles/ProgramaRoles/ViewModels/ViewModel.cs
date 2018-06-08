@@ -5,10 +5,7 @@ namespace ProgramaRoles.ViewModels
 {
     public class ViewModel
     {
-        public ViewModel()
-        {
-
-        }
+        public ViewModel(){}
 
         public int Id { get; set; }
         public string nombreSec { get; set; }

@@ -19,7 +19,7 @@ namespace ProgramaRoles.Models
         public DateTime fechaFin { get; set; }
         public bool vigente { get; set; }
         public bool emailChked { get; set; }
- 
+
         public UsuarioRolHorario(int idUsuarioSector, string nombreUsuario, string rolesTemporales, string email, DateTime fechaInicio, DateTime fechaFin, bool emailChked)
         {
             this.idUsuarioSector = idUsuarioSector;
@@ -29,9 +29,9 @@ namespace ProgramaRoles.Models
             this.fechaModificacion = DateTime.Now;
             this.fechaInicio = fechaInicio;
             this.fechaFin = fechaFin;
-            this.vigente = (new UtilsString()).VerificarFechaVigenciaDeRol(fechaInicio);
+            this.vigente = (new UtilsFecha()).VerificarFechaVigenciaDeRol(fechaInicio);
             this.emailChked = emailChked;
-        }            
+        }
 
     }
 }

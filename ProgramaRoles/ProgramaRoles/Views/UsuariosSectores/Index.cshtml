@@ -1,17 +1,17 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Inicio";
 }
 
-<legend>Inicio</legend>
-<button class="btn btn-default bottom" title="Roles a Usuarios">
-    @Html.ActionLink("Editar Roles a traves de Usuarios", "ObtenerUsuariosSectores", "UsuariosSectores")
+<h1>@ViewBag.Title</h1>
+<a class="btn btn-default" title="Roles a Usuarios" href="~/UsuariosSectores/ObtenerUsuariosSectores" >
+    Editar Roles a traves de Usuarios
     <i class="glyphicon glyphicon-user">
     </i>
-</button>
+</a>
 <br />
 <br />
-<button class="btn btn-default bottom" title="Usuarios a Roles">
-    @Html.ActionLink("Editar Roles de Usuarios a través de Roles", "ObtenerRoles", "Rol")
+<a class="btn btn-default" title="Roles a Usuarios" href="~/Rol/ObtenerRoles">
+    Editar Roles de Usuarios a través de Roles
     <i class="glyphicon glyphicon-registration-mark">
     </i>
-</button>
+</a>

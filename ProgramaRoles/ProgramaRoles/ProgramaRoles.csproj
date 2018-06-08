@@ -151,8 +151,11 @@
     <Compile Include="Models\UsuarioRolHorario.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosSectores.cs" />
+    <Compile Include="Utils\UtilsUserController.cs" />
+    <Compile Include="Utils\UtilsFecha.cs" />
+    <Compile Include="Utils\UtilsRoles.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelUserValido.cs" />
+    <Compile Include="ViewModels\ViewModelUserValidez.cs" />
     <Compile Include="ViewModels\ViewModelUsuarioMuestra.cs" />
     <Compile Include="ViewModels\ViewModelUsuarioRolHorario.cs" />
     <Compile Include="ViewModels\ViewModelUsuarioRol.cs" />
