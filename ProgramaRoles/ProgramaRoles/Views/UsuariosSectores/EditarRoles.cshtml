@@ -77,9 +77,11 @@
 
     var listaUsuarioRolHorario = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
     //var eventDates = {};
-    var eventDates = [];
-   
+    var eventDates = [[]];
+
     for (i = 0; i < listaUsuarioRolHorario.length; i++) {
+        eventDates[i] = [];
+
         for (j = 0; j < listaUsuarioRolHorario[i].listaFechas.length; j++) {
             var cadena = listaUsuarioRolHorario[i].listaFechas[j];
 
@@ -90,9 +92,14 @@
 
             cadena = aux.getMonth() + 1 + "/" + aux.getDate() + "/" + aux.getFullYear();
 
+            //eventDates[i][new Date(cadena)] = new Date(cadena);
             //eventDates.push(new Date(cadena));
-            //eventDates[new Date(cadena)] = new Date(cadena);
+            //eventDates[i][j] = cadena;
+
+            eventDates[i][j] = new Date(cadena);
+            
         }
+
     }
 
     $(document).ready(function () {
@@ -120,40 +127,44 @@
 
             //eventDates.splice(x, 1);  //borra a partir del elemento x
             //eventDates.pop();         //borra el ultimo el elemento del array
-            eventDates = [];          //Vaciar array
-            debugger;
-            
+            //eventDates = [[]];          //Vaciar array
+
         };
 
-        //var dateArray = ["03/03/2018", "03/04/2018", "03/05/2018", "03/06/2018", "03/07/2018", "03/08/2018"]
-
-        var auxiliar = "#" + $(".multiDatepickerClass")[0].id;
-        debugger;
-        $(auxiliar).multiDatesPicker({
-            beforeShowDay: function (date) {
-                var highlight = eventDates[date];
-                if (highlight) {
-                    return [true, "event", '8:00 - 18:00'];
-                } else {
-                    return [true, '', ''];
-                }
-            },
-        });
 
         $(".multiDatepickerClass").multiDatesPicker({
-        
+
             //addDates: ['01/14/' + y, '01/16/' + y, '01/18/' + y, '01/20/' + y],
             dateFormat: 'dd/mm/yy',
             numberOfMonths: [2, 3],
             defaultDate: hoy,
             dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
             monthNamesShort: ["Enero", "Febrero", "Marzo", "Abril",
-                "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
-                "Octubre", "Noviembre", "Diciembre"],
+                              "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+                              "Octubre", "Noviembre", "Diciembre"],
 
             monthNames: ["Enero", "Febrero", "Marzo", "Abril",
-                "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
-                "Octubre", "Noviembre", "Diciembre"],
+                         "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+                         "Octubre", "Noviembre", "Diciembre"],
+
+            beforeShowDay: function (date) {
+
+                
+                var inputText = $(this).context.name;
+                var arrayNameInput = inputText.split('_');
+                var i = parseInt(arrayNameInput[1]);
+
+                /*debugger;
+
+                eventDates[1].splice(1, 0);
+
+                debugger;*/
+
+                for (var j = 0; j < eventDates[i].length; j++)
+                    if (date - eventDates[i][j] == 0)
+                        return [true, "event", "TOOLTIP"];
+                return [true,"",""];
+            },
 
             //beforeShowDay: $.datepicker.noWeekends,
 
@@ -162,7 +173,8 @@
             /*mode: 'daysRange',
             autoselectRange: [0, 60],*/
 
-            onSelect: function (selectedDate) {
+            onSelect: function (selectedDate)
+            {
                 var aux = selectedDate.split('/');
                 selectedDate = aux[1] + "/" + aux[0] + "/" + aux[2];
 
@@ -184,20 +196,22 @@
                 {
                     fec = fechaFin.getTime() < fechaInicio.getTime() ? fechaFin : fechaInicio;
 
-                    for (i = 0; i < diff - 1; i++) {
+                    for (i = 0; i < diff - 1; i++)
+                    {
                         fec.setDate(fec.getDate() + 1);
                         var datestring = fec.getDate() + "/" + (fec.getMonth() + 1) + "/" + fec.getFullYear();
 
                         $(this).multiDatesPicker('toggleDate', datestring);
                     }
+
                     selectConKeyDown = "";
 
                 }
             }
         });
 
-
     });
+
 </script>
 
 <style>
@@ -215,6 +229,7 @@
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
     }
+
     .event a {
         background-color: #0094ff !important;
         background-image: none !important;
