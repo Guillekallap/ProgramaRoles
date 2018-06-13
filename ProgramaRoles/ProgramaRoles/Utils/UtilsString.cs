@@ -172,12 +172,12 @@ namespace ProgramaRoles.Utils
                 listaRoles1 = roles1.Split(',').ToList();
             }
 
-            if(listaRoles1.Count()==1 && listaRoles1.First() == "" && roles2.First()!="")
+            if(listaRoles1.Count()==1 && listaRoles1.First() == "" && roles2.Count()!=0)
             {
                 return string.Join(",", roles2.ToArray()); //Roles iguales sin modificar
             }
 
-            if (roles2.Count() == 1 && roles2.First()=="")
+            if (roles2.Count() == 0)
             {
                 if (roles1 == "")
                 {
@@ -205,6 +205,7 @@ namespace ProgramaRoles.Utils
                 }             
             }
             string rolesArreglado = string.Join(",", rolesFinales.ToArray());
+            if (rolesArreglado == ""){ return null; }
             return rolesArreglado;
         }
 
@@ -213,6 +214,7 @@ namespace ProgramaRoles.Utils
 
             List<Roles> listaRolesAObtener = new List<Roles>();
             List<string> listaRolesOrdenados = new List<string>();
+
             //Ordenar Roles dados por el usuario
             foreach (string rolString in listaRolesString)
             {

@@ -177,17 +177,19 @@ namespace ProgramaRoles.Utils
                 }
             }
 
-            listadoFechas = listadoFechas.Select(x => x.Date).Distinct().Where(x => x.Date > DateTime.Now).OrderBy(x => x.Date).ToList();
+            listadoFechas = listadoFechas.Select(x => x.Date).Distinct().Where(x =>((x.Date > DateTime.Now)||((x.Date.Day==DateTime.Now.Day)&&(x.Date.Month==DateTime.Now.Month)&&(x.Date.Year==DateTime.Now.Year)))).OrderBy(x => x.Date).ToList();
             return listadoFechas;
         }
 
-        public void AcortarFechas(List<UsuarioRolHorario> ListUSRH, DateTime fechaInicio, DateTime fechaFin)
+        public List<UsuarioRolHorario> AcortarFechas(List<UsuarioRolHorario> ListUSRH, DateTime fechaInicio, DateTime fechaFin)
         {
             UsSecRepository usSecRepo = new UsSecRepository();
             TimeSpan fechaRef = new TimeSpan(23, 59, 59);
             TimeSpan fechaRef1 = new TimeSpan(0, 0, 1);
+
             //Arreglar ver para cortar las fechas segun lo que se quiere obtener.
             List<UsuarioRolHorario> listadoActualizados = new List<UsuarioRolHorario>();
+
             foreach (var USRH in ListUSRH)
             {
                 //Verifico que si las fechas son iguales se borra toda la tupla.
@@ -197,41 +199,131 @@ namespace ProgramaRoles.Utils
                 }
                 else
                 {
-                    TimeSpan span = fechaInicio - USRH.fechaInicio;
-                    if (span.Days > 0)
+                    TimeSpan diferenciaInicioInicio = fechaInicio - USRH.fechaInicio;
+
+                    if (diferenciaInicioInicio.Days > 0)
                     {
-                        DateTime aux = USRH.fechaFin;
-                        USRH.fechaFin = fechaInicio.Subtract(fechaRef1);
-                        listadoActualizados.Add(USRH);
-                        span = aux - fechaFin;
-                        if (span.Days > 0)
+                        UsuarioRolHorario USRHAux = new UsuarioRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.fechaInicio, USRH.fechaFin, USRH.emailChked);
+                        USRHAux.fechaFin = fechaInicio.Subtract(fechaRef1);
+                        listadoActualizados.Add(USRHAux);
+                        diferenciaInicioInicio = USRH.fechaFin - fechaFin;
+
+                        if (diferenciaInicioInicio.Days > 0)
                         {
-                            USRH.fechaFin = aux;
-                            USRH.fechaInicio = fechaFin.Subtract(fechaRef);
+                            USRH.fechaInicio = fechaFin.Subtract(fechaRef).AddDays(1);
                             listadoActualizados.Add(USRH);
                         }
                         usSecRepo.EliminarUsuarioRolHorario(USRH.id);
                     }
                     else
                     {
-                        span = fechaFin - USRH.fechaFin;
-                        if (span.Days >= 0)
+                        diferenciaInicioInicio = fechaFin - USRH.fechaFin;
+                        if (diferenciaInicioInicio.Days >= 0)
                         {
                             usSecRepo.EliminarUsuarioRolHorario(USRH.id);
                         }
-                    }
+                        else
+                        {
+                            USRH.fechaInicio = fechaFin.Subtract(fechaRef).AddDays(1);
+                            listadoActualizados.Add(USRH);
 
+                            usSecRepo.EliminarUsuarioRolHorario(USRH.id);
+                        }
+                    }
                 }
             }
-            listadoActualizados.RemoveAll(x=>x.fechaFin<DateTime.Now);
 
-
-            foreach (var USRHA in listadoActualizados)
-            {
-                usSecRepo.AgregarUsuarioSectorRolHorario(USRHA.idUsuarioSector, USRHA.nombreUsuario, USRHA.rolesTemporales, USRHA.email, USRHA.emailChked, USRHA.fechaInicio, USRHA.fechaFin, DateTime.Now, (new UtilsFecha()).VerificarFechaVigenciaDeRol(USRHA.fechaInicio));
-            }
+            listadoActualizados.RemoveAll(x => x.fechaFin < DateTime.Now);
+            return listadoActualizados;
         }
 
+        public void VerificarFechasAGrabar(List<UsuarioRolHorario> listadoActualizados, List<DateTime> listaFechas)
+        {
+            TimeSpan fechaRef = new TimeSpan(23, 59, 59);
+            TimeSpan fechaRef1 = new TimeSpan(0, 0, 1);
+            listaFechas.OrderBy(x => x.Date);
+            List<UsuarioRolHorario> listadoActualiza2 = new List<UsuarioRolHorario>();
+            List<DateTime>fec = listaFechas;
+            foreach (var USRH in listadoActualizados)
+            {
+                UsuarioRolHorario USRHAux = new UsuarioRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.fechaInicio, USRH.fechaFin, USRH.emailChked);
 
+                while(fec.Count() > 2)
+                {
+                    if (USRH.fechaInicio >= fec.First() && fec.ElementAt(1) <= USRH.fechaFin)
+                    {
+                        USRHAux.fechaInicio = fec.ElementAt(1).Subtract(fechaRef).AddDays(1);
+                        
+                        if (USRHAux.fechaInicio <= fec.ElementAt(2) && fec.ElementAt(3) <= USRHAux.fechaFin)
+                        {
+                            USRHAux.fechaFin = fec.ElementAt(2).Subtract(fechaRef1);
+                            listadoActualiza2.Add(USRHAux);
+
+                            USRH.fechaInicio = fec.ElementAt(1).Subtract(fechaRef).AddDays(1);
+                            fec.RemoveAt(1);
+                        }
+                        else
+                        {
+                            listadoActualiza2.Add(USRHAux);
+                            fec.RemoveAt(0);
+                        }
+                        fec.RemoveAt(0);
+                    }
+                    else
+                    {
+                        if (USRH.fechaInicio >= fec.First())
+                        {
+                            USRHAux.fechaFin = fec.First().Subtract(fechaRef1);
+                            listadoActualiza2.Add(USRHAux);
+
+                            USRH.fechaInicio = fec.First();
+                        }
+                        //Obtengo al inicio que es menor al primer rango de fecha.
+                        else
+                        {
+                            USRHAux.fechaInicio = USRH.fechaInicio;
+                            USRHAux.fechaFin = fec.First().Subtract(fechaRef1);
+                            listadoActualiza2.Add(USRHAux);
+
+                            USRH.fechaInicio = fec.First();
+
+                        }
+                    }
+                }
+
+                if (USRH.fechaInicio >= fec.First() && fec.ElementAt(1) <= USRH.fechaFin)
+                {
+                    USRHAux.fechaInicio = fec.ElementAt(1).Subtract(fechaRef).AddDays(1);
+                    listadoActualiza2.Add(USRHAux);
+                }
+                else
+                {
+                    if (USRH.fechaInicio >= fec.First())
+                    {
+                        USRHAux.fechaFin = fec.First().Subtract(fechaRef1);
+                        listadoActualiza2.Add(USRHAux);
+
+                        USRH.fechaInicio = fec.First();
+                    }
+                    //Obtengo al inicio que es menor al primer rango de fecha.
+                    else
+                    {
+                        USRHAux.fechaInicio = USRH.fechaInicio;
+                        USRHAux.fechaFin = fec.First().Subtract(fechaRef1);
+                        listadoActualiza2.Add(USRHAux);
+
+                        USRH.fechaInicio = fec.First();
+                    }
+                }
+            }
+            listadoActualiza2.Distinct();
+
+            //Grabar registros en Base de Datos
+            foreach (var Usuario in listadoActualiza2)
+            {
+                (new UsSecRepository()).AgregarUsuarioSectorRolHorario(Usuario.idUsuarioSector, Usuario.nombreUsuario, Usuario.rolesTemporales, Usuario.email, Usuario.emailChked, Usuario.fechaInicio, Usuario.fechaFin, DateTime.Now, (new UtilsFecha()).VerificarFechaVigenciaDeRol(Usuario.fechaInicio));
+
+            }
+        }
     }
 }

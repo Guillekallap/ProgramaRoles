@@ -77,7 +77,7 @@ namespace ProgramaRoles.Controllers
             ModelState.Clear();
 
             List<UsuariosSectores> listaUserSectorAux = UsSecRepo.ListarTodosUsuariosSectores(dni, nombreUsuario, nombreSector);
-            
+
             foreach (var entity in listaUserSectorAux)
             {
                 ViewModel vModel = new ViewModel(entity);
@@ -89,32 +89,32 @@ namespace ProgramaRoles.Controllers
         [HttpPost]
         public ActionResult ControladorPartialView(List<ViewModel> lista_users)
         {
-                    List<UsuariosSectores> usec = new List<UsuariosSectores>();
-                    if (lista_users == null)
-                    {
-                        return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
-                    }
-                    foreach (ViewModel item in lista_users)
-                    {
-                        if (item.Chked)
-                        {
-                            var i = item.Id;
-                            usec.Add(UsSecRepo.BuscarUsuarioSector(i));
-                        }
-                    }
-                    List<ViewModelUsuarioRol> lista = new List<ViewModelUsuarioRol>();
-                    List<Roles> roles = UsSecRepo.ListarTodosRoles();
-                    foreach (var item in usec)
-                    {
-                        ViewModelUsuarioRol vModel = new ViewModelUsuarioRol(item, roles);                        
-                        lista.Add(vModel);
-                    }
-                    TempData["listaSeleccion"] = lista;
-                    if (lista.Count() == 0)
-                    {
-                        return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
-                    }
-                    return RedirectToAction("EditarRoles", "UsuariosSectores");
+            List<UsuariosSectores> usec = new List<UsuariosSectores>();
+            if (lista_users == null)
+            {
+                return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
+            }
+            foreach (ViewModel item in lista_users)
+            {
+                if (item.Chked)
+                {
+                    var i = item.Id;
+                    usec.Add(UsSecRepo.BuscarUsuarioSector(i));
+                }
+            }
+            List<ViewModelUsuarioRol> lista = new List<ViewModelUsuarioRol>();
+            List<Roles> roles = UsSecRepo.ListarTodosRoles();
+            foreach (var item in usec)
+            {
+                ViewModelUsuarioRol vModel = new ViewModelUsuarioRol(item, roles);
+                lista.Add(vModel);
+            }
+            TempData["listaSeleccion"] = lista;
+            if (lista.Count() == 0)
+            {
+                return RedirectToAction("ObtenerUsuariosSectores", "UsuariosSectores");
+            }
+            return RedirectToAction("EditarRoles", "UsuariosSectores");
         }
 
         public ActionResult EditarRoles()
@@ -156,7 +156,7 @@ namespace ProgramaRoles.Controllers
             List<string> listaEmail = (List<string>)TempData["listaEmails"];
 
             try
-            {                
+            {
                 List<Roles> listaClaseRoles = UsSecRepo.ListarTodosRoles();
                 int cantRoles = listaClaseRoles.Count();
                 List<UsuarioRolHorario> listaUSRHAGrabar = new List<UsuarioRolHorario>();
@@ -164,7 +164,7 @@ namespace ProgramaRoles.Controllers
                 List<UsuariosSectores> listUserAGrabar = new List<UsuariosSectores>();
 
                 for (int i = 0; i < cantidadDeParametros; i++)
-                {                    
+                {
                     UsuariosSectores user = new UsuariosSectores();
                     UsuarioRolHorario userHora = new UsuarioRolHorario();
                     List<string> listaRolesString = new List<string>();
@@ -224,40 +224,49 @@ namespace ProgramaRoles.Controllers
 
                         /*Ya tengo en listaRolesString todos los que fue eligiendo el usuario.
                           Como resultado en rolesTemporales obtengo aquellos que no se agregaron.*/
-                        userHora.rolesTemporales = (new UtilsString()).OrdenarRolesPorID(listaClaseRoles, (new UtilsString()).OrdenarListaDeRolesTemporales(user.roles, listaRolesString).Split(',').ToList());                        
-                        //Parte de Fechas, Primero conversion de string a fecha, luego se busca el inicio y fin.
-                        List<DateTime> listaFechas = (new UtilsFecha()).conversionStringAFecha(fecha);
-                        listaFechas = (new UtilsFecha()).identificarFechaInicioFechaFin(listaFechas);
-
-                        for (int j=0; j<listaFechas.Count();j++)
+                        string rolesTempAux = (new UtilsString()).OrdenarListaDeRolesTemporales(user.roles, listaRolesString);
+                        if (rolesTempAux != null)
                         {
-                            userHora.fechaInicio = listaFechas.First();
-                            listaFechas.RemoveAt(0);
-                            userHora.fechaFin = listaFechas.First();
-                            listaFechas.RemoveAt(0);
+                            userHora.rolesTemporales = (new UtilsString()).OrdenarRolesPorID(listaClaseRoles, rolesTempAux.Split(',').ToList());
 
-                            UsuarioRolHorario USRH = new UsuarioRolHorario(user.id, userHora.nombreUsuario, userHora.rolesTemporales, userHora.email, userHora.fechaInicio, userHora.fechaFin, userHora.emailChked);
+                            //Parte de Fechas, Primero conversion de string a fecha, luego se busca el inicio y fin.
+                            List<DateTime> listaFechas = (new UtilsFecha()).conversionStringAFecha(fecha);
+                            listaFechas = (new UtilsFecha()).identificarFechaInicioFechaFin(listaFechas);
 
-                            int cantVecesRepetido = 0;
-                            List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(USRH.idUsuarioSector, USRH.fechaInicio, USRH.fechaFin);
-
-                            foreach (var miniUSRH in miniListaUsRoHorario)
+                            for (int j = 0; j < listaFechas.Count(); j++)
                             {
-                                if (!(((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) < 1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) < 1)) || ((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) > -1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) > -1))))
+                                userHora.fechaInicio = listaFechas.First();
+                                listaFechas.RemoveAt(0);
+                                userHora.fechaFin = listaFechas.First();
+                                listaFechas.RemoveAt(0);
+
+                                UsuarioRolHorario USRH = new UsuarioRolHorario(user.id, userHora.nombreUsuario, userHora.rolesTemporales, userHora.email, userHora.fechaInicio, userHora.fechaFin, userHora.emailChked);
+
+                                int cantVecesRepetido = 0;
+                                List<UsuarioRolHorario> miniListaUsRoHorario = UsSecRepo.ListarUsuarioRolHorario(USRH.idUsuarioSector, USRH.fechaInicio, USRH.fechaFin);
+
+                                foreach (var miniUSRH in miniListaUsRoHorario)
                                 {
-                                   cantVecesRepetido++;
+                                    if (!(((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) < 1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) < 1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) < 1)) || ((USRH.fechaInicio.CompareTo(miniUSRH.fechaInicio) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaInicio) > -1)) && ((USRH.fechaInicio.CompareTo(miniUSRH.fechaFin) > -1) && (USRH.fechaFin.CompareTo(miniUSRH.fechaFin) > -1))))
+                                    {
+                                        cantVecesRepetido++;
+                                    }
+                                    if (cantVecesRepetido != 0) { break; }
                                 }
-                                if (cantVecesRepetido != 0) { break; }
-                            }
 
-                            if (cantVecesRepetido == 0)
-                            {
-                                listaUSRHAGrabar.Add(USRH);
+                                if (cantVecesRepetido == 0)
+                                {
+                                    listaUSRHAGrabar.Add(USRH);
+                                }
+                                else
+                                {
+                                    listaUSRHAGrabarInvalido.Add(USRH);
+                                }
                             }
-                            else
-                            {
-                                listaUSRHAGrabarInvalido.Add(USRH);
-                            }
+                        }
+                        else
+                        {
+                            userHora.rolesTemporales = null;
                         }
                     }
                 }
@@ -316,16 +325,40 @@ namespace ProgramaRoles.Controllers
         {
             ViewModelUserValidez vmValidos = (ViewModelUserValidez)TempData["vmUserValidez"];
 
+            List<UsuarioRolHorario> listaCortados = new List<UsuarioRolHorario>();
+            List<DateTime> listaFechas = new List<DateTime>();
+
+            List<ViewModelUsuarioRolHorario> listUSRHI = viewModelUserInvalido.listaUsuarioRolHorarioInvalido;
+        
             //Guardado USRHI Invalidos.
-            foreach (ViewModelUsuarioRolHorario USRHI in viewModelUserInvalido.listaUsuarioRolHorarioInvalido)
+            while (listUSRHI.Count()>0)
             {
-                if (USRHI.Chked)
+                ViewModelUsuarioRolHorario USRHI = listUSRHI.First();
+
+                if (USRHI.Chked && USRHI.rolesTemporales != null)
                 {
                     //Logica de separar tuplas por fechas
-                    (new UtilsFecha()).AcortarFechas(UsSecRepo.ListarUsuarioRolHorario(USRHI.idUsuarioSector, USRHI.fechaInicio, USRHI.fechaFin),USRHI.fechaInicio,USRHI.fechaFin);                    
+                    listaCortados.AddRange(new UtilsFecha().AcortarFechas(UsSecRepo.ListarUsuarioRolHorario(USRHI.idUsuarioSector, USRHI.fechaInicio, USRHI.fechaFin), USRHI.fechaInicio, USRHI.fechaFin));
+                    listaFechas.Add(USRHI.fechaInicio);
+                    listaFechas.Add(USRHI.fechaFin);
+
+                    if (listUSRHI.Count() == 1)
+                    {
+                        (new UtilsFecha()).VerificarFechasAGrabar(listaCortados, listaFechas);
+                        listaFechas.Clear();
+                    }
+                    else
+                    {
+                        if (listUSRHI.ElementAt(1).idUsuarioSector != USRHI.idUsuarioSector)
+                        { 
+                            (new UtilsFecha()).VerificarFechasAGrabar(listaCortados, listaFechas);
+                            listaFechas.Clear();
+                        }   
+                    }
 
                     vmValidos.listaUsuarioRolHorario.Add(USRHI);
                 }
+                listUSRHI.RemoveAt(0);
             }
             TempData["vmUserValidez"] = vmValidos;
 
