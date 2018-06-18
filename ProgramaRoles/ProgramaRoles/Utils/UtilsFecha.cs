@@ -157,34 +157,37 @@ namespace ProgramaRoles.Utils
 
         public void listadoDeFechasPorUsuarioRolHorario(List<UsuarioRolHorario> listaUSRH, List<string> fechaRoles, List<DateTime> listaFechas)
         {
-            UsuariosSectores usuario = (new UsSecRepository()).BuscarUsuarioSector(listaUSRH.First().idUsuarioSector);
-
-            if (listaUSRH == null)
+            if (listaUSRH.Count()==0)
             {
                 listaFechas=null;
                 fechaRoles = null;
             }
-
-            foreach (var entity in listaUSRH)
+            else
             {
-                TimeSpan span = entity.fechaFin - entity.fechaInicio;
-                if (span.Days > 0)
+                UsuariosSectores usuario = (new UsSecRepository()).BuscarUsuarioSector(listaUSRH.First().idUsuarioSector);
+
+                foreach (var entity in listaUSRH)
                 {
-                    for (int i = 0; i < (span.Days + 1); i++)
+                    TimeSpan span = entity.fechaFin - entity.fechaInicio;
+                    if (span.Days > 0)
                     {
-                        listaFechas.Add(entity.fechaInicio.AddDays(i));
-                        string rolEntity = (new UtilsRoles()).comprobarRoles(usuario,entity);
-                        fechaRoles.Add(rolEntity);                        
+                        for (int i = 0; i < (span.Days + 1); i++)
+                        {
+                            listaFechas.Add(entity.fechaInicio.AddDays(i));
+                            string rolEntity = (new UtilsRoles()).comprobarRoles(usuario, entity);
+                            fechaRoles.Add(rolEntity);
+                        }
+                    }
+                    else
+                    {
+                        listaFechas.Add(entity.fechaInicio);
+                        string rolEntity = (new UtilsRoles()).comprobarRoles(usuario, entity);
+                        fechaRoles.Add(rolEntity);
                     }
                 }
-                else
-                {
-                    listaFechas.Add(entity.fechaInicio);
-                    string rolEntity = (new UtilsRoles()).comprobarRoles(usuario, entity);
-                    fechaRoles.Add(rolEntity);
-                }
+                listaFechas = listaFechas.Select(x => x.Date).Distinct().Where(x => ((x.Date > DateTime.Now) || ((x.Date.Day == DateTime.Now.Day) && (x.Date.Month == DateTime.Now.Month) && (x.Date.Year == DateTime.Now.Year)))).OrderBy(x => x.Date).ToList();
+
             }
-            listaFechas = listaFechas.Select(x => x.Date).Distinct().Where(x =>((x.Date > DateTime.Now)||((x.Date.Day==DateTime.Now.Day)&&(x.Date.Month==DateTime.Now.Month)&&(x.Date.Year==DateTime.Now.Year)))).OrderBy(x => x.Date).ToList();
 
         }
 
