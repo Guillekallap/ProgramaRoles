@@ -76,43 +76,35 @@
     var fechasInput;
 
     var listaUsuarioRolHorario = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
-    //var eventDates = {};
+
     var eventDates = [[]];
-    var eventRoles = [[]];
 
-   
+    if (listaUsuarioRolHorario != null) {
 
-    for (i = 0; i < listaUsuarioRolHorario.length; i++) {
-        eventDates[i] = [];
+        for (i = 0; i < listaUsuarioRolHorario.length; i++)
+        {
+            eventDates[i] = [];
 
-        for (j = 0; j < listaUsuarioRolHorario[i].listaFechas.length; j++) {
-            var cadena = listaUsuarioRolHorario[i].listaFechas[j];
+            for (j = 0; j < listaUsuarioRolHorario[i].listaFechas.length; j++)
+            {
+                var cadena = listaUsuarioRolHorario[i].listaFechas[j];
 
-            cadena = cadena.replace("/Date(", "")
-            cadena = cadena.replace(")/", "")
-            var aux = new Date();
-            aux.setTime(cadena);
+                cadena = cadena.replace("/Date(", "")
+                cadena = cadena.replace(")/", "")
+                var aux = new Date();
+                aux.setTime(cadena);
 
-            cadena = aux.getMonth() + 1 + "/" + aux.getDate() + "/" + aux.getFullYear();
+                cadena = aux.getMonth() + 1 + "/" + aux.getDate() + "/" + aux.getFullYear();
 
-            //eventDates[i][new Date(cadena)] = new Date(cadena);
-            //eventDates.push(new Date(cadena));
-            //eventDates[i][j] = cadena;
+                //eventDates[i][new Date(cadena)] = new Date(cadena);
+                //eventDates.push(new Date(cadena));
+                //eventDates[i][j] = cadena;
 
-            eventDates[i][j] = new Date(cadena);
-            
+                eventDates[i][j] = new Date(cadena);
+            }
+
+
         }
-
-    }
-
-    debugger;
-
-    for (i = 0; i < listaUsuarioRolHorario[0].fechaRoles.length; i++)
-    {
-        //eventRoles = [i];
-        
-        eventRoles[i] = listaUsuarioRolHorario[i].fechaRoles[0];
-        
     }
 
     $(document).ready(function () {
@@ -144,6 +136,11 @@
 
         };
 
+        String.prototype.replaceAll = function (buscar, reemplazo) {
+            var target = this;
+            return target.replace(new RegExp(buscar, 'g'), reemplazo);
+        };
+
 
         $(".multiDatepickerClass").multiDatesPicker({
 
@@ -173,10 +170,14 @@
 
                 debugger;*/
 
-                for (var j = 0; j < eventDates[i].length; j++)
-                    if (date - eventDates[i][j] == 0)
-                        return [true, "event", "TOOLTIP"];
-                return [true,"",""];
+                for (var j = 0; j < eventDates[i].length; j++) {                                        
+                    if (date - eventDates[i][j] == 0) {
+                        return [true, "event", listaUsuarioRolHorario[i].fechaRoles[j].replaceAll(",", "\n")];
+                        i++;
+                    }
+                }
+                return [true, "", ""];                
+               
             },
 
             //beforeShowDay: $.datepicker.noWeekends,
