@@ -197,10 +197,12 @@ namespace ProgramaRoles.Controllers
 
                     //Resolucion y Validacion a partir de la fecha.
                     if (fecha == "")
-                    {
-                        //Luego para Enviar A Vista GrabarValido
-                        listUserAGrabar.Add(user);
-
+                    {                      
+                        if (listaRoles.First() != user.roles)
+                        {
+                            //Luego para Enviar A Vista GrabarValido
+                            listUserAGrabar.Add(user);
+                        }
                         //Borra lo que no necesita para designarlo correctamente a UsuarioRolHorario
                         listaRoles.RemoveAt(0);
                         listaNombreUsuario.RemoveAt(0);

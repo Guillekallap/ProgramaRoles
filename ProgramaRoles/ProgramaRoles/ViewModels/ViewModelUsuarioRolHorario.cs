@@ -24,7 +24,9 @@ namespace ProgramaRoles.ViewModels
         public bool emailChked { get; set; }
         public bool Chked { get; set; }
         public string fechas { get; set; }
+        //Visualizar las roles contenidos en cada fecha.
         public List<DateTime> listaFechas { get; set; }
+        public List<string> fechaRoles { get; set; }
 
         public ViewModelUsuarioRolHorario(ViewModelUsuarioRol vMuestra)
         {
@@ -33,7 +35,12 @@ namespace ProgramaRoles.ViewModels
             this.Chked = false;
             this.emailChked = false;
             this.email = vMuestra.email;
-            this.listaFechas = (new UtilsFecha()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(vMuestra.id));
+            List<UsuarioRolHorario>  listUSRH = (new UsSecRepository()).BuscarUsuarioSectorRolHorario(vMuestra.id);
+            List<DateTime> listFec=new List<DateTime>();
+            List<string> fecRoles = new List<string>();
+            (new UtilsFecha()).listadoDeFechasPorUsuarioRolHorario(listUSRH,fecRoles, listFec);
+            this.fechaRoles = fecRoles;
+            this.listaFechas = listFec;
         }
 
         public ViewModelUsuarioRolHorario(UsuarioRolHorario vmUSRH)

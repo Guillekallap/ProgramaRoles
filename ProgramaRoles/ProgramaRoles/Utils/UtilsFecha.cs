@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ProgramaRoles.Repository;
+using System.Net.Mail;
+using System.Net;
 
 namespace ProgramaRoles.Utils
 {
@@ -153,12 +155,14 @@ namespace ProgramaRoles.Utils
             return fechasInicioFin;
         }
 
-        public List<DateTime> listadoDeFechasPorUsuarioRolHorario(List<UsuarioRolHorario> listaUSRH)
+        public void listadoDeFechasPorUsuarioRolHorario(List<UsuarioRolHorario> listaUSRH, List<string> fechaRoles, List<DateTime> listaFechas)
         {
-            List<DateTime> listadoFechas = new List<DateTime>();
+            UsuariosSectores usuario = (new UsSecRepository()).BuscarUsuarioSector(listaUSRH.First().idUsuarioSector);
+
             if (listaUSRH == null)
             {
-                return listadoFechas;
+                listaFechas=null;
+                fechaRoles = null;
             }
 
             foreach (var entity in listaUSRH)
@@ -168,17 +172,20 @@ namespace ProgramaRoles.Utils
                 {
                     for (int i = 0; i < (span.Days + 1); i++)
                     {
-                        listadoFechas.Add(entity.fechaInicio.AddDays(i));
+                        listaFechas.Add(entity.fechaInicio.AddDays(i));
+                        string rolEntity = (new UtilsRoles()).comprobarRoles(usuario,entity);
+                        fechaRoles.Add(rolEntity);                        
                     }
                 }
                 else
                 {
-                    listadoFechas.Add(entity.fechaInicio);
+                    listaFechas.Add(entity.fechaInicio);
+                    string rolEntity = (new UtilsRoles()).comprobarRoles(usuario, entity);
+                    fechaRoles.Add(rolEntity);
                 }
             }
+            listaFechas = listaFechas.Select(x => x.Date).Distinct().Where(x =>((x.Date > DateTime.Now)||((x.Date.Day==DateTime.Now.Day)&&(x.Date.Month==DateTime.Now.Month)&&(x.Date.Year==DateTime.Now.Year)))).OrderBy(x => x.Date).ToList();
 
-            listadoFechas = listadoFechas.Select(x => x.Date).Distinct().Where(x =>((x.Date > DateTime.Now)||((x.Date.Day==DateTime.Now.Day)&&(x.Date.Month==DateTime.Now.Month)&&(x.Date.Year==DateTime.Now.Year)))).OrderBy(x => x.Date).ToList();
-            return listadoFechas;
         }
 
         public List<UsuarioRolHorario> AcortarFechas(List<UsuarioRolHorario> ListUSRH, DateTime fechaInicio, DateTime fechaFin)

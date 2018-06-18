@@ -78,6 +78,9 @@
     var listaUsuarioRolHorario = @Html.Raw(Json.Encode(Model.listaUsuarioRolHorario));
     //var eventDates = {};
     var eventDates = [[]];
+    var eventRoles = [[]];
+
+   
 
     for (i = 0; i < listaUsuarioRolHorario.length; i++) {
         eventDates[i] = [];
@@ -100,6 +103,16 @@
             
         }
 
+    }
+
+    debugger;
+
+    for (i = 0; i < listaUsuarioRolHorario[0].fechaRoles.length; i++)
+    {
+        //eventRoles = [i];
+        
+        eventRoles[i] = listaUsuarioRolHorario[i].fechaRoles[0];
+        
     }
 
     $(document).ready(function () {

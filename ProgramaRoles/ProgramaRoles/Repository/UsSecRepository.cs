@@ -90,6 +90,8 @@ namespace ProgramaRoles.Repository
                             dni = Convert.ToString(dr["dni"]),
                             email = Convert.ToString(dr["email"]),
                             roles = Convert.ToString(dr["roles"]),
+                            fechaModificacion = Convert.ToDateTime(dr["fechaModi"]),
+
                         }).FirstOrDefault();
 
             return (usec);

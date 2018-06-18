@@ -235,7 +235,7 @@ namespace UnitTest
         [TestMethod]
         public void ComprobarListadoDeFechasUSRH()
         {
-            List<UsuarioRolHorario> listadoFechas = (new UsSecRepository()).ListarUsuarioRolHorario(1007, (new UtilsFecha()).conversionStringAFecha("14/05/2018").First(), (new UtilsFecha()).conversionStringAFecha("30/06/2018").First());
+            List<UsuarioRolHorario> listadoFechas = (new UsSecRepository()).ListarUsuarioRolHorario(1006, (new UtilsFecha()).conversionStringAFecha("14/06/2018").First(), (new UtilsFecha()).conversionStringAFecha("30/07/2018").First());
             //List<DateTime> listadoFec = (new UtilsString()).listadoDeFechasPorUsuarioRolHorario((new UsSecRepository()).BuscarUsuarioSectorRolHorario(1007));        
             Assert.IsNotNull(listadoFechas);
         }
@@ -251,9 +251,26 @@ namespace UnitTest
         [TestMethod]
         public void acotarFechasPrueba1InicioMenorAFechaInicioYFinMayorAFechaInicio()
         {
-            List<UsuarioRolHorario> listadoFechas = (new UsSecRepository()).ListarUsuarioRolHorario(1006, (new UtilsFecha()).conversionStringAFecha("01/06/2018").First(), (new UtilsFecha()).conversionStringAFecha("10/06/2018").First());
-            (new UtilsFecha()).AcortarFechas(listadoFechas, (new UtilsFecha()).conversionStringAFecha("01/06/2018").First(), (new UtilsFecha()).conversionStringAFecha("10/06/2018").First());
+            List<UsuarioRolHorario> listadoFechas = (new UsSecRepository()).ListarUsuarioRolHorario(1006, (new UtilsFecha()).conversionStringAFecha("18/06/2018").First(), (new UtilsFecha()).conversionStringAFecha("10/08/2018").First());
+            (new UtilsFecha()).AcortarFechas(listadoFechas, (new UtilsFecha()).conversionStringAFecha("18/06/2018").First(), (new UtilsFecha()).conversionStringAFecha("10/08/2018").First());
             Assert.IsNotNull(listadoFechas);
+        }
+
+
+        [TestMethod]
+        public void constructorViewModelUsuarioRolHorario()
+        {
+
+            List<UsuariosSectores> listUser = (new UsSecRepository()).ListarTodosUsuariosSectores(null,null,null);
+
+            List<ViewModelUsuarioRolHorario> listUSRH = new List<ViewModelUsuarioRolHorario>();
+            foreach (var User in listUser)
+            {
+                ViewModelUsuarioRol vmm = new ViewModelUsuarioRol(User, (new UsSecRepository()).ListarTodosRoles());
+                ViewModelUsuarioRolHorario vm = new ViewModelUsuarioRolHorario(vmm);
+                listUSRH.Add(vm);
+            }
+            Assert.IsNotNull(listUser);
         }
 
         //[TestMethod]
@@ -273,7 +290,7 @@ namespace UnitTest
         //[TestMethod]
         //public void EnvioDeEmailCorrecto()
         //{
-        //    (new UtilsEmail()).EnviarEmail("guillekallap@hotmail.com", "guille", "ROLE_USUARIOS_ADMINISTRADOR");
+        //    (new UtilsFecha()).EnviarCorreo("soportetecnicosalud@gmail.com", "soporte", "ROLE_USUARIOS_ADMINISTRADOR,ROLE_ADMINISION_BASE",true);            
         //}
     }
 }

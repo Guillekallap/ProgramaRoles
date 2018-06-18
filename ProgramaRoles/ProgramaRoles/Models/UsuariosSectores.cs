@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ProgramaRoles.Utils;
 
 
@@ -19,6 +20,7 @@ namespace ProgramaRoles.Models
         public string dni { get; set; }
         public string email { get; set; }
         public string roles { get; set; }
+        public DateTime fechaModificacion { get; set; }
 
         public UsuariosSectores(UsuariosSectores usec,List<Sroles> RolesAEditar)
         {

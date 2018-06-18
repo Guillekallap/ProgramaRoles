@@ -109,5 +109,33 @@ namespace ProgramaRoles.Utils
             return rolesArreglado;
         }
 
+        //Desde Otro Proyecto
+        public string comprobarRoles(UsuariosSectores user, UsuarioRolHorario userHorario)
+        {
+            List<string> listaRoles = user.roles.Split(',').ToList();
+            List<string> listaRolesTemporales = userHorario.rolesTemporales.Split(',').ToList();
+            List<Roles> rolesTotales = (new UsSecRepository()).ListarTodosRoles();
+            List<Roles> auxiliar = new List<Roles>();
+
+            //No puede darse este caso
+            if (listaRoles == null && listaRolesTemporales == null) { return null; }
+
+            //Al encontrarse con roles distintos de nulo en User.
+            if (listaRoles != null && (user.fechaModificacion < userHorario.fechaModificacion))
+            {
+                foreach (var rolUSRH in listaRolesTemporales)
+                {
+                    bool encontrado = listaRoles.Contains(rolUSRH);
+                    if (encontrado == false) { listaRoles.Add(rolUSRH); } else { listaRoles.Remove(rolUSRH); }
+                }
+            }
+            else
+            {
+                return userHorario.rolesTemporales;
+            }
+
+            string rolesComprobados = OrdenarRolesPorID(rolesTotales, listaRoles);
+            return rolesComprobados;
+        }
     }
 }
