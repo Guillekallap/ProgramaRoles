@@ -294,21 +294,29 @@ namespace ProgramaRoles.Controllers
         public ActionResult GrabarUserValido()
         {
             ViewModelUserValidez viewModelUserValido = (ViewModelUserValidez) TempData["vmUserValidez"];
-            if(!(viewModelUserValido.listaUsuario.Count()==1 && viewModelUserValido.listaUsuario.First() == null))
+
+            try
             {
-                //Guardado como siempre sin fechas.
-                foreach (ViewModel user in viewModelUserValido.listaUsuario)
+                if (!(viewModelUserValido.listaUsuario.Count() == 1 && viewModelUserValido.listaUsuario.First() == null))
                 {
-                    UsSecRepo.ModificarRolesUsuarioSector(user.Id, user.roles);
+                    //Guardado como siempre sin fechas.
+                    foreach (ViewModel user in viewModelUserValido.listaUsuario)
+                    {
+                        UsSecRepo.ModificarRolesUsuarioSector(user.Id, user.roles);
+                    }
+                }
+                if (!(viewModelUserValido.listaUsuarioRolHorario.Count() == 1 && viewModelUserValido.listaUsuarioRolHorario.First() == null))
+                {
+                    //Guardado USRH validos.
+                    foreach (ViewModelUsuarioRolHorario USRH in viewModelUserValido.listaUsuarioRolHorario)
+                    {
+                        UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
+                    }
                 }
             }
-            if (!(viewModelUserValido.listaUsuarioRolHorario.Count() == 1 && viewModelUserValido.listaUsuarioRolHorario.First() == null))
+            catch (Exception ex)
             {
-                //Guardado USRH validos.
-                foreach (ViewModelUsuarioRolHorario USRH in viewModelUserValido.listaUsuarioRolHorario)
-                {
-                    UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
-                }
+                throw new Exception(ex.Message);
             }
 
             return View(viewModelUserValido);

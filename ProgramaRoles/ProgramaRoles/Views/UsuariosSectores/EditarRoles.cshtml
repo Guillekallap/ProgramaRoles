@@ -5,8 +5,6 @@
 }
 <script src="~/Scripts/tbody.hover.action.js"></script>
 
-@*<div>Seleccionados: <span id="seleccionados"></span></div>*@
-
 <h1>@ViewBag.Title</h1>
 @using (Html.BeginForm("EditarRoles", "UsuariosSectores", FormMethod.Post))
 {
@@ -121,13 +119,10 @@
         var shiftpressed = false;
 
         document.body.onkeydown = function (e) {
-            //$("#seleccionados").html("true" + hoy);
             shiftpressed = true;
-            //hoy.setMonth(hoy.getMonth() + 6);
         };
 
         document.body.onkeyup = function (e) {
-            //$("#seleccionados").html("false" + hoy);
             shiftpressed = false;
 
             //eventDates.splice(x, 1);  //borra a partir del elemento x
