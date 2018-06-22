@@ -123,28 +123,37 @@ namespace ProgramaRoles.Controllers
             List<string> listaNombreUsuario = new List<string>();
             List<string> listaEmail = new List<string>();
 
-            ViewModelUsuarioMuestra viewModelUsMuestra = new ViewModelUsuarioMuestra
+            try
             {
-                listaUsuarioRol = (List<ViewModelUsuarioRol>)TempData["listaSeleccion"],
-                listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
-            };
 
-            foreach (var item in viewModelUsMuestra.listaUsuarioRol)
-            {
-                //Logica de los roles Anteriores
-                ViewModelUsuarioRolHorario VMUsRolHorario = new ViewModelUsuarioRolHorario(item);
-                viewModelUsMuestra.listaUsuarioRolHorario.Add(VMUsRolHorario);
-                listaRol.Add(item.roles);
-                listaNombreUsuario.Add(item.nombreUsuario);
-                listaEmail.Add(item.email);
+                ViewModelUsuarioMuestra viewModelUsMuestra = new ViewModelUsuarioMuestra
+                {
+                    listaUsuarioRol = (List<ViewModelUsuarioRol>)TempData["listaSeleccion"],
+                    listaUsuarioRolHorario = new List<ViewModelUsuarioRolHorario>()
+                };
+
+                foreach (var item in viewModelUsMuestra.listaUsuarioRol)
+                {
+                    //Logica de los roles Anteriores
+                    ViewModelUsuarioRolHorario VMUsRolHorario = new ViewModelUsuarioRolHorario(item);
+                    viewModelUsMuestra.listaUsuarioRolHorario.Add(VMUsRolHorario);
+                    listaRol.Add(item.roles);
+                    listaNombreUsuario.Add(item.nombreUsuario);
+                    listaEmail.Add(item.email);
+                }
+
+                TempData["cantidadUser"] = viewModelUsMuestra.listaUsuarioRol.Count();
+                TempData["listaRoles"] = listaRol;
+                TempData["listaNombreUsuarios"] = listaNombreUsuario;
+                TempData["listaEmails"] = listaEmail;
+
+                return View(viewModelUsMuestra);
+
             }
-
-            TempData["cantidadUser"] = viewModelUsMuestra.listaUsuarioRol.Count();
-            TempData["listaRoles"] = listaRol;
-            TempData["listaNombreUsuarios"] = listaNombreUsuario;
-            TempData["listaEmails"] = listaEmail;
-
-            return View(viewModelUsMuestra);
+            catch
+            {
+                return RedirectToAction("ObtenerUsuariosSectores");
+            }
         }
 
         [HttpPost]
@@ -285,16 +294,15 @@ namespace ProgramaRoles.Controllers
                 }
                 return RedirectToAction("GrabarUserValido");
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                return RedirectToAction("ObtenerUsuariosSectores");
             }
         }
 
         public ActionResult GrabarUserValido()
         {
-            ViewModelUserValidez viewModelUserValido = (ViewModelUserValidez) TempData["vmUserValidez"];
-
+            ViewModelUserValidez viewModelUserValido = (ViewModelUserValidez) TempData["vmUserValidez"];        
             try
             {
                 if (!(viewModelUserValido.listaUsuario.Count() == 1 && viewModelUserValido.listaUsuario.First() == null))
@@ -313,11 +321,13 @@ namespace ProgramaRoles.Controllers
                         UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
                     }
                 }
+                viewModelUserValido.listaUsuarioRolHorarioInvalido.Clear();
             }
-            catch (Exception ex)
+            catch
             {
-                throw new Exception(ex.Message);
+                return RedirectToAction("ObtenerUsuariosSectores");
             }
+            TempData["vmUserValidez"] = viewModelUserValido;
 
             return View(viewModelUserValido);
         }
@@ -325,9 +335,17 @@ namespace ProgramaRoles.Controllers
         public ActionResult GrabarUserInvalido()
         {
             ViewModelUserValidez viewModelUserInvalido = (ViewModelUserValidez)TempData["vmUserValidez"];
-            TempData["vmUserValidez"] = viewModelUserInvalido;
 
-            return View(viewModelUserInvalido);
+            try
+            {
+                TempData["vmUserValidez"] = viewModelUserInvalido;
+                return View(viewModelUserInvalido);
+
+            }
+            catch
+            {
+                return RedirectToAction("ObtenerUsuariosSectores");
+            }
         }
 
         [HttpPost]
@@ -338,41 +356,47 @@ namespace ProgramaRoles.Controllers
             List<UsuarioRolHorario> listaCortados = new List<UsuarioRolHorario>();
             List<DateTime> listaFechas = new List<DateTime>();
 
-            List<ViewModelUsuarioRolHorario> listUSRHI = viewModelUserInvalido.listaUsuarioRolHorarioInvalido;
-        
-            //Guardado USRHI Invalidos.
-            while (listUSRHI.Count()>0)
-            {
-                ViewModelUsuarioRolHorario USRHI = listUSRHI.First();
+            try {
+                List<ViewModelUsuarioRolHorario> listUSRHI = viewModelUserInvalido.listaUsuarioRolHorarioInvalido;
 
-                if (USRHI.Chked && USRHI.rolesTemporales != null)
+                //Guardado USRHI Invalidos.
+                while (listUSRHI.Count() > 0)
                 {
-                    //Logica de separar tuplas por fechas
-                    listaCortados.AddRange(new UtilsFecha().AcortarFechas(UsSecRepo.ListarUsuarioRolHorario(USRHI.idUsuarioSector, USRHI.fechaInicio, USRHI.fechaFin), USRHI.fechaInicio, USRHI.fechaFin));
-                    listaFechas.Add(USRHI.fechaInicio);
-                    listaFechas.Add(USRHI.fechaFin);
+                    ViewModelUsuarioRolHorario USRHI = listUSRHI.First();
 
-                    if (listUSRHI.Count() == 1)
+                    if (USRHI.Chked && USRHI.rolesTemporales != null)
                     {
-                        (new UtilsFecha()).VerificarFechasAGrabar(listaCortados, listaFechas);
-                        listaFechas.Clear();
-                    }
-                    else
-                    {
-                        if (listUSRHI.ElementAt(1).idUsuarioSector != USRHI.idUsuarioSector)
-                        { 
+                        //Logica de separar tuplas por fechas
+                        listaCortados.AddRange(new UtilsFecha().AcortarFechas(UsSecRepo.ListarUsuarioRolHorario(USRHI.idUsuarioSector, USRHI.fechaInicio, USRHI.fechaFin), USRHI.fechaInicio, USRHI.fechaFin));
+                        listaFechas.Add(USRHI.fechaInicio);
+                        listaFechas.Add(USRHI.fechaFin);
+
+                        if (listUSRHI.Count() == 1)
+                        {
                             (new UtilsFecha()).VerificarFechasAGrabar(listaCortados, listaFechas);
                             listaFechas.Clear();
-                        }   
+                        }
+                        else
+                        {
+                            if (listUSRHI.ElementAt(1).idUsuarioSector != USRHI.idUsuarioSector)
+                            {
+                                (new UtilsFecha()).VerificarFechasAGrabar(listaCortados, listaFechas);
+                                listaFechas.Clear();
+                            }
+                        }
+
+                        vmValidos.listaUsuarioRolHorario.Add(USRHI);
                     }
-
-                    vmValidos.listaUsuarioRolHorario.Add(USRHI);
+                    listUSRHI.RemoveAt(0);
                 }
-                listUSRHI.RemoveAt(0);
-            }
-            TempData["vmUserValidez"] = vmValidos;
 
-            return RedirectToAction("GrabarUserValido","UsuariosSectores");
+                TempData["vmUserValidez"] = vmValidos;
+                return RedirectToAction("GrabarUserValido", "UsuariosSectores");
+            }
+            catch
+            {
+                return RedirectToAction("ObtenerUsuariosSectores");
+            }
         }
     }
 }
