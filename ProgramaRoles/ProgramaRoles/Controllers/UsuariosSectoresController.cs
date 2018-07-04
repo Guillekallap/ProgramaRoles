@@ -150,8 +150,9 @@ namespace ProgramaRoles.Controllers
                 return View(viewModelUsMuestra);
 
             }
-            catch
-            {
+            catch(Exception e)
+            {                       
+                UtilsLog.Instance.LogError(e.Message);
                 return RedirectToAction("ObtenerUsuariosSectores");
             }
         }
@@ -305,7 +306,7 @@ namespace ProgramaRoles.Controllers
             ViewModelUserValidez viewModelUserValido = (ViewModelUserValidez) TempData["vmUserValidez"];        
             try
             {
-                if (!(viewModelUserValido.listaUsuario.Count() == 1 && viewModelUserValido.listaUsuario.First() == null))
+                if (!(viewModelUserValido.listaUsuario.Count() == 0))
                 {
                     //Guardado como siempre sin fechas.
                     foreach (ViewModel user in viewModelUserValido.listaUsuario)
@@ -313,7 +314,7 @@ namespace ProgramaRoles.Controllers
                         UsSecRepo.ModificarRolesUsuarioSector(user.Id, user.roles);
                     }
                 }
-                if (!(viewModelUserValido.listaUsuarioRolHorario.Count() == 1 && viewModelUserValido.listaUsuarioRolHorario.First() == null))
+                if (!(viewModelUserValido.listaUsuarioRolHorario.Count() == 0))
                 {
                     //Guardado USRH validos.
                     foreach (ViewModelUsuarioRolHorario USRH in viewModelUserValido.listaUsuarioRolHorario)
@@ -321,7 +322,10 @@ namespace ProgramaRoles.Controllers
                         UsSecRepo.AgregarUsuarioSectorRolHorario(USRH.idUsuarioSector, USRH.nombreUsuario, USRH.rolesTemporales, USRH.email, USRH.emailChked, USRH.fechaInicio, USRH.fechaFin, USRH.fechaModificacion, USRH.vigente);
                     }
                 }
-                viewModelUserValido.listaUsuarioRolHorarioInvalido.Clear();
+                if (viewModelUserValido.listaUsuarioRolHorarioInvalido != null)
+                {
+                    viewModelUserValido.listaUsuarioRolHorarioInvalido.Clear();
+                }
             }
             catch
             {

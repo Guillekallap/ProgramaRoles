@@ -103,6 +103,7 @@
     <Content Include="Scripts\esm\popper.min.js.map" />
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\bootstrap.min.js.map" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -151,6 +152,7 @@
     <Compile Include="Models\UsuarioRolHorario.cs" />
     <Compile Include="Models\Usuarios.cs" />
     <Compile Include="Models\UsuariosSectores.cs" />
+    <Compile Include="Utils\UtilsLog.cs" />
     <Compile Include="Utils\UtilsUserController.cs" />
     <Compile Include="Utils\UtilsFecha.cs" />
     <Compile Include="Utils\UtilsRoles.cs" />

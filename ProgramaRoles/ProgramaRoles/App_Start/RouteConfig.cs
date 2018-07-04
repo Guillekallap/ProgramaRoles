@@ -16,9 +16,9 @@ namespace ProgramaRoles
             );
 
             routes.MapRoute(
-                name: "EditarUsuarioSector",
-                url: "{controller}/{action}/{rrol}/{ddatosUsuarios}",
-                defaults: new { controller = "Rol" , action = "EditarUsuarioSector",rrol= UrlParameter.Optional }
+                name: "ObtenerRoles",
+                url: "{controller}/{action}/{rrol}",
+                defaults: new { controller = "Rol" , action = "ObtenerRoles", rrol= UrlParameter.Optional }
             );
         }
     }

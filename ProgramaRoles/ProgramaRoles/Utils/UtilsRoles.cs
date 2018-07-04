@@ -121,7 +121,7 @@ namespace ProgramaRoles.Utils
             if (listaRoles == null && listaRolesTemporales == null) { return null; }
 
             //Al encontrarse con roles distintos de nulo en User.
-            if (listaRoles != null && (user.fechaModificacion < userHorario.fechaModificacion))
+            if (!listaRoles.Contains("") && (user.fechaModificacion < userHorario.fechaModificacion))
             {
                 foreach (var rolUSRH in listaRolesTemporales)
                 {
